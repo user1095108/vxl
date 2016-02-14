@@ -27,7 +27,7 @@
 # pragma once
 
 #if __cplusplus < 201402L
-# error "You need a C++14 compiler to use lualite"
+# error "You need a C++14 compiler to use vxl"
 #endif // __cplusplus
 
 #if defined(__SSE__)
