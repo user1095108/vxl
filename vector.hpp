@@ -719,7 +719,7 @@ namespace vector
 template <typename T>
 constexpr inline T pow2(T const e) noexcept
 {
-  return 1 << e;
+  return T(1) << e;
 }
 
 template <typename T>
