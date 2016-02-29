@@ -957,7 +957,6 @@ constexpr inline bool than_equal(
 }
 
 #if defined(__SSE4_1__)
-
 template <typename T, unsigned N, ::std::size_t ...Is>
 constexpr inline typename ::vxl::vector_traits<T, N>::int_vector_type
 all_ones_or_mask(::std::index_sequence<Is...> const) noexcept
@@ -971,18 +970,29 @@ all_ones_or_mask(::std::index_sequence<Is...> const) noexcept
 }
 
 template <typename T, unsigned N, ::std::size_t ...Is>
+constexpr inline typename ::vxl::vector_traits<T, N>::int_vector_type
+all_zeros_and_mask(::std::index_sequence<Is...> const) noexcept
+{
+  // generate mask for each Is
+  return typename ::vxl::vector_traits<T, N>::int_vector_type{
+    (
+      Is < N ? ~0 : 0
+    )...
+  };
+}
+
+template <typename T, unsigned N, ::std::size_t ...Is>
 constexpr inline typename ::std::enable_if<
   ((N < 4) && (4 == sizeof(T))),
   bool>::type
 all_ones(typename vector_traits<T, N>::int_vector_type const v,
   ::std::index_sequence<Is...> const) noexcept
 {
-  return _mm_test_all_ones(
-    _mm_or_si128(__m128i(v),
-      __m128i(
-        all_ones_or_mask<T, N>(
-          ::std::make_index_sequence<sizeof(v) / sizeof(T)>()
-        )
+  return _mm_test_all_zeros(
+    ~__m128i(v),
+    __m128i(
+      all_zeros_and_mask<T, N>(
+        ::std::make_index_sequence<sizeof(v) / sizeof(T)>()
       )
     )
   );
@@ -1013,18 +1023,6 @@ all_ones(typename vector_traits<T, N>::int_vector_type v,
     )...
   },
   v[0]; 
-}
-
-template <typename T, unsigned N, ::std::size_t ...Is>
-constexpr inline typename ::vxl::vector_traits<T, N>::int_vector_type
-all_zeros_and_mask(::std::index_sequence<Is...> const) noexcept
-{
-  // generate mask for each Is
-  return typename ::vxl::vector_traits<T, N>::int_vector_type{
-    (
-      Is < N ? ~0 : 0
-    )...
-  };
 }
 
 template <typename T, unsigned N, ::std::size_t ...Is>
@@ -1268,6 +1266,22 @@ constexpr inline bool all_ones(
   },
   v[0];
 }
+
+template <typename T, unsigned N, ::std::size_t ...Is>
+constexpr inline bool all_zeros(
+  typename vector_traits<T, N>::int_vector_type v,
+  ::std::index_sequence<Is...> const) noexcept
+{
+  return swallow{
+    (
+      v |= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
+        v,
+        ::std::make_index_sequence<sizeof(v) / sizeof(T)>()
+      )
+    )...
+  },
+  !v[0]; 
+}
 #endif
 
 template <typename T, unsigned N, ::std::size_t ...Is>
@@ -1296,17 +1310,9 @@ template <typename T, unsigned N>
 constexpr inline bool operator==(
   vector<T, N> const& l, vector<T, N> const& r) noexcept
 {
-#if defined(__SSE4_1__)
-  return detail::vector::all_zeros<T, N>(
-    typename vector_traits<T, N>::int_vector_type(l.data_) ^
-    typename vector_traits<T, N>::int_vector_type(r.data_),
-    ::std::make_index_sequence<detail::vector::log2(N)>()
-  );
-#else
   return detail::vector::all_ones<T, N>(l.data_ == r.data_,
     ::std::make_index_sequence<detail::vector::log2(N)>()
   );
-#endif
 }
 
 // the only reason for the existance of comparison operators are the
