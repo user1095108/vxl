@@ -42,6 +42,10 @@
 # include "smmintrin.h"
 #endif // __SSE4_1__
 
+#if defined(__AVX__)
+# include "immintrin.h"
+#endif // __AVX__
+
 #if defined(__ARM_NEON__)
 # include "arm_neon.h"
 #endif // __ARM_NEON__
@@ -956,22 +960,9 @@ constexpr inline bool than_equal(
   (e | v)[0];
 }
 
-#if defined(__SSE4_1__)
 template <typename T, unsigned N, ::std::size_t ...Is>
 constexpr inline typename ::vxl::vector_traits<T, N>::int_vector_type
-all_ones_or_mask(::std::index_sequence<Is...> const) noexcept
-{
-  // generate mask for each Is
-  return typename ::vxl::vector_traits<T, N>::int_vector_type{
-    (
-      Is < N ? 0 : ~0
-    )...
-  };
-}
-
-template <typename T, unsigned N, ::std::size_t ...Is>
-constexpr inline typename ::vxl::vector_traits<T, N>::int_vector_type
-all_zeros_and_mask(::std::index_sequence<Is...> const) noexcept
+ptest_and_mask(::std::index_sequence<Is...> const) noexcept
 {
   // generate mask for each Is
   return typename ::vxl::vector_traits<T, N>::int_vector_type{
@@ -982,6 +973,92 @@ all_zeros_and_mask(::std::index_sequence<Is...> const) noexcept
 }
 
 template <typename T, unsigned N, ::std::size_t ...Is>
+constexpr inline typename ::vxl::vector_traits<T, N>::int_vector_type
+ptest_or_mask(::std::index_sequence<Is...> const) noexcept
+{
+  // generate mask for each Is
+  return typename ::vxl::vector_traits<T, N>::int_vector_type{
+    (
+      Is < N ? 0 : ~0
+    )...
+  };
+}
+
+#if defined(__AVX__)
+template <typename T, unsigned N, ::std::size_t ...Is>
+constexpr inline typename ::std::enable_if<
+  ((N <= 4) && (4 == sizeof(T))),
+  bool
+>::type
+all_ones(typename vector_traits<T, N>::int_vector_type const v,
+  ::std::index_sequence<Is...> const) noexcept
+{
+  return _mm_testc_ps(
+    __m128(v),
+    __m128(
+      ptest_and_mask<T, N>(
+        ::std::make_index_sequence<sizeof(v) / sizeof(T)>()
+      )
+    )
+  );
+}
+
+template <typename T, unsigned N, ::std::size_t ...Is>
+constexpr inline typename ::std::enable_if<
+  ((N == 2) && (8 == sizeof(T))),
+  bool
+>::type
+all_ones(typename vector_traits<T, N>::int_vector_type const v,
+  ::std::index_sequence<Is...> const) noexcept
+{
+  return _mm_testc_pd(
+    __m128d(v),
+    __m128d(
+      ptest_and_mask<T, N>(
+        ::std::make_index_sequence<sizeof(v) / sizeof(T)>()
+      )
+    )
+  );
+}
+
+template <typename T, unsigned N, ::std::size_t ...Is>
+constexpr inline typename ::std::enable_if<
+  ((N > 4) && (N <= 8) && (4 == sizeof(T))) ||
+  ((N > 2) && (N <= 4) && (8 == sizeof(T))),
+  bool
+>::type
+all_ones(typename vector_traits<T, N>::int_vector_type const v,
+  ::std::index_sequence<Is...> const) noexcept
+{
+  return _mm256_testc_si256(
+    __m256i(v),
+    __m256i(
+      ptest_and_mask<T, N>(
+        ::std::make_index_sequence<sizeof(v) / sizeof(T)>()
+      )
+    )
+  );
+}
+
+template <typename T, unsigned N, ::std::size_t ...Is>
+constexpr inline typename ::std::enable_if<
+  (32 < sizeof(typename vector_traits<T, N>::int_vector_type)), bool
+>::type
+all_ones(typename vector_traits<T, N>::int_vector_type v,
+  ::std::index_sequence<Is...> const) noexcept
+{
+  return swallow{
+    (
+      v &= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
+        v,
+        ::std::make_index_sequence<sizeof(v) / sizeof(T)>()
+      )
+    )...
+  },
+  v[0]; 
+}
+#elif defined(__SSE4_1__)
+template <typename T, unsigned N, ::std::size_t ...Is>
 constexpr inline typename ::std::enable_if<
   ((N < 4) && (4 == sizeof(T))),
   bool>::type
@@ -991,7 +1068,7 @@ all_ones(typename vector_traits<T, N>::int_vector_type const v,
   return _mm_test_all_zeros(
     ~__m128i(v),
     __m128i(
-      all_zeros_and_mask<T, N>(
+      ptest_and_mask<T, N>(
         ::std::make_index_sequence<sizeof(v) / sizeof(T)>()
       )
     )
@@ -1035,7 +1112,7 @@ all_zeros(typename vector_traits<T, N>::int_vector_type const v,
   return _mm_test_all_zeros(
     __m128i(v),
     __m128i(
-      all_zeros_and_mask<T, N>(
+      ptest_and_mask<T, N>(
         ::std::make_index_sequence<sizeof(v) / sizeof(T)>()
       )
     )
