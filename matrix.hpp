@@ -189,8 +189,10 @@ struct matrix
 };
 
 template <typename T, unsigned M, unsigned N, typename ...A,
-  typename = typename ::std::enable_if<all_of<
-    ::std::is_same<T, typename ::std::decay<A>::type>...>{}
+  typename = typename ::std::enable_if<
+    all_of<
+      ::std::is_same<T, typename ::std::decay<A>::type>...
+    >{}
   >::type
 >
 inline matrix<T, M, N> make_matrix(A const ...a) noexcept
