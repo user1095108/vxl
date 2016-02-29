@@ -1060,29 +1060,19 @@ all_ones(typename vector_traits<T, N>::int_vector_type v,
 #elif defined(__SSE4_1__)
 template <typename T, unsigned N, ::std::size_t ...Is>
 constexpr inline typename ::std::enable_if<
-  ((N < 4) && (4 == sizeof(T))),
+  ((N <= 4) && (4 == sizeof(T))),
   bool>::type
 all_ones(typename vector_traits<T, N>::int_vector_type const v,
   ::std::index_sequence<Is...> const) noexcept
 {
-  return _mm_test_all_zeros(
-    ~__m128i(v),
+  return _mm_testc_si128(
+    __m128i(v),
     __m128i(
       ptest_and_mask<T, N>(
         ::std::make_index_sequence<sizeof(v) / sizeof(T)>()
       )
     )
   );
-}
-
-template <typename T, unsigned N, ::std::size_t ...Is>
-constexpr inline typename ::std::enable_if<
-  ((N == 4) && (4 == sizeof(T))) || ((N == 2) && (8 == sizeof(T))),
-  bool>::type
-all_ones(typename vector_traits<T, N>::int_vector_type const v,
-  ::std::index_sequence<Is...> const) noexcept
-{
-  return _mm_test_all_ones(__m128i(v));
 }
 
 template <typename T, unsigned N, ::std::size_t ...Is>
