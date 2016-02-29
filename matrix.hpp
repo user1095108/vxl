@@ -28,8 +28,6 @@
 
 #include <cassert>
 
-#include "generic/meta.hpp"
-
 #include "dot.hpp"
 
 namespace vxl
@@ -191,7 +189,7 @@ struct matrix
 };
 
 template <typename T, unsigned M, unsigned N, typename ...A,
-  typename = typename ::std::enable_if<::generic::all_of<
+  typename = typename ::std::enable_if<all_of<
     ::std::is_same<T, typename ::std::decay<A>::type>...>{}
   >::type
 >

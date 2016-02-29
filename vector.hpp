@@ -38,6 +38,10 @@
 # include "emmintrin.h"
 #endif
 
+#if defined(__SSE4_1__)
+# include "smmintrin.h"
+#endif // __SSE4_1__
+
 #if defined(__ARM_NEON__)
 # include "arm_neon.h"
 #endif // __ARM_NEON__
@@ -55,6 +59,20 @@
 namespace vxl
 {
 
+using default_tag = struct { };
+using no_translation_tag = struct { };
+using shift_tag = struct { };
+
+template <class A, class ...B>
+struct all_of : ::std::integral_constant<bool, A{} && all_of<B...>{}>
+{
+};
+
+template <class A>
+struct all_of<A> : ::std::integral_constant<bool, A{}>
+{
+};
+
 struct swallow
 {
   template <typename ...T>
@@ -62,10 +80,6 @@ struct swallow
   {
   }
 };
-
-using default_tag = struct { };
-using no_translation_tag = struct { };
-using shift_tag = struct { };
 
 #if defined(__clang__)
 template <typename U, typename V>
@@ -941,7 +955,66 @@ constexpr inline bool than_equal(
   },
   (e | v)[0];
 }
-#if defined(__SSE2__)
+
+#if defined(__SSE4_1__)
+
+template <typename T, unsigned N, ::std::size_t ...Is>
+constexpr inline typename ::vxl::vector_traits<T, N>::int_vector_type
+equal_or_mask(::std::index_sequence<Is...> const) noexcept
+{
+  // generate mask for each Is
+  return typename ::vxl::vector_traits<T, N>::int_vector_type{
+    (
+      Is < N ? 0 : ~0
+    )...
+  };
+}
+
+template <typename T, unsigned N, ::std::size_t ...Is>
+constexpr inline typename ::std::enable_if<
+  ((N < 4) && (4 == sizeof(T))),
+  bool>::type
+equal(typename vector_traits<T, N>::int_vector_type const v,
+  ::std::index_sequence<Is...> const) noexcept
+{
+  return _mm_test_all_ones(
+    _mm_or_si128(__m128i(v),
+      __m128i(
+        equal_or_mask<T, N>(
+          ::std::make_index_sequence<sizeof(v) / sizeof(T)>()
+        )
+      )
+    )
+  );
+}
+
+template <typename T, unsigned N, ::std::size_t ...Is>
+constexpr inline typename ::std::enable_if<
+  ((N == 4) && (4 == sizeof(T))) || ((N == 2) && (8 == sizeof(T))),
+  bool>::type
+equal(typename vector_traits<T, N>::int_vector_type const v,
+  ::std::index_sequence<Is...> const) noexcept
+{
+  return _mm_test_all_ones(__m128i(v));
+}
+
+template <typename T, unsigned N, ::std::size_t ...Is>
+constexpr inline typename ::std::enable_if<
+  (16 < sizeof(typename vector_traits<T, N>::int_vector_type)), bool>::type
+equal(typename vector_traits<T, N>::int_vector_type v,
+  ::std::index_sequence<Is...> const) noexcept
+{
+  return swallow{
+    (
+      v &= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
+        v,
+        ::std::make_index_sequence<sizeof(v) / sizeof(T)>()
+      )
+    )...
+  },
+  v[0]; 
+}
+#elif defined(__SSE2__)
 template <typename T, unsigned N, ::std::size_t ...Is>
 constexpr inline typename ::std::enable_if<
   (N == 2) && (4 == sizeof(T)),
