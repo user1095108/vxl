@@ -543,7 +543,7 @@ inline bool operator==(matrix<T, M, N> const& l,
     result &= l.data_[j] == r.data_[j];
   }
 
-  return detail::vector::equal<T, M>(result,
+  return detail::vector::all_ones<T, M>(result,
     ::std::make_index_sequence<detail::vector::log2(M)>()
   );
 #else
@@ -552,7 +552,7 @@ inline bool operator==(matrix<T, M, N> const& l,
     result &= l.data_[i] == r.data_[i];
   }
 
-  return detail::vector::equal<T, N>(result,
+  return detail::vector::all_ones<T, N>(result,
     ::std::make_index_sequence<detail::vector::log2(N)>()
   );
 #endif // VXL_ROW_MAJOR
