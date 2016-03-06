@@ -80,7 +80,7 @@ struct all_of<A> : ::std::integral_constant<bool, A{}>
 struct swallow
 {
   template <typename ...T>
-  explicit swallow(T&& ...) noexcept
+  constexpr explicit swallow(T&& ...) noexcept
   {
   }
 };
