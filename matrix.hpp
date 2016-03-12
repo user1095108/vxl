@@ -535,12 +535,12 @@ template <typename T, unsigned M, unsigned N>
 inline bool operator==(matrix<T, M, N> const& l,
   matrix<T, M, N> const& r) noexcept
 {
-  auto result(l.data_[0] == r.data_[0]);
+  auto result(l.data_[0] != r.data_[0]);
 
 #ifndef VXL_ROW_MAJOR
   for (unsigned j{1}; j != N; ++j)
   {
-    result &= l.data_[j] != r.data_[j];
+    result |= l.data_[j] != r.data_[j];
   }
 
   return detail::vector::all_zeros<T, M>(result,
@@ -549,7 +549,7 @@ inline bool operator==(matrix<T, M, N> const& l,
 #else
   for (unsigned i{1}; i != M; ++i)
   {
-    result &= l.data_[i] != r.data_[i];
+    result |= l.data_[i] != r.data_[i];
   }
 
   return detail::vector::all_zeros<T, N>(result,
