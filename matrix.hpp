@@ -540,19 +540,19 @@ inline bool operator==(matrix<T, M, N> const& l,
 #ifndef VXL_ROW_MAJOR
   for (unsigned j{1}; j != N; ++j)
   {
-    result &= l.data_[j] == r.data_[j];
+    result &= l.data_[j] != r.data_[j];
   }
 
-  return detail::vector::all_ones<T, M>(result,
+  return detail::vector::all_zeros<T, M>(result,
     ::std::make_index_sequence<detail::vector::log2(M)>()
   );
 #else
   for (unsigned i{1}; i != M; ++i)
   {
-    result &= l.data_[i] == r.data_[i];
+    result &= l.data_[i] != r.data_[i];
   }
 
-  return detail::vector::all_ones<T, N>(result,
+  return detail::vector::all_zeros<T, N>(result,
     ::std::make_index_sequence<detail::vector::log2(N)>()
   );
 #endif // VXL_ROW_MAJOR
