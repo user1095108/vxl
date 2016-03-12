@@ -27,7 +27,7 @@
 # pragma once
 
 #if __cplusplus < 201402L
-# error "You need a C++14 compiler to use vxl"
+# error "You need a c++14 compiler"
 #endif // __cplusplus
 
 #if defined(__SSE__)
