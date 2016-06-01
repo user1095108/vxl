@@ -960,30 +960,6 @@ constexpr inline bool than_equal(
   (e | v)[0];
 }
 
-template <typename T, unsigned N, ::std::size_t ...Is>
-constexpr inline typename ::vxl::vector_traits<T, N>::int_vector_type
-ptest_and_mask(::std::index_sequence<Is...> const) noexcept
-{
-  // generate mask for each Is
-  return typename ::vxl::vector_traits<T, N>::int_vector_type{
-    (
-      Is < N ? ~0 : 0
-    )...
-  };
-}
-
-template <typename T, unsigned N, ::std::size_t ...Is>
-constexpr inline typename ::vxl::vector_traits<T, N>::int_vector_type
-ptest_or_mask(::std::index_sequence<Is...> const) noexcept
-{
-  // generate mask for each Is
-  return typename ::vxl::vector_traits<T, N>::int_vector_type{
-    (
-      Is < N ? 0 : ~0
-    )...
-  };
-}
-
 #if defined(__SSE__)
 template <typename T, unsigned N, ::std::size_t ...Is>
 constexpr inline typename ::std::enable_if<
