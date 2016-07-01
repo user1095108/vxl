@@ -936,12 +936,11 @@ constexpr inline bool than_equal(
     (
       v &= lin_shuffler<
         typename vector_traits<T, N>::int_value_type, N, Is + 1>(
-          e,
-          ::std::make_index_sequence<sizeof(v) / sizeof(T)>()
+        e,
+        ::std::make_index_sequence<sizeof(v) / sizeof(T)>()
       ) |
-        than_mask<
-          typename vector_traits<T, N>::int_value_type, N, Is>(
-            ::std::make_index_sequence<sizeof(v) / sizeof(T)>()
+      than_mask<typename vector_traits<T, N>::int_value_type, N, Is>(
+        ::std::make_index_sequence<sizeof(v) / sizeof(T)>()
       )
     )...
   },
