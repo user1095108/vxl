@@ -160,17 +160,15 @@ namespace detail
 namespace vector
 {
 
-template <typename T, unsigned N, ::std::size_t ...Is>
+template <typename T, unsigned N, std::size_t ...Is>
 constexpr inline typename ::vxl::vector_traits<T, N>::vector_type
 cdot(typename vector_traits<T, N>::vector_type v,
-  ::std::index_sequence<Is...> const) noexcept
+  std::index_sequence<Is...> const) noexcept
 {
-  return swallow{
-    (
-      // result depends on previous shuffles
-      v += pow2_shuffler<T, sizeof(v) / sizeof(T), Is>(v,
-        ::std::make_index_sequence<sizeof(v) / sizeof(T)>()
-      )
+  return swallow {
+    // result depends on previous shuffles
+    v += pow2_shuffler<T, sizeof(v) / sizeof(T), Is>(v,
+      std::make_index_sequence<sizeof(v) / sizeof(T)>()
     )...
   },
   v;
@@ -188,7 +186,7 @@ constexpr inline vector<T, N> cdot(vector<T, N> const& l,
 {
   return {
     detail::vector::cdot<T, N>(l.data_ * r.data_,
-      ::std::make_index_sequence<detail::vector::log2(N)>()
+      std::make_index_sequence<detail::vector::log2(N)>()
     )
   };
 }

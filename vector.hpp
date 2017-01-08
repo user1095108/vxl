@@ -846,8 +846,10 @@ constexpr inline std::size_t make_hash(std::size_t seed,
   std::index_sequence<Is...> const) noexcept
 {
   return (
-    seed ^= ... ^= convert<typename vxl::vector<T, N>::uint_value_type>(
+    seed ^= ... ^= (
+      convert<typename vxl::vector<T, N>::uint_value_type>(
       v[Is + 1]) + 0x9e3779b9 + (seed << 6) + (seed >> 2)
+    )
   );
 }
 
@@ -1000,12 +1002,13 @@ constexpr inline std::enable_if_t<
 all_zeros(typename vector_traits<T, N>::int_vector_type v,
   std::index_sequence<Is...> const) noexcept
 {
-  return !(
-    pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
+  return swallow{
+    v |= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
       v,
       std::make_index_sequence<sizeof(v) / sizeof(T)>()
-    ) | ...
-  )[0];
+    )...
+  },
+  !v[0];
 }
 
 template <typename T, unsigned N, std::size_t ...Is>
@@ -1016,12 +1019,13 @@ constexpr inline std::enable_if_t<
 all_ones(typename vector_traits<T, N>::int_vector_type v,
   std::index_sequence<Is...> const) noexcept
 {
-  return (
-    pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
+  return swallow{
+    v &= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
       v,
       std::make_index_sequence<sizeof(v) / sizeof(T)>()
-    ) & ...
-  )[0];
+    )...
+  },
+  v[0];
 }
 #elif defined(__ARM_NEON__)
 template <typename T, unsigned N, std::size_t ...Is>
@@ -1101,12 +1105,13 @@ constexpr inline std::enable_if_t<
 all_zeros(typename vector_traits<T, N>::int_vector_type v,
   std::index_sequence<Is...> const) noexcept
 {
-  return !(
-    pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
+  return swallow{
+    v |= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
       v,
       std::make_index_sequence<sizeof(v) / sizeof(T)>()
-    ) | ...
-  )[0];
+    )...
+  },
+  !v[0];
 }
 #else
 template <typename T, unsigned N, std::size_t ...Is>
@@ -1114,12 +1119,13 @@ constexpr inline bool all_ones(
   typename vector_traits<T, N>::int_vector_type v,
   std::index_sequence<Is...> const) noexcept
 {
-  return (
-    pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
+  return swallow{
+    v &= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
       v,
       std::make_index_sequence<sizeof(v) / sizeof(T)>()
-    ) & ...
-  )[0];
+    )...
+  },
+  v[0];
 }
 
 template <typename T, unsigned N, std::size_t ...Is>
@@ -1127,12 +1133,13 @@ constexpr inline bool all_zeros(
   typename vector_traits<T, N>::int_vector_type v,
   std::index_sequence<Is...> const) noexcept
 {
-  return !(
-    pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
+  return swallow{
+    v |= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
       v,
       std::make_index_sequence<sizeof(v) / sizeof(T)>()
-    ) | ...
-  )[0];
+    )...
+  },
+  !v[0];
 }
 #endif
 

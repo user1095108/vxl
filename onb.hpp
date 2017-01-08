@@ -29,8 +29,6 @@
 # define VXL_ONB_HPP
 # pragma once
 
-#include <math.h>
-
 #include "vector.hpp"
 
 namespace vxl
@@ -56,12 +54,25 @@ template <typename T>
 constexpr inline vector<T, 3> cortho(vector<T, 3> const& v,
   default_tag const = {}) noexcept
 {
+  using int_value_type = typename vector_traits<float, 3>::int_value_type;
+  using int_vector_type = typename vector_traits<float, 3>::int_vector_type;
+  using vector_type = typename vector_traits<float, 3>::vector_type;
+
   auto const tmp(cabs(v));
 
-  // if abs(x) < abs(z), then the largest components are either y or z
-  return tmp(0) < tmp(2) ?
+/*
+  // if abs(x) < abs(y), then the largest components are either y or z
+  return tmp(0) < tmp(1) ?
     vector<T, 3>{T(0), -v(2), v(1)} :
     vector<T, 3>{-v(1), v(0), T(0)};
+*/
+  return {
+    select(
+      vector_type{T(0), -v(2), v(1)},
+      vector_type{-v(1), v(0), T(0)},
+      cvector<int_value_type, 3>(-(tmp(0) < tmp(1)))
+    )
+  };
 }
 
 }

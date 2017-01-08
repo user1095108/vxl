@@ -89,10 +89,10 @@ namespace detail
 namespace max
 {
 
-template <typename T, unsigned N, ::std::size_t ...Is>
-inline typename ::vxl::vector_traits<T, N>::vector_type
-cmax(::vxl::vector<T, N> const& v,
-  ::std::index_sequence<Is...> const) noexcept
+template <typename T, unsigned N, std::size_t ...Is>
+inline typename vxl::vector_traits<T, N>::vector_type
+cmax(vxl::vector<T, N> const& v,
+  std::index_sequence<Is...> const) noexcept
 {
   decltype(v.data_) result(v.data_);
 
@@ -101,7 +101,7 @@ cmax(::vxl::vector<T, N> const& v,
   swallow{
     (
       sr = detail::vector::pow2_shuffler<T, N, Is>(result,
-        ::std::make_index_sequence<sizeof(v) / sizeof(T)>()),
+        std::make_index_sequence<sizeof(v) / sizeof(T)>()),
       result = select(result, sr, result > sr),
       Is
     )...
@@ -121,7 +121,7 @@ inline vector<T, N> cmax(vector<T, N> const& v) noexcept
 {
   return {
     detail::max::cmax(v,
-      ::std::make_index_sequence<detail::vector::log2(N)>()
+      std::make_index_sequence<detail::vector::log2(N)>()
     )
   };
 }

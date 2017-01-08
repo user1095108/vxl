@@ -58,6 +58,7 @@ int main()
 
   vxl::vector<double, 4> e{1., 2., 3., 4.};
   std::cout << (e == e) << std::endl;
+  std::cout << vxl::norm2(e) << std::endl;
 
   return 0;
 }
