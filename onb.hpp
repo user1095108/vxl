@@ -60,7 +60,7 @@ constexpr inline vector<T, 3> cortho(vector<T, 3> const& v,
 
   // if abs(x) < abs(z), then the largest components are either y or z
   return tmp(0) < tmp(2) ?
-    vector<T, 3>{T(0), -v(2), v(1)} ?
+    vector<T, 3>{T(0), -v(2), v(1)} :
     vector<T, 3>{-v(1), v(0), T(0)};
 }
 

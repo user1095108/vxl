@@ -800,7 +800,8 @@ constexpr inline vector<T, N> cabs(vector<T, N> const& v) noexcept
 
   return {
     vector_type(int_vector_type(v.data_) &
-      detail::vector::abs_mask<T, N>(std::make_index_sequence<N>()))
+      detail::vector::abs_mask<T, N>(std::make_index_sequence<N>())
+    )
   };
 }
 
@@ -846,13 +847,10 @@ constexpr inline std::size_t make_hash(std::size_t seed,
   typename vector_traits<T, N>::vector_type const& v,
   std::index_sequence<Is...> const) noexcept
 {
-  return swallow{
-    (
-      seed ^= convert<typename vxl::vector<T, N>::uint_value_type>(
-        v[Is + 1]) + 0x9e3779b9 + (seed << 6) + (seed >> 2)
-    )...
-  },
-  seed;
+  return (
+    seed ^= ... ^= convert<typename vxl::vector<T, N>::uint_value_type>(
+      v[Is + 1]) + 0x9e3779b9 + (seed << 6) + (seed >> 2)
+  );
 }
 
 template <typename T, unsigned N, std::size_t I, std::size_t ...Is>
