@@ -90,20 +90,20 @@ struct swallow
 
 #if defined(__clang__)
 template <typename U, typename V>
-constexpr inline typename std::enable_if<
+constexpr inline std::enable_if_t<
   !std::is_arithmetic<V>{},
   V
->::type
+>
 select(V const a, V const b, U const c) noexcept
 {
   return V((c & U(a)) | (~c & U(b)));
 }
 #else
 template <typename U, typename V>
-constexpr inline typename std::enable_if<
+constexpr inline std::enable_if_t<
   !std::is_arithmetic<V>{},
   V
->::type
+>
 select(V const a, V const b, U const c) noexcept
 {
   return c ? a : b;
@@ -111,10 +111,10 @@ select(V const a, V const b, U const c) noexcept
 #endif
 
 template <typename U, typename V>
-inline typename std::enable_if<
+constexpr inline std::enable_if_t<
   std::is_arithmetic<V>{},
   V
->::type
+>
 select(V const a, V const b, U const c) noexcept
 {
   static_assert(sizeof(U) == sizeof(V), "sizeof(U) != sizeof(V)");
@@ -432,11 +432,11 @@ struct deduce
 
 template <typename T>
 struct deduce<T,
-  typename std::enable_if<
+  std::enable_if_t<
     !std::is_arithmetic<T>{} &&
     !std::is_array<T>{} &&
     sizeof(std::declval<T>()[0])
-  >::type
+  >
 >
 {
   using value_type =
@@ -452,9 +452,7 @@ struct deduce<T,
 
 template <typename T>
 struct deduce<T,
-  typename std::enable_if<
-    std::is_arithmetic<T>{}
-  >::type
+  std::enable_if_t<std::is_arithmetic<T>{}>
 >
 {
   using value_type =
@@ -475,10 +473,10 @@ struct is_vector : std::false_type
 
 template <typename T>
 struct is_vector<T,
-  typename std::enable_if<
+  std::enable_if_t<
     bool(sizeof(deduce<T>)) &&
     !std::is_arithmetic<T>{}
-  >::type
+  >
 > : std::true_type
 {
 };
@@ -509,10 +507,10 @@ constexpr inline R const& convert(T const& v)
 }
 
 template <typename R, unsigned M, typename V>
-constexpr inline typename std::enable_if<
+constexpr inline std::enable_if_t<
   !is_vector<V>{} && std::is_arithmetic<V>{},
   typename vxl::vector_traits<R, M>::vector_type
->::type
+>
 convert(V const& v) noexcept
 {
   static_assert(1 == M, "M must equal 1");
@@ -520,10 +518,10 @@ convert(V const& v) noexcept
 }
 
 template <typename R, unsigned M, typename V>
-constexpr inline typename std::enable_if<
+constexpr inline std::enable_if_t<
   is_vector<V>{},
   typename vxl::vector_traits<R, M>::vector_type
->::type
+>
 convert(V const& v) noexcept
 {
   return detail::vector::convert<R, M, typename deduce<V>::value_type, M>(
@@ -1028,7 +1026,7 @@ all_ones(typename vector_traits<T, N>::int_vector_type v,
 #elif defined(__ARM_NEON__)
 template <typename T, unsigned N, std::size_t ...Is>
 //__attribute__ ((noinline))
-constexpr inline typename std::enable_if<((N == 2) &&
+constexpr inline std::enable_if_t<((N == 2) &&
   (8 == sizeof(typename vector_traits<T, N>::int_vector_type))), bool>::type
 all_zeros(typename vector_traits<T, N>::int_vector_type const v,
   std::index_sequence<Is...> const) noexcept
@@ -1043,7 +1041,7 @@ all_zeros(typename vector_traits<T, N>::int_vector_type const v,
 
 template <typename T, unsigned N, std::size_t ...Is>
 //__attribute__ ((noinline))
-constexpr inline typename std::enable_if<((N == 3) &&
+constexpr inline std::enable_if_t<((N == 3) &&
   (16 == sizeof(typename vector_traits<T, N>::int_vector_type))), bool>::type
 all_zeros(typename vector_traits<T, N>::int_vector_type const v,
   std::index_sequence<Is...> const) noexcept
@@ -1061,7 +1059,7 @@ all_zeros(typename vector_traits<T, N>::int_vector_type const v,
 
 template <typename T, unsigned N, std::size_t ...Is>
 //__attribute__ ((noinline))
-constexpr inline typename std::enable_if<((N == 4)) &&
+constexpr inline std::enable_if_t<((N == 4)) &&
   (16 == sizeof(typename vector_traits<T, N>::int_vector_type)), bool>::type
 all_zeros(typename vector_traits<T, N>::int_vector_type const v,
   std::index_sequence<Is...> const) noexcept
@@ -1079,7 +1077,7 @@ all_zeros(typename vector_traits<T, N>::int_vector_type const v,
 
 template <typename T, unsigned N, std::size_t ...Is>
 //__attribute__ ((noinline))
-constexpr inline typename std::enable_if<((N == 2) &&
+constexpr inline std::enable_if_t<((N == 2) &&
   (16 == sizeof(typename vector_traits<T, N>::int_vector_type))), bool>::type
 all_zeros(typename vector_traits<T, N>::int_vector_type const v,
   std::index_sequence<Is...> const) noexcept
