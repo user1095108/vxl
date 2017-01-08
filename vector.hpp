@@ -30,7 +30,7 @@
 # pragma once
 
 #if __cplusplus < 201402L
-# error "You need a c++1z compiler"
+# error "You need a c++14 compiler"
 #endif // __cplusplus
 
 #if defined(__SSE__)
@@ -846,8 +846,8 @@ constexpr inline std::size_t make_hash(std::size_t seed,
   std::index_sequence<Is...> const) noexcept
 {
   return swallow{
-    (
-      seed ^= convert<typename ::vxl::vector<T, N>::uint_value_type>(
+    seed ^= (
+      convert<typename ::vxl::vector<T, N>::uint_value_type>(
         v[Is + 1]) + 0x9e3779b9 + (seed << 6) + (seed >> 2)
     )...
   },
