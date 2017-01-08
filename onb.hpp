@@ -45,7 +45,7 @@ template <typename T>
 constexpr inline vector<T, 2> cortho(vector<T, 2> const& v,
   default_tag const = {}) noexcept
 {
-  return vector<T, 2>{-v(1), v(0)};
+  return {-v(1), v(0)};
 }
 
 //////////////////////////////////////////////////////////////////////////////
