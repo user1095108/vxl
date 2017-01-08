@@ -1255,7 +1255,7 @@ namespace std
 template <typename T, unsigned N>
 struct hash<vxl::vector<T, N> >
 {
-  size_t operator()(vxl::vector<T, N> const& v) const noexcept
+  constexpr size_t operator()(vxl::vector<T, N> const& v) const noexcept
   {
     return vxl::detail::vector::make_hash(
       vxl::detail::vector::convert<
