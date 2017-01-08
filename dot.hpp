@@ -160,6 +160,12 @@ namespace detail
 namespace vector
 {
 
+/*
+** 1   2   3   4
+** 12  23  34  14
+** 1234 1234 1234 1234
+*/
+
 template <typename T, unsigned N, std::size_t ...Is>
 constexpr inline typename ::vxl::vector_traits<T, N>::vector_type
 cdot(typename vector_traits<T, N>::vector_type v,

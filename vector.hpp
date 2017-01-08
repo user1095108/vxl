@@ -845,12 +845,13 @@ constexpr inline std::size_t make_hash(std::size_t seed,
   typename vector_traits<T, N>::vector_type const& v,
   std::index_sequence<Is...> const) noexcept
 {
-  return (
-    seed ^= ... ^= (
-      convert<typename vxl::vector<T, N>::uint_value_type>(
-      v[Is + 1]) + 0x9e3779b9 + (seed << 6) + (seed >> 2)
-    )
-  );
+  return swallow{
+    (
+      seed ^= convert<typename ::vxl::vector<T, N>::uint_value_type>(
+        v[Is + 1]) + 0x9e3779b9 + (seed << 6) + (seed >> 2)
+    )...
+  },
+  seed;
 }
 
 template <typename T, unsigned N, std::size_t I, std::size_t ...Is>
