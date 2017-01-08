@@ -32,6 +32,7 @@ namespace vxl
 {
 
 // cross product
+// http://fastcpp.blogspot.si/2011/04/vector-cross-product-using-sse-code.html
 template <typename T, unsigned N>
 //__attribute__ ((noinline))
 constexpr inline vector<T, N> ccross(vector<T, N> const& l,

@@ -1,25 +1,28 @@
 /*
-** The MIT License (MIT)
-** 
-** Copyright (c) 2014-2016 Janez Žemva
-** 
-** Permission is hereby granted, free of charge, to any person obtaining a copy
-** of this software and associated documentation files (the "Software"), to deal
-** in the Software without restriction, including without limitation the rights
-** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-** copies of the Software, and to permit persons to whom the Software is
-** furnished to do so, subject to the following conditions:
-** 
-** The above copyright notice and this permission notice shall be included in all
-** copies or substantial portions of the Software.
-** 
-** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-** SOFTWARE.
+** This is free and unencumbered software released into the public domain.
+**
+** Anyone is free to copy, modify, publish, use, compile, sell, or
+** distribute this software, either in source code form or as a compiled
+** binary, for any purpose, commercial or non-commercial, and by any
+** means.
+**
+** In jurisdictions that recognize copyright laws, the author or authors
+** of this software dedicate any and all copyright interest in the
+** software to the public domain. We make this dedication for the benefit
+** of the public at large and to the detriment of our heirs and
+** successors. We intend this dedication to be an overt act of
+** relinquishment in perpetuity of all present and future rights to this
+** software under copyright law.
+**
+** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+** EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+** MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+** IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+** OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+** ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+** OTHER DEALINGS IN THE SOFTWARE.
+**
+** For more information, please refer to <http://unlicense.org/>
 */
 
 #ifndef VXL_MATRIX_HPP
@@ -39,14 +42,14 @@ namespace detail
 namespace matrix
 {
 
-template <unsigned I, typename D, typename S, ::std::size_t ...Is>
-static void copy(D& dst, S const& src, ::std::index_sequence<Is...> const)
+template <unsigned I, typename D, typename S, std::size_t ...Is>
+static void copy(D& dst, S const& src, std::index_sequence<Is...> const)
 {
   swallow{(dst[Is][I] = src[Is])...};
 }
 
-template <typename D, unsigned I, typename S, ::std::size_t ...Is>
-static D sample(S const& src, ::std::index_sequence<Is...> const)
+template <typename D, unsigned I, typename S, std::size_t ...Is>
+static D sample(S const& src, std::index_sequence<Is...> const)
 {
   return D{(src[Is][I])...};
 }
@@ -91,7 +94,7 @@ struct matrix
   }
 
   // assignment
-  matrix<T, M, N>& operator=(::std::initializer_list<T> const l) noexcept
+  matrix<T, M, N>& operator=(std::initializer_list<T> const l) noexcept
   {
     assert(M * N == l.size());
     auto k(l.begin());
@@ -117,7 +120,7 @@ struct matrix
 #ifndef VXL_ROW_MAJOR
     return detail::matrix::sample<
       typename vector_traits<T, N>::vector_type, I
-    >(data_, ::std::make_index_sequence<N>());
+    >(data_, std::make_index_sequence<N>());
 #else
     return data_[i];
 #endif // VXL_ROW_MAJOR
@@ -129,7 +132,7 @@ struct matrix
   {
 #ifndef VXL_ROW_MAJOR
     detail::matrix::copy<I>(data_, v,
-      ::std::make_index_sequence<N>());
+      std::make_index_sequence<N>());
 #else
     data_[i] = v;
 #endif // VXL_ROW_MAJOR
@@ -140,7 +143,7 @@ struct matrix
   {
 #ifndef VXL_ROW_MAJOR
     detail::matrix::copy<I>(data_, v.data_,
-      ::std::make_index_sequence<N>());
+      std::make_index_sequence<N>());
 #else
     data_[i] = v.data_;
 #endif // VXL_ROW_MAJOR
@@ -154,7 +157,7 @@ struct matrix
 #else
     return detail::matrix::sample<
       typename vector_traits<T, M>::vector_type, J
-    >(data_, ::std::make_index_sequence<M>());
+    >(data_, std::make_index_sequence<M>());
 #endif // VXL_ROW_MAJOR
   }
 
@@ -166,7 +169,7 @@ struct matrix
     data_[J] = v;
 #else
     detail::matrix::copy<J>(data_, v,
-      ::std::make_index_sequence<M>()
+      std::make_index_sequence<M>()
     );
 #endif // VXL_ROW_MAJOR
   }
@@ -178,7 +181,7 @@ struct matrix
     data_[J] = v.data_;
 #else
     detail::matrix::copy<J>(data_, v.data_,
-      ::std::make_index_sequence<M>()
+      std::make_index_sequence<M>()
     );
 #endif // VXL_ROW_MAJOR
   }
@@ -189,9 +192,9 @@ struct matrix
 };
 
 template <typename T, unsigned M, unsigned N, typename ...A,
-  typename = typename ::std::enable_if<
+  typename = typename std::enable_if<
     all_of<
-      ::std::is_same<T, typename ::std::decay<A>::type>...
+      std::is_same<T, typename std::decay<A>::type>...
     >{}
   >::type
 >
@@ -222,17 +225,17 @@ namespace detail
 namespace matrix
 {
 
-template <unsigned I, typename T, unsigned M, unsigned N, ::std::size_t ...Is>
-constexpr inline auto sample(::vxl::matrix<T, M, N> const& m,
-  ::std::index_sequence<Is...> const) noexcept ->
+template <unsigned I, typename T, unsigned M, unsigned N, std::size_t ...Is>
+constexpr inline auto sample(vxl::matrix<T, M, N> const& m,
+  std::index_sequence<Is...> const) noexcept ->
   typename vector_traits<T, M>::vector_type
 {
   return typename vector_traits<T, M>::vector_type{m.data_[Is][I]...};
 }
 
-template <typename T, unsigned M, unsigned N, ::std::size_t ...Is>
-constexpr inline auto sample(::vxl::matrix<T, M, N> const& m,
-  unsigned const i, ::std::index_sequence<Is...> const) noexcept ->
+template <typename T, unsigned M, unsigned N, std::size_t ...Is>
+constexpr inline auto sample(vxl::matrix<T, M, N> const& m,
+  unsigned const i, std::index_sequence<Is...> const) noexcept ->
   typename vector_traits<T, M>::vector_type
 {
   return typename vector_traits<T, M>::vector_type{m.data_[Is][i]...};
@@ -247,7 +250,7 @@ constexpr inline vector<T, M> row(matrix<T, M, N> const& m) noexcept
 {
 #ifndef VXL_ROW_MAJOR
   return {
-    detail::matrix::sample<I>(m, I, ::std::make_index_sequence<N>())
+    detail::matrix::sample<I>(m, I, std::make_index_sequence<N>())
   };
 #else
   return {l.data_[I]};
@@ -259,7 +262,7 @@ constexpr inline vector<T, M> row(matrix<T, M, N> const& m,
   unsigned const i) noexcept
 {
 #ifndef VXL_ROW_MAJOR
-  return {detail::matrix::sample(m, i, ::std::make_index_sequence<N>())};
+  return {detail::matrix::sample(m, i, std::make_index_sequence<N>())};
 #else
   return {l.data_[i]};
 #endif // VXL_ROW_MAJOR
@@ -272,7 +275,7 @@ constexpr inline vector<T, M> col(matrix<T, M, N> const& m) noexcept
   return {m.data_[J]};
 #else
   return {
-    detail::matrix::sample<J>(m, ::std::make_index_sequence<M>())
+    detail::matrix::sample<J>(m, std::make_index_sequence<M>())
   };
 #endif // VXL_ROW_MAJOR
 }
@@ -284,7 +287,7 @@ constexpr inline vector<T, M> col(matrix<T, M, N> const& m,
 #ifndef VXL_ROW_MAJOR
   return {m.data_[j]};
 #else
-  return {detail::matrix::sample(m, j, ::std::make_index_sequence<M>())};
+  return {detail::matrix::sample(m, j, std::make_index_sequence<M>())};
 #endif // VXL_ROW_MAJOR
 }
 
@@ -428,12 +431,12 @@ inline matrix<T, M, N> operator*(T const l,
 #ifndef VXL_ROW_MAJOR
   for (unsigned j{}; j != N; ++j)
   {
-    result.data_[j] = ::vxl::cvector<T, M>(l) * r.data_[j];
+    result.data_[j] = vxl::cvector<T, M>(l) * r.data_[j];
   }
 #else
   for (unsigned i{}; i != M; ++i)
   {
-    result.data_[i] = ::vxl::cvector<T, N>(l) * r.data_[i];
+    result.data_[i] = vxl::cvector<T, N>(l) * r.data_[i];
   }
 #endif // VXL_ROW_MAJOR
 
@@ -460,12 +463,12 @@ inline matrix<T, M, N> operator/(matrix<T, M, N> const& l,
 #ifndef VXL_ROW_MAJOR
   for (unsigned j{}; j != N; ++j)
   {
-    result.data_[j] = ::vxl::cvector<T, M>(invr) * l.data_[j];
+    result.data_[j] = vxl::cvector<T, M>(invr) * l.data_[j];
   }
 #else
   for (unsigned i{}; i != M; ++i)
   {
-    result.data_[i] = ::vxl::cvector<T, N>(invr) * l.data_[i];
+    result.data_[i] = vxl::cvector<T, N>(invr) * l.data_[i];
   }
 #endif // VXL_ROW_MAJOR
 
@@ -517,12 +520,12 @@ inline matrix<T, M, N>& operator*=(matrix<T, M, N>& l, T const r) noexcept
 #ifndef VXL_ROW_MAJOR
   for (unsigned j{}; j != N; ++j)
   {
-    l.data_[j] *= ::vxl::cvector<T, M>(r);
+    l.data_[j] *= vxl::cvector<T, M>(r);
   }
 #else
   for (unsigned i{}; i != M; ++i)
   {
-    l.data_[i] *= ::vxl::cvector<T, N>(r);
+    l.data_[i] *= vxl::cvector<T, N>(r);
   }
 #endif // VXL_ROW_MAJOR
 
@@ -544,7 +547,7 @@ inline bool operator==(matrix<T, M, N> const& l,
   }
 
   return detail::vector::all_zeros<T, M>(result,
-    ::std::make_index_sequence<detail::vector::log2(M)>()
+    std::make_index_sequence<detail::vector::log2(M)>()
   );
 #else
   for (unsigned i{1}; i != M; ++i)
@@ -553,7 +556,7 @@ inline bool operator==(matrix<T, M, N> const& l,
   }
 
   return detail::vector::all_zeros<T, N>(result,
-    ::std::make_index_sequence<detail::vector::log2(N)>()
+    std::make_index_sequence<detail::vector::log2(N)>()
   );
 #endif // VXL_ROW_MAJOR
 }
@@ -564,9 +567,9 @@ namespace detail
 namespace matrix
 {
 
-template <typename T, unsigned M, unsigned N, ::std::size_t ...Is>
-inline void identity(::vxl::matrix<T, M, N>& m,
-  ::std::index_sequence<Is...> const) noexcept
+template <typename T, unsigned M, unsigned N, std::size_t ...Is>
+inline void identity(vxl::matrix<T, M, N>& m,
+  std::index_sequence<Is...> const) noexcept
 {
   swallow{(m(Is, Is, T(1)), Is)...};
 }
@@ -583,7 +586,7 @@ inline void identity(matrix<T, M, N>& m) noexcept
 
   zero(m);
 
-  detail::matrix::identity(m, ::std::make_index_sequence<M>());
+  detail::matrix::identity(m, std::make_index_sequence<M>());
 }
 
 template <typename T, unsigned M, unsigned N>
@@ -595,7 +598,7 @@ inline matrix<T, M, N> identity() noexcept
 
   zero(r);
 
-  detail::matrix::identity(r, ::std::make_index_sequence<M>());
+  detail::matrix::identity(r, std::make_index_sequence<M>());
 
   return r;
 }
@@ -604,7 +607,7 @@ inline matrix<T, M, N> identity() noexcept
 template <typename T, unsigned M, unsigned N>
 inline void zero(matrix<T, M, N>& m) noexcept
 {
-  ::std::memset(&m.data_, 0, sizeof(m.data_));
+  std::memset(&m.data_, 0, sizeof(m.data_));
 }
 
 // transposition
@@ -635,7 +638,7 @@ inline matrix<T, N, M> trans(matrix<T, M, N> const& m) noexcept
 }
 
 template <typename T, unsigned M, unsigned N>
-::std::ostream& operator<<(::std::ostream& os, matrix<T, M, N> const& m)
+std::ostream& operator<<(std::ostream& os, matrix<T, M, N> const& m)
 {
   for (unsigned i{}; i != M - 1; ++i)
   {
