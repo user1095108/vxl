@@ -1167,9 +1167,9 @@ constexpr inline bool all_zeros(
       v |= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
         v,
         std::make_index_sequence<sizeof(v) / sizeof(T)>()
-      ),
-      ...
-    )
+      )
+    ),
+    ...
   );
 
   return !v[0];
