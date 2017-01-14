@@ -70,23 +70,21 @@ namespace max
 // m(1, 2, 3, 4) m(2, 3, 4, 1) m(3, 4, 1, 2) m(4, 1, 2, 3)
 template <typename T, unsigned N, std::size_t ...Is>
 inline typename vxl::vector_traits<T, N>::vector_type
-cmax(vxl::vector<T, N> const v, std::index_sequence<Is...> const) noexcept
+cmax(vxl::vector<T, N> v, std::index_sequence<Is...> const) noexcept
 {
-  decltype(v.data_) result(v.data_);
-
   decltype(v.data_) sr;
 
   (
     (
-      sr = detail::vector::pow2_shuffler<T, N, Is>(result,
+      sr = detail::vector::pow2_shuffler<T, N, Is>(v.data_,
         std::make_index_sequence<sizeof(v) / sizeof(T)>()
       ),
-      result = select(result, sr, result > sr)
+      v.data_ = select(v.data_, sr, v.data_ > sr)
     ),
     ...
   );
 
-  return result;
+  return v.data_;
 }
 
 }
