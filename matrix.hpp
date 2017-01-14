@@ -94,7 +94,7 @@ struct matrix
   }
 
   // assignment
-  matrix<T, M, N>& operator=(std::initializer_list<T> const l) noexcept
+  auto& operator=(std::initializer_list<T> const l) noexcept
   {
     assert(M * N == l.size());
     auto k(l.begin());
@@ -131,8 +131,10 @@ struct matrix
     typename vector_traits<T, N>::vector_type const& v) noexcept
   {
 #ifndef VXL_ROW_MAJOR
-    detail::matrix::copy<I>(data_, v,
-      std::make_index_sequence<N>());
+    detail::matrix::copy<I>(data_,
+      v,
+      std::make_index_sequence<N>()
+    );
 #else
     data_[i] = v;
 #endif // VXL_ROW_MAJOR
@@ -142,8 +144,10 @@ struct matrix
   void set_row(vector<T, N> const& v) noexcept
   {
 #ifndef VXL_ROW_MAJOR
-    detail::matrix::copy<I>(data_, v.data_,
-      std::make_index_sequence<N>());
+    detail::matrix::copy<I>(data_,
+      v.data_,
+      std::make_index_sequence<N>()
+    );
 #else
     data_[i] = v.data_;
 #endif // VXL_ROW_MAJOR
@@ -205,7 +209,7 @@ inline matrix<T, M, N> make_matrix(A const ...a) noexcept
 
   unsigned i{};
 
-  swallow{
+  (
     (
 #ifndef VXL_ROW_MAJOR
       result.data_[i % N][i / M] = a,
@@ -213,8 +217,9 @@ inline matrix<T, M, N> make_matrix(A const ...a) noexcept
       result.data_[i / M][i % N] = a,
 #endif // VXL_ROW_MAJOR
       ++i
-    )...
-  };
+    ),
+    ...
+  );
 
   return result;
 }

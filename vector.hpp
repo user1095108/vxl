@@ -845,13 +845,17 @@ constexpr inline std::size_t make_hash(std::size_t seed,
   typename vector_traits<T, N>::vector_type const& v,
   std::index_sequence<Is...> const) noexcept
 {
-  return swallow{
-    seed ^= (
-      convert<typename ::vxl::vector<T, N>::uint_value_type>(
-        v[Is + 1]) + 0x9e3779b9 + (seed << 6) + (seed >> 2)
-    )...
-  },
-  seed;
+  (
+    (
+      seed ^= (
+        convert<typename vxl::vector<T, N>::uint_value_type>(
+          v[Is + 1]) + 0x9e3779b9 + (seed << 6) + (seed >> 2)
+      )
+    ),
+    ...
+  );
+
+  return seed;
 }
 
 template <typename T, unsigned N, std::size_t I, std::size_t ...Is>
@@ -902,7 +906,7 @@ constexpr inline bool than(typename vector_traits<T, N>::int_vector_type v,
   typename vector_traits<T, N>::int_vector_type e,
   std::index_sequence<Is...> const) noexcept
 {
-  return swallow{
+  (
     (
       // calculate terms
       v &= lin_shuffler<
@@ -914,18 +918,22 @@ constexpr inline bool than(typename vector_traits<T, N>::int_vector_type v,
         typename vector_traits<T, N>::int_value_type, N, Is>(
           std::make_index_sequence<sizeof(v) / sizeof(T)>()
       ) // some of the es are masked at each iteration
-    )...
-  },
+    ),
+    ...
+  );
+
   // ORing all terms together
-  swallow{
+  (
     (
       v |= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
         v,
         std::make_index_sequence<sizeof(v) / sizeof(T)>()
       )
-    )...
-  },
-  v[0];
+    ),
+    ...
+  );
+  
+  return v[0];
 }
 
 template <typename T, unsigned N, std::size_t ...Is>
@@ -934,7 +942,7 @@ constexpr inline bool than_equal(
   typename vector_traits<T, N>::int_vector_type e,
   std::index_sequence<Is...> const) noexcept
 {
-  return swallow{
+  (
     (
       v &= lin_shuffler<
         typename vector_traits<T, N>::int_value_type, N, Is + 1>(
@@ -944,9 +952,11 @@ constexpr inline bool than_equal(
       than_mask<typename vector_traits<T, N>::int_value_type, N, Is>(
         std::make_index_sequence<sizeof(v) / sizeof(T)>()
       )
-    )...
-  },
-  swallow{
+    ),
+    ...
+  );
+
+  (
     (
       e &= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
         e,
@@ -956,9 +966,11 @@ constexpr inline bool than_equal(
         v,
         std::make_index_sequence<sizeof(v) / sizeof(T)>()
       )
-    )...
-  },
-  (e | v)[0];
+    ),
+    ...
+  );
+
+  return (e | v)[0];
 }
 
 #if defined(__SSE__)
@@ -1003,13 +1015,17 @@ constexpr inline std::enable_if_t<
 all_zeros(typename vector_traits<T, N>::int_vector_type v,
   std::index_sequence<Is...> const) noexcept
 {
-  return swallow{
-    v |= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
-      v,
-      std::make_index_sequence<sizeof(v) / sizeof(T)>()
-    )...
-  },
-  !v[0];
+  (
+    (
+      v |= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
+        v,
+        std::make_index_sequence<sizeof(v) / sizeof(T)>()
+      )
+    ),
+    ...
+  );
+
+  return !v[0];
 }
 
 template <typename T, unsigned N, std::size_t ...Is>
@@ -1020,13 +1036,17 @@ constexpr inline std::enable_if_t<
 all_ones(typename vector_traits<T, N>::int_vector_type v,
   std::index_sequence<Is...> const) noexcept
 {
-  return swallow{
-    v &= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
-      v,
-      std::make_index_sequence<sizeof(v) / sizeof(T)>()
-    )...
-  },
-  v[0];
+  (
+    (
+      v &= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
+        v,
+        std::make_index_sequence<sizeof(v) / sizeof(T)>()
+      )
+    ),
+    ...
+  );
+
+  return v[0];
 }
 #elif defined(__ARM_NEON__)
 template <typename T, unsigned N, std::size_t ...Is>
@@ -1106,13 +1126,17 @@ constexpr inline std::enable_if_t<
 all_zeros(typename vector_traits<T, N>::int_vector_type v,
   std::index_sequence<Is...> const) noexcept
 {
-  return swallow{
-    v |= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
-      v,
-      std::make_index_sequence<sizeof(v) / sizeof(T)>()
-    )...
-  },
-  !v[0];
+  (
+    (
+      v |= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
+        v,
+        std::make_index_sequence<sizeof(v) / sizeof(T)>()
+      )
+    ),
+    ...
+  );
+
+  return !v[0];
 }
 #else
 template <typename T, unsigned N, std::size_t ...Is>
@@ -1120,13 +1144,17 @@ constexpr inline bool all_ones(
   typename vector_traits<T, N>::int_vector_type v,
   std::index_sequence<Is...> const) noexcept
 {
-  return swallow{
-    v &= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
-      v,
-      std::make_index_sequence<sizeof(v) / sizeof(T)>()
-    )...
-  },
-  v[0];
+  (
+    (
+      v &= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
+        v,
+        std::make_index_sequence<sizeof(v) / sizeof(T)>()
+      )
+    ),
+    ...
+  );
+
+  return v[0];
 }
 
 template <typename T, unsigned N, std::size_t ...Is>
@@ -1134,13 +1162,17 @@ constexpr inline bool all_zeros(
   typename vector_traits<T, N>::int_vector_type v,
   std::index_sequence<Is...> const) noexcept
 {
-  return swallow{
-    v |= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
-      v,
-      std::make_index_sequence<sizeof(v) / sizeof(T)>()
-    )...
-  },
-  !v[0];
+  (
+    (
+      v |= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
+        v,
+        std::make_index_sequence<sizeof(v) / sizeof(T)>()
+      ),
+      ...
+    )
+  );
+
+  return !v[0];
 }
 #endif
 
