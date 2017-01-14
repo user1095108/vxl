@@ -65,10 +65,12 @@ namespace detail
 namespace min
 {
 
+// 1 2 3 4
+// m(1, 2) m(2, 3) m(3, 4) m(4, 1)
+// m(1, 2, 3, 4) m(2, 3, 4, 1) m(3, 4, 1, 2) m(4, 1, 2, 3)
 template <typename T, unsigned N, std::size_t ...Is>
 inline typename vxl::vector_traits<T, N>::vector_type
-cmin(vxl::vector<T, N> const& v,
-  std::index_sequence<Is...> const) noexcept
+cmin(vxl::vector<T, N> const v, std::index_sequence<Is...> const) noexcept
 {
   decltype(v.data_) result(v.data_);
 
@@ -77,7 +79,8 @@ cmin(vxl::vector<T, N> const& v,
   (
     (
       sr = detail::vector::pow2_shuffler<T, N, Is>(result,
-        std::make_index_sequence<sizeof(v) / sizeof(T)>()),
+        std::make_index_sequence<sizeof(v) / sizeof(T)>()
+      ),
       result = select(result, sr, result < sr)
     ),
     ...

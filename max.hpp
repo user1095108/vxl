@@ -16,7 +16,7 @@ namespace vxl
 #if defined(__ARM_NEON__)
 
 //__attribute__ ((noinline))
-inline vector<float, 2> cmax(vector<float, 2> const& v) noexcept
+inline vector<float, 2> cmax(vector<float, 2> const v) noexcept
 {
   using vector_type = typename vector_traits<float, 2>::vector_type;
 
@@ -28,7 +28,7 @@ inline vector<float, 2> cmax(vector<float, 2> const& v) noexcept
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 3> cmax(vector<float, 3> const& v) noexcept
+inline vector<float, 3> cmax(vector<float, 3> const v) noexcept
 {
   using vector_type = typename vector_traits<float, 3>::vector_type;
 
@@ -43,7 +43,7 @@ inline vector<float, 3> cmax(vector<float, 3> const& v) noexcept
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 4> cmax(vector<float, 4> const& v) noexcept
+inline vector<float, 4> cmax(vector<float, 4> const v) noexcept
 {
   using vector_type = typename vector_traits<float, 4>::vector_type;
 
@@ -65,9 +65,12 @@ namespace detail
 namespace max
 {
 
+// 1 2 3 4
+// m(1, 2) m(2, 3) m(3, 4) m(4, 1)
+// m(1, 2, 3, 4) m(2, 3, 4, 1) m(3, 4, 1, 2) m(4, 1, 2, 3)
 template <typename T, unsigned N, std::size_t ...Is>
 inline typename vxl::vector_traits<T, N>::vector_type
-cmax(vxl::vector<T, N> const& v, std::index_sequence<Is...> const) noexcept
+cmax(vxl::vector<T, N> const v, std::index_sequence<Is...> const) noexcept
 {
   decltype(v.data_) result(v.data_);
 
@@ -76,7 +79,8 @@ cmax(vxl::vector<T, N> const& v, std::index_sequence<Is...> const) noexcept
   (
     (
       sr = detail::vector::pow2_shuffler<T, N, Is>(result,
-        std::make_index_sequence<sizeof(v) / sizeof(T)>()),
+        std::make_index_sequence<sizeof(v) / sizeof(T)>()
+      ),
       result = select(result, sr, result > sr)
     ),
     ...
