@@ -1,27 +1,3 @@
-/*
-** The MIT License (MIT)
-** 
-** Copyright (c) 2014-2016 Janez Žemva
-** 
-** Permission is hereby granted, free of charge, to any person obtaining a copy
-** of this software and associated documentation files (the "Software"), to deal
-** in the Software without restriction, including without limitation the rights
-** to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-** copies of the Software, and to permit persons to whom the Software is
-** furnished to do so, subject to the following conditions:
-** 
-** The above copyright notice and this permission notice shall be included in all
-** copies or substantial portions of the Software.
-** 
-** THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-** IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-** FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-** AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-** LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-** OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-** SOFTWARE.
-*/
-
 #ifndef VXL_QUAT_HPP
 # define VXL_QUAT_HPP
 # pragma once
@@ -137,8 +113,8 @@ constexpr inline quat<T>& operator-=(quat<T>& a, quat<T> const& b) noexcept
 template <typename T>
 inline bool operator==(quat<T> const& l, quat<T> const& r) noexcept
 {
-  return detail::vector::equal<T, 4>(l.data_ == r.data_,
-    ::std::make_index_sequence<detail::vector::log2(4)>()
+  return detail::vector::all_zeros<T, 4>(l.data_ != r.data_,
+    std::make_index_sequence<detail::vector::log2(4)>()
   );
 }
 
@@ -161,9 +137,9 @@ namespace detail
 namespace quat
 {
 
-template <typename T, unsigned N, ::std::size_t ...Is>
+template <typename T, unsigned N, std::size_t ...Is>
 constexpr inline auto scalar_vector(::vxl::quat<T> const& x,
-  ::std::index_sequence<Is...> const) noexcept ->
+  std::index_sequence<Is...> const) noexcept ->
   typename vector_traits<T, N>::vector_type
 {
   using int_vector_type = typename vector_traits<T, N>::int_vector_type;
@@ -184,7 +160,7 @@ constexpr inline auto scalar_vector(quat<T> const& x) noexcept ->
   typename vector_traits<T, N>::vector_type
 {
   return detail::quat::scalar_vector<T, N>(x,
-    ::std::make_index_sequence<sizeof(x.data_) / sizeof(x.data_[0])>()
+    std::make_index_sequence<sizeof(x.data_) / sizeof(x.data_[0])>()
   );
 }
 
@@ -225,14 +201,16 @@ constexpr inline quat<T> conjugated(quat<T> const& x) noexcept
 template <typename T>
 inline vector<T, 4> norm2(quat<T> const& x) noexcept
 {
-  return cdot(vector<T, 4>{x.data_}, vector<T, 4>{x.data_});
+  vector<T, 4> const q{x.data_};
+
+  return cdot(q, q);
 }
 
 }
 
 // stream operators
 template <typename T>
-::std::ostream& operator<<(::std::ostream& os, ::vxl::quat<T> const& v)
+std::ostream& operator<<(std::ostream& os, ::vxl::quat<T> const& v)
 {
   os << '(';
 
