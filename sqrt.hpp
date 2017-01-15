@@ -50,7 +50,7 @@ inline vector<float, 2> csqrt(float const x) noexcept
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 2> csqrt(vector<float, 2> const x) noexcept
+inline vector<float, 2> csqrt(vector<float, 2> const& x) noexcept
 {
   using vector_type = typename vector_traits<float, 2>::vector_type;
 
@@ -66,7 +66,7 @@ inline vector<float, 2> csqrt(vector<float, 2> const x) noexcept
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 3> csqrt(vector<float, 3> const x) noexcept
+inline vector<float, 3> csqrt(vector<float, 3> const& x) noexcept
 {
   using vector_type = typename vector_traits<float, 3>::vector_type;
 
@@ -82,7 +82,7 @@ inline vector<float, 3> csqrt(vector<float, 3> const x) noexcept
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 4> csqrt(vector<float, 4> const x) noexcept
+inline vector<float, 4> csqrt(vector<float, 4> const& x) noexcept
 {
   using vector_type = typename vector_traits<float, 4>::vector_type;
 
@@ -115,7 +115,7 @@ inline vector<float, 4> csqrt(float const xx) noexcept
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 2> csqrt(vector<float, 2> const x) noexcept
+inline vector<float, 2> csqrt(vector<float, 2> const& x) noexcept
 {
   auto const r(_mm_rsqrt_ps(x.data_));
 
@@ -126,7 +126,7 @@ inline vector<float, 2> csqrt(vector<float, 2> const x) noexcept
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 3> csqrt(vector<float, 3> const x) noexcept
+inline vector<float, 3> csqrt(vector<float, 3> const& x) noexcept
 {
   auto const r(_mm_rsqrt_ps(x.data_));
 
@@ -137,7 +137,7 @@ inline vector<float, 3> csqrt(vector<float, 3> const x) noexcept
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 4> csqrt(vector<float, 4> const x) noexcept
+inline vector<float, 4> csqrt(vector<float, 4> const& x) noexcept
 {
   auto const r(_mm_rsqrt_ps(x.data_));
 
