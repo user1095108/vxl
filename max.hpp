@@ -16,7 +16,7 @@ namespace vxl
 #if defined(__ARM_NEON__)
 
 //__attribute__ ((noinline))
-inline vector<float, 2> cmax(vector<float, 2> const v) noexcept
+inline vector<float, 2> cmax(vector<float, 2> const& v) noexcept
 {
   using vector_type = typename vector_traits<float, 2>::vector_type;
 
@@ -28,7 +28,7 @@ inline vector<float, 2> cmax(vector<float, 2> const v) noexcept
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 3> cmax(vector<float, 3> const v) noexcept
+inline vector<float, 3> cmax(vector<float, 3> const& v) noexcept
 {
   using vector_type = typename vector_traits<float, 3>::vector_type;
 
@@ -43,7 +43,7 @@ inline vector<float, 3> cmax(vector<float, 3> const v) noexcept
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 4> cmax(vector<float, 4> const v) noexcept
+inline vector<float, 4> cmax(vector<float, 4> const& v) noexcept
 {
   using vector_type = typename vector_traits<float, 4>::vector_type;
 
@@ -94,7 +94,7 @@ cmax(vxl::vector<T, N> v, std::index_sequence<Is...> const) noexcept
 // max
 template <typename T, unsigned N>
 //__attribute__ ((noinline))
-inline vector<T, N> cmax(vector<T, N> const v) noexcept
+inline vector<T, N> cmax(vector<T, N> const& v) noexcept
 {
   return {
     detail::max::cmax(v,
