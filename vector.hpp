@@ -498,7 +498,8 @@ constexpr inline std::enable_if_t<
 convert(V const& v) noexcept
 {
   return detail::vector::convert<R, M, typename deduce<V>::value_type, M>(
-    v, std::make_index_sequence<M>()
+    v,
+    std::make_index_sequence<M>()
   );
 }
 
@@ -523,8 +524,8 @@ struct vector
   void operator()(unsigned const i, T const v) noexcept { data_[i] = v; }
 
   // conversion
-  auto ref() const noexcept -> decltype((data_)) {return data_;}
-  auto ref() noexcept -> decltype((data_)) {return data_;}
+  auto& ref() const noexcept {return data_;}
+  auto& ref() noexcept {return data_;}
 };
 
 template <typename T, unsigned N>
@@ -626,22 +627,14 @@ namespace vector
 
 template <unsigned N, int ...I>
 struct swizzle_indices :
-  std::conditional<
+  std::conditional_t<
     sizeof...(I) < N,
     swizzle_indices<N, I..., 0>,
     std::integer_sequence<int, I...>
-  >::type
+  >
 {
-  static_assert(sizeof...(I) <= N, "");
+  static_assert(sizeof...(I) <= N);
 };
-
-template <typename T, int ...I>
-constexpr inline auto clang_swizzle(T&& a, T&& b,
-  std::integer_sequence<int, I...> const) noexcept ->
-  decltype(__builtin_shufflevector(a, b, I...))
-{
-  return __builtin_shufflevector(a, b, I...);
-}
 
 }
 
@@ -652,8 +645,11 @@ template <int ...I, typename T, unsigned N>
 constexpr inline void swizzle(vector<T, N>& v)
 {
 #if defined(__clang__)
-  v.data_ = detail::vector::clang_swizzle(v.data_, v.data_,
-    detail::vector::swizzle_indices<sizeof(v.data_) / sizeof(T), I...>()
+  v.data_ = __builtin_shufflevector(v.data_,
+    v.data_,
+    detail::vector::swizzle_indices<sizeof(v.data_) / sizeof(T),
+      I...
+    >()
   );
 #else
   using int_vector_type = typename vector_traits<T, N>::int_vector_type;
@@ -667,9 +663,11 @@ constexpr inline vector<T, N> swizzled(vector<T, N> const& v) noexcept
 {
 #if defined(__clang__)
   return {
-    detail::vector::clang_swizzle(v.data_, v.data_,
+    __builtin_shufflevector(v.data_,
+      v.data_,
       detail::vector::swizzle_indices<sizeof(v.data_) / sizeof(T),
-      (I < N ? I : I + sizeof(v) / sizeof(v(0)) - N)...>()
+        I...
+      >()
     )
   };
 #else
@@ -687,17 +685,21 @@ constexpr inline vector<T, N> swizzled(vector<T, N> const& a,
 {
 #if defined(__clang__)
   return {
-    detail::vector::clang_swizzle(a.data_, b.data_,
+    __builtin_shufflevector(a.data_,
+      b.data_,
       detail::vector::swizzle_indices<sizeof(a.data_) / sizeof(T),
-      (I < N ? I : I + sizeof(a) / sizeof(a(0)) - N)...>()
+        (I < N ? I : I - N + sizeof(a.data_) / sizeof(T))...
+      >()
     )
   };
 #else
   using int_vector_type = typename vector_traits<T, N>::int_vector_type;
 
   return {
-    __builtin_shuffle(a.data_, b.data_,
-      int_vector_type{(I < N ? I : I + sizeof(a) / sizeof(a(0)) - N)...})
+    __builtin_shuffle(a.data_,
+      b.data_,
+      int_vector_type{(I < N ? I : I - N + sizeof(a.data_) / sizeof(T))...}
+    )
   };
 #endif
 }
