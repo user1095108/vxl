@@ -164,8 +164,8 @@ struct matrix
   }
 
   // conversion
-  auto ref() const noexcept -> decltype((data_)) {return data_;}
-  auto ref() noexcept -> decltype((data_)) {return data_;}
+  auto& ref() noexcept {return data_;}
+  auto& ref() const noexcept {return data_;}
 };
 
 template <typename T, unsigned M, unsigned N, typename ...A,
@@ -231,7 +231,9 @@ constexpr inline vector<T, M> row(matrix<T, M, N> const& m) noexcept
     detail::matrix::sample<I>(m, I, std::make_index_sequence<N>())
   };
 #else
-  return {l.data_[I]};
+  return {
+    l.data_[I]
+  };
 #endif // VXL_ROW_MAJOR
 }
 
@@ -240,9 +242,13 @@ constexpr inline vector<T, M> row(matrix<T, M, N> const& m,
   unsigned const i) noexcept
 {
 #ifndef VXL_ROW_MAJOR
-  return {detail::matrix::sample(m, i, std::make_index_sequence<N>())};
+  return {
+    detail::matrix::sample(m, i, std::make_index_sequence<N>())
+  };
 #else
-  return {l.data_[i]};
+  return {
+    l.data_[i]
+  };
 #endif // VXL_ROW_MAJOR
 }
 
@@ -250,7 +256,9 @@ template <unsigned J, typename T, unsigned M, unsigned N>
 constexpr inline vector<T, M> col(matrix<T, M, N> const& m) noexcept
 {
 #ifndef VXL_ROW_MAJOR
-  return {m.data_[J]};
+  return {
+    m.data_[J]
+  };
 #else
   return {
     detail::matrix::sample<J>(m, std::make_index_sequence<M>())
@@ -263,16 +271,20 @@ constexpr inline vector<T, M> col(matrix<T, M, N> const& m,
   unsigned const j) noexcept
 {
 #ifndef VXL_ROW_MAJOR
-  return {m.data_[j]};
+  return {
+    m.data_[j]
+  };
 #else
-  return {detail::matrix::sample(m, j, std::make_index_sequence<M>())};
+  return {
+    detail::matrix::sample(m, j, std::make_index_sequence<M>())
+  };
 #endif // VXL_ROW_MAJOR
 }
 
 // arithmetic operations
 template <typename T, unsigned M, unsigned N>
 //__attribute__ ((noinline))
-inline matrix<T, M, N> operator+(matrix<T, M, N> const& l,
+inline auto operator+(matrix<T, M, N> const& l,
   matrix<T, M, N> const& r) noexcept
 {
   decltype(l + r) result;
@@ -319,7 +331,7 @@ template <typename T, unsigned M1, unsigned N1, unsigned M2, unsigned N2>
 inline matrix<T, M1, N2> operator*(matrix<T, M1, N1> const& l,
   matrix<T, M2, N2> const& r) noexcept
 {
-  static_assert(N1 == M2, "");
+  static_assert(N1 == M2);
   decltype(l * r) result;
 
 #ifndef VXL_ROW_MAJOR
@@ -378,7 +390,7 @@ template <typename T, unsigned N, unsigned M2, unsigned N2>
 inline vector<T, N2> operator*(vector<T, N> const& l,
   matrix<T, M2, N2> const& r) noexcept
 {
-  static_assert(N == M2, "");
+  static_assert(N == M2);
 
 #ifndef VXL_ROW_MAJOR
   decltype(l * r) result;
@@ -549,7 +561,10 @@ template <typename T, unsigned M, unsigned N, std::size_t ...Is>
 inline void identity(vxl::matrix<T, M, N>& m,
   std::index_sequence<Is...> const) noexcept
 {
-  swallow{(m(Is, Is, T(1)), Is)...};
+  (
+    m(Is, Is, T(1)),
+    ...
+  );
 }
 
 }
@@ -574,9 +589,7 @@ inline matrix<T, M, N> identity() noexcept
 
   matrix<T, M, N> r;
 
-  zero(r);
-
-  detail::matrix::identity(r, std::make_index_sequence<M>());
+  identity(r);
 
   return r;
 }

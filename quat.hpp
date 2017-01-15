@@ -17,8 +17,8 @@ struct quat
   operator decltype((data_)) () noexcept { return data_; }
 
   // conversion
-  auto ref() const noexcept -> decltype((data_)) { return data_; }
-  auto ref() noexcept -> decltype((data_)) { return data_; }
+  auto& ref() noexcept { return data_; }
+  auto& ref() const noexcept { return data_; }
 
   // element access
   T operator()(unsigned const i) const noexcept { return data_[i]; }
@@ -160,7 +160,7 @@ constexpr inline auto scalar_vector(quat<T> const& x) noexcept ->
   typename vector_traits<T, N>::vector_type
 {
   return detail::quat::scalar_vector<T, N>(x,
-    std::make_index_sequence<sizeof(x.data_) / sizeof(x.data_[0])>()
+    std::make_index_sequence<sizeof(x.data_) / sizeof(T)>()
   );
 }
 
