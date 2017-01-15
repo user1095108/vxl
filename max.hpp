@@ -77,7 +77,7 @@ cmax(vxl::vector<T, N> v, std::index_sequence<Is...> const) noexcept
   (
     (
       sr = detail::vector::pow2_shuffler<T, N, Is>(v.data_,
-        std::make_index_sequence<sizeof(v) / sizeof(T)>()
+        std::make_index_sequence<sizeof(v.data_) / sizeof(T)>()
       ),
       v.data_ = select(v.data_, sr, v.data_ > sr)
     ),
