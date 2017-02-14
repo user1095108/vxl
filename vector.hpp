@@ -636,6 +636,14 @@ struct swizzle_indices :
   static_assert(sizeof...(I) <= N);
 };
 
+template <typename T, int ...I>
+constexpr inline auto clang_swizzle(T&& a, T&& b,
+  ::std::integer_sequence<int, I...> const) noexcept ->
+  decltype(__builtin_shufflevector(a, b, I...))
+{
+  return __builtin_shufflevector(a, b, I...);
+}
+
 }
 
 }
@@ -645,7 +653,7 @@ template <int ...I, typename T, unsigned N>
 constexpr inline void swizzle(vector<T, N>& v)
 {
 #if defined(__clang__)
-  v.data_ = __builtin_shufflevector(v.data_,
+  v.data_ = detail::vector::clang_swizzle(v.data_,
     v.data_,
     detail::vector::swizzle_indices<sizeof(v.data_) / sizeof(T),
       I...
@@ -663,7 +671,7 @@ constexpr inline vector<T, N> swizzled(vector<T, N> const& v) noexcept
 {
 #if defined(__clang__)
   return {
-    __builtin_shufflevector(v.data_,
+    detail::vector::clang_swizzle(v.data_,
       v.data_,
       detail::vector::swizzle_indices<sizeof(v.data_) / sizeof(T),
         I...
@@ -685,7 +693,7 @@ constexpr inline vector<T, N> swizzled(vector<T, N> const& a,
 {
 #if defined(__clang__)
   return {
-    __builtin_shufflevector(a.data_,
+    detail::vector::clang_swizzle(a.data_,
       b.data_,
       detail::vector::swizzle_indices<sizeof(a.data_) / sizeof(T),
         (I < N ? I : I - N + sizeof(a.data_) / sizeof(T))...
