@@ -638,8 +638,7 @@ struct swizzle_indices :
 
 template <typename T, int ...I>
 constexpr inline auto clang_swizzle(T&& a, T&& b,
-  ::std::integer_sequence<int, I...> const) noexcept ->
-  decltype(__builtin_shufflevector(a, b, I...))
+  std::integer_sequence<int, I...> const) noexcept
 {
   return __builtin_shufflevector(a, b, I...);
 }
