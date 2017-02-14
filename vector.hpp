@@ -629,7 +629,7 @@ template <unsigned N, int ...I>
 struct swizzle_indices :
   std::conditional_t<
     sizeof...(I) < N,
-    swizzle_indices<N, I..., 0>,
+    swizzle_indices<N, I..., -1>,
     std::integer_sequence<int, I...>
   >
 {
