@@ -61,41 +61,6 @@ struct swallow
   }
 };
 
-#if defined(__clang__)
-template <typename U, typename V>
-constexpr inline std::enable_if_t<
-  !std::is_arithmetic<V>{},
-  V
->
-select(V const a, V const b, U const c) noexcept
-{
-  return V((c & U(a)) | (~c & U(b)));
-}
-#else
-template <typename U, typename V>
-constexpr inline std::enable_if_t<
-  !std::is_arithmetic<V>{},
-  V
->
-select(V const a, V const b, U const c) noexcept
-{
-  return c ? a : b;
-}
-#endif
-
-template <typename U, typename V>
-constexpr inline std::enable_if_t<
-  std::is_arithmetic<V>{},
-  V
->
-select(V const a, V const b, U const c) noexcept
-{
-  static_assert(sizeof(U) == sizeof(V), "sizeof(U) != sizeof(V)");
-  auto const r((-c & (U&)(a)) | (~-c & (U&)(b)));
-
-  return (V&)(r);
-}
-
 template <typename T, unsigned N> struct vector_traits;
 
 template <>
@@ -412,10 +377,12 @@ struct deduce<T,
   >
 >
 {
-  using value_type =
-    typename std::decay<decltype(std::declval<T>()[0])>::type;
+  using value_type = std::decay_t<decltype(std::declval<T>()[0])>;
 
-  static constexpr auto size = sizeof(T) / sizeof(value_type);
+  enum : std::size_t
+  {
+    size = sizeof(T) / sizeof(value_type)
+  };
 
   using vector_type =
     typename vector_traits<value_type, size>::vector_type;
@@ -428,10 +395,12 @@ struct deduce<T,
   std::enable_if_t<std::is_arithmetic<T>{}>
 >
 {
-  using value_type =
-    typename std::decay<decltype(std::declval<T>())>::type;
+  using value_type = std::decay_t<decltype(std::declval<T>())>;
 
-  static constexpr auto size = sizeof(T) / sizeof(value_type);
+  enum : std::size_t
+  {
+    size = sizeof(T) / sizeof(value_type)
+  };
 
   using vector_type =
     typename vector_traits<value_type, size>::vector_type;
@@ -453,6 +422,41 @@ struct is_vector<T,
 > : std::true_type
 {
 };
+
+#if defined(__clang__)
+template <typename U, typename V>
+constexpr inline std::enable_if_t<
+  !std::is_arithmetic<V>{},
+  V
+>
+select(V const a, V const b, U const c) noexcept
+{
+  return V((c & U(a)) | (~c & U(b)));
+}
+#else
+template <typename U, typename V>
+constexpr inline std::enable_if_t<
+  !std::is_arithmetic<V>{},
+  V
+>
+select(V const a, V const b, U const c) noexcept
+{
+  return c ? a : b;
+}
+#endif
+
+template <typename U, typename V>
+constexpr inline std::enable_if_t<
+  std::is_arithmetic<V>{},
+  V
+>
+select(V const a, V const b, U const c) noexcept
+{
+  static_assert(sizeof(U) == sizeof(V), "sizeof(U) != sizeof(V)");
+  auto const r((-c & (U&)(a)) | (~-c & (U&)(b)));
+
+  return (V&)(r);
+}
 
 // convert
 namespace detail
