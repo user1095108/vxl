@@ -460,6 +460,7 @@ constexpr inline std::enable_if_t<
 >
 select(V const a, V const b, U const c) noexcept
 {
+  static_assert(sizeof(U) == sizeof(V), "sizeof(U) != sizeof(V)");
   return select(a, b, c, std::make_index_sequence<deduce<V>::size>());
 }
 #else
