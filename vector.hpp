@@ -424,19 +424,49 @@ struct is_vector<T,
 };
 
 #if defined(__clang__)
+/*
 template <typename U, typename V>
 constexpr inline std::enable_if_t<
-  !std::is_arithmetic<V>{},
+  is_vector<U>{} && is_vector<V>{},
   V
 >
 select(V const a, V const b, U const c) noexcept
 {
   return V((c & U(a)) | (~c & U(b)));
 }
+*/
+
+namespace
+{
+
+template <typename U, typename V, std::size_t ...Is>
+//__attribute__ ((noinline))
+constexpr inline std::enable_if_t<
+  is_vector<U>{} && is_vector<V>{},
+  V
+>
+select(V const a, V const b, U const c,
+  std::index_sequence<Is...> const) noexcept
+{
+  return V{(c[Is] ? a[Is] : b[Is])...};
+}
+
+}
+
+template <typename U, typename V>
+constexpr inline std::enable_if_t<
+  is_vector<U>{} && is_vector<V>{},
+  V
+>
+select(V const a, V const b, U const c) noexcept
+{
+  return select(a, b, c, std::make_index_sequence<deduce<V>::size>());
+}
+
 #else
 template <typename U, typename V>
 constexpr inline std::enable_if_t<
-  !std::is_arithmetic<V>{},
+  is_vector<U>{} && is_vector<V>{},
   V
 >
 select(V const a, V const b, U const c) noexcept
@@ -447,7 +477,7 @@ select(V const a, V const b, U const c) noexcept
 
 template <typename U, typename V>
 constexpr inline std::enable_if_t<
-  std::is_arithmetic<V>{},
+  !is_vector<U>{} && !is_vector<V>{},
   V
 >
 select(V const a, V const b, U const c) noexcept
