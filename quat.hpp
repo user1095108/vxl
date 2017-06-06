@@ -52,10 +52,6 @@ inline constexpr quat<T> operator*(
   using int_value_type = typename vector_traits<T, 4>::int_value_type;
   using int_vector_type = typename vector_traits<T, 4>::int_vector_type;
 
-  constexpr int_vector_type const mask{
-    0, 0, 0, 1 << (8 * sizeof(int_value_type) - 1)
-  };
-
 #if defined(__clang__)
   auto const t1(
     l.data_ *
@@ -91,6 +87,11 @@ inline constexpr quat<T> operator*(
     __builtin_shuffle(r.data_, int_vector_type{1, 2, 0, 0})
   );
 #endif
+
+  // negate the sign bit
+  constexpr int_vector_type mask{
+    0, 0, 0, 1 << (8 * sizeof(int_value_type) - 1)
+  };
 
   return {
     t1 +
