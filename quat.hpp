@@ -21,19 +21,20 @@ struct quat
   auto& ref() const noexcept { return data_; }
 
   // element access
+  T& operator()(unsigned const i) noexcept { return data_[i]; }
   T operator()(unsigned const i) const noexcept { return data_[i]; }
   void operator()(unsigned const i, T const v) noexcept { data_[i] = v; }
 };
 
 template <typename T>
-constexpr inline quat<T> operator+(quat<T> const& a,
+inline constexpr quat<T> operator+(quat<T> const& a,
   quat<T> const& b) noexcept
 {
   return { a.data_ + b.data_ };
 }
 
 template <typename T>
-constexpr inline quat<T> operator-(quat<T> const& a,
+inline constexpr quat<T> operator-(quat<T> const& a,
   quat<T> const& b) noexcept
 {
   return { a.data_ - b.data_ };
@@ -41,7 +42,8 @@ constexpr inline quat<T> operator-(quat<T> const& a,
 
 template <typename T>
 //__attribute__ ((noinline))
-inline quat<T> operator*(quat<T> const& l, quat<T> const& r) noexcept
+inline constexpr quat<T> operator*(
+  quat<T> const& l, quat<T> const& r) noexcept
 {
 //  l(0)r(3) + l(1)r(2) - l(2)r(1) + l(3)r(0)
 // -l(0)r(2) + l(1)r(3) + l(2)r(0) + l(3)r(1)
@@ -98,13 +100,13 @@ inline quat<T> operator*(quat<T> const& l, quat<T> const& r) noexcept
 }
 
 template <typename T>
-constexpr inline quat<T>& operator+=(quat<T>& a, quat<T> const& b) noexcept
+inline constexpr quat<T>& operator+=(quat<T>& a, quat<T> const& b) noexcept
 {
   return a.data_ += b.data_, a;
 }
 
 template <typename T>
-constexpr inline quat<T>& operator-=(quat<T>& a, quat<T> const& b) noexcept
+inline constexpr quat<T>& operator-=(quat<T>& a, quat<T> const& b) noexcept
 {
   return a.data_ -= b.data_, a;
 }
@@ -119,14 +121,14 @@ inline bool operator==(quat<T> const& l, quat<T> const& r) noexcept
 }
 
 template <typename T>
-inline bool operator!=(quat<T> const& l, quat<T> const& r) noexcept
+inline constexpr bool operator!=(quat<T> const& l, quat<T> const& r) noexcept
 {
   return !operator==(l, r);
 }
 
 // scalar part
 template <typename T>
-constexpr inline T scalar(quat<T> const& x) noexcept
+inline constexpr T scalar(quat<T> const& x) noexcept
 {
   return x.data_[3];
 }
@@ -173,7 +175,7 @@ constexpr inline vector<T, 3> vec(quat<T> const& x) noexcept
 
 // conjugation
 template <typename T>
-inline void conjugate(quat<T>& x) noexcept
+constexpr inline void conjugate(quat<T>& x) noexcept
 {
   using int_vector_type = typename vector_traits<T, 4>::int_vector_type;
   using vector_type = typename vector_traits<T, 4>::vector_type;
@@ -199,7 +201,7 @@ constexpr inline quat<T> conjugated(quat<T> const& x) noexcept
 }
 
 template <typename T>
-inline vector<T, 4> norm2(quat<T> const& x) noexcept
+constexpr inline vector<T, 4> norm2(quat<T> const& x) noexcept
 {
   vector<T, 4> const q{x.data_};
 
