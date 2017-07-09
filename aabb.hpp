@@ -34,7 +34,7 @@ namespace vxl
 {
 
 template <typename T = float, unsigned N = 3>
-using aabb_type = ::std::array<vector<T, N>, 2>;
+using aabb_t = std::array<vector<T, N>, 2>;
 
 }
 
