@@ -416,8 +416,9 @@ struct is_vector : std::false_type
 template <typename T>
 struct is_vector<T,
   std::enable_if_t<
-    bool(sizeof(deduce<T>)) &&
-    !std::is_arithmetic<T>{}
+    !std::is_arithmetic<T>{} &&
+    !std::is_array<T>{} &&
+    sizeof(std::declval<T>()[0])
   >
 > : std::true_type
 {
@@ -436,7 +437,10 @@ select(V const a, V const b, U const c) noexcept
 }
 */
 
-namespace
+namespace detail
+{
+
+namespace vector
 {
 
 template <typename U, typename V, std::size_t ...Is>
@@ -453,6 +457,8 @@ select(V const a, V const b, U const c,
 
 }
 
+}
+
 template <typename U, typename V>
 constexpr inline std::enable_if_t<
   is_vector<U>{} && is_vector<V>{},
@@ -461,7 +467,11 @@ constexpr inline std::enable_if_t<
 select(V const a, V const b, U const c) noexcept
 {
   static_assert(sizeof(U) == sizeof(V), "sizeof(U) != sizeof(V)");
-  return select(a, b, c, std::make_index_sequence<deduce<V>::size>());
+  return detail::vector::select(a,
+    b,
+    c,
+    std::make_index_sequence<deduce<V>::size>()
+  );
 }
 #else
 template <typename U, typename V>

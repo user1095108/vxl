@@ -528,9 +528,11 @@ template <typename T, unsigned M, unsigned N>
 inline bool operator==(matrix<T, M, N> const& l,
   matrix<T, M, N> const& r) noexcept
 {
-  auto result(l.data_[0] != r.data_[0]);
-
 #ifndef VXL_ROW_MAJOR
+  typename vector_traits<T, M>::int_vector_type result(
+    l.data_[0] != r.data_[0]
+  );
+
   for (unsigned j{1}; j != N; ++j)
   {
     result |= l.data_[j] != r.data_[j];
@@ -540,6 +542,10 @@ inline bool operator==(matrix<T, M, N> const& l,
     std::make_index_sequence<detail::vector::log2(M)>()
   );
 #else
+  typename vector_traits<T, N>::int_vector_type result(
+    l.data_[0] != r.data_[0]
+  );
+
   for (unsigned i{1}; i != M; ++i)
   {
     result |= l.data_[i] != r.data_[i];
