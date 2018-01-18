@@ -1002,7 +1002,7 @@ constexpr inline bool than_equal(
 #if defined(__SSE__)
 template <typename T, unsigned N, std::size_t ...Is>
 constexpr inline std::enable_if_t<
-  (N == 2) && (4 == sizeof(T)),
+  (2 == N) && (4 == sizeof(T)),
   bool
 >
 all_zeros(typename vector_traits<T, N>::int_vector_type const v,
@@ -1013,7 +1013,7 @@ all_zeros(typename vector_traits<T, N>::int_vector_type const v,
 
 template <typename T, unsigned N, std::size_t ...Is>
 constexpr inline std::enable_if_t<
-  (N == 3) && (4 == sizeof(T)),
+  (3 == N) && (4 == sizeof(T)),
   bool
 >
 all_zeros(typename vector_traits<T, N>::int_vector_type const v,
@@ -1024,7 +1024,7 @@ all_zeros(typename vector_traits<T, N>::int_vector_type const v,
 
 template <typename T, unsigned N, std::size_t ...Is>
 constexpr inline std::enable_if_t<
-  ((N == 4) && (4 == sizeof(T))) || ((N == 2) && (8 == sizeof(T))),
+  ((4 == N) && (4 == sizeof(T))) || ((2 == N) && (8 == sizeof(T))),
   bool
 >
 all_zeros(typename vector_traits<T, N>::int_vector_type const v,
