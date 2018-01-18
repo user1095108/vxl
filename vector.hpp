@@ -1075,25 +1075,30 @@ all_ones(typename vector_traits<T, N>::int_vector_type v,
   return v[0];
 }
 #elif defined(__ARM_NEON__)
+// just one byte out of each vector needs to be tested for 0
 template <typename T, unsigned N, std::size_t ...Is>
 //__attribute__ ((noinline))
-constexpr inline std::enable_if_t<((N == 2) &&
-  (8 == sizeof(typename vector_traits<T, N>::int_vector_type))), bool>::type
+constexpr inline std::enable_if_t<
+  (2 == N) && (4 == sizeof(T)),
+  bool
+>::type
 all_zeros(typename vector_traits<T, N>::int_vector_type const v,
   std::index_sequence<Is...> const) noexcept
 {
-  return !int32x2_t(
+  return !int16x4_t(
     vtbl1_s8(
       int8x8_t(int32x2_t(v)),
-      int8x8_t{0, 4, 4, 4}
+      int8x8_t{0, 4}
     )
   )[0];
 }
 
 template <typename T, unsigned N, std::size_t ...Is>
 //__attribute__ ((noinline))
-constexpr inline std::enable_if_t<((N == 3) &&
-  (16 == sizeof(typename vector_traits<T, N>::int_vector_type))), bool>::type
+constexpr inline std::enable_if_t<(
+  (3 == N) && (4 == sizeof(T)),
+  bool
+>::type
 all_zeros(typename vector_traits<T, N>::int_vector_type const v,
   std::index_sequence<Is...> const) noexcept
 {
@@ -1103,15 +1108,17 @@ all_zeros(typename vector_traits<T, N>::int_vector_type const v,
         int8x8_t(vget_low_s32(int32x4_t(v))),
         int8x8_t(vget_high_s32(int32x4_t(v)))
       },
-      int8x8_t{0, 4, 8, 8}
+      int8x8_t{0, 4, 8}
     )
   )[0];
 }
 
 template <typename T, unsigned N, std::size_t ...Is>
 //__attribute__ ((noinline))
-constexpr inline std::enable_if_t<((N == 4)) &&
-  (16 == sizeof(typename vector_traits<T, N>::int_vector_type)), bool>::type
+constexpr inline std::enable_if_t<
+  (4 == N) && (4 == sizeof(T)),
+  bool
+>::type
 all_zeros(typename vector_traits<T, N>::int_vector_type const v,
   std::index_sequence<Is...> const) noexcept
 {
@@ -1128,18 +1135,20 @@ all_zeros(typename vector_traits<T, N>::int_vector_type const v,
 
 template <typename T, unsigned N, std::size_t ...Is>
 //__attribute__ ((noinline))
-constexpr inline std::enable_if_t<((N == 2) &&
-  (16 == sizeof(typename vector_traits<T, N>::int_vector_type))), bool>::type
+constexpr inline std::enable_if_t<
+  (2 == N) && (8 == sizeof(T)),
+  bool
+>::type
 all_zeros(typename vector_traits<T, N>::int_vector_type const v,
   std::index_sequence<Is...> const) noexcept
 {
-  return !int32x2_t(
+  return !int16x4_t(
     vtbl2_s8(
       int8x8x2_t{
         int8x8_t(vget_low_s64(int64x2_t(v))),
         int8x8_t(vget_high_s64(int64x2_t(v)))
       },
-      int8x8_t{0, 4, 8, 12}
+      int8x8_t{0, 8}
     )
   )[0];
 }
