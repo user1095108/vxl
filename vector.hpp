@@ -1081,7 +1081,7 @@ template <typename T, unsigned N, std::size_t ...Is>
 constexpr inline std::enable_if_t<
   (2 == N) && (4 == sizeof(T)),
   bool
->::type
+>
 all_zeros(typename vector_traits<T, N>::int_vector_type const v,
   std::index_sequence<Is...> const) noexcept
 {
@@ -1095,10 +1095,10 @@ all_zeros(typename vector_traits<T, N>::int_vector_type const v,
 
 template <typename T, unsigned N, std::size_t ...Is>
 //__attribute__ ((noinline))
-constexpr inline std::enable_if_t<(
+constexpr inline std::enable_if_t<
   (3 == N) && (4 == sizeof(T)),
   bool
->::type
+>
 all_zeros(typename vector_traits<T, N>::int_vector_type const v,
   std::index_sequence<Is...> const) noexcept
 {
@@ -1118,7 +1118,7 @@ template <typename T, unsigned N, std::size_t ...Is>
 constexpr inline std::enable_if_t<
   (4 == N) && (4 == sizeof(T)),
   bool
->::type
+>
 all_zeros(typename vector_traits<T, N>::int_vector_type const v,
   std::index_sequence<Is...> const) noexcept
 {
@@ -1138,7 +1138,7 @@ template <typename T, unsigned N, std::size_t ...Is>
 constexpr inline std::enable_if_t<
   (2 == N) && (8 == sizeof(T)),
   bool
->::type
+>
 all_zeros(typename vector_traits<T, N>::int_vector_type const v,
   std::index_sequence<Is...> const) noexcept
 {
