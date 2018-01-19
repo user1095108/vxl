@@ -17,7 +17,11 @@ inline vector<float, 2> cdot(vector<float, 2> const& l,
 
   auto const prod(float32x2_t(l.data_) * float32x2_t(r.data_));
 
-  return {vector_type(vpadd_f32(prod, prod))};
+  return {
+    vector_type(
+      vpadd_f32(prod, vrev64_f32(prod))
+    )
+  };
 }
 
 //__attribute__ ((noinline))
