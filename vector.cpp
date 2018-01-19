@@ -60,5 +60,11 @@ int main()
   std::cout << (e == e) << std::endl;
   std::cout << vxl::norm2(e) << std::endl;
 
+  std::cout << vxl::cdot(
+      vxl::vector<float, 2>{1, 2},
+      vxl::vector<float, 2>{3, 4}
+    ).data_[0] <<
+    std::endl;
+
   return 0;
 }
