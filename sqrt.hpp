@@ -22,16 +22,16 @@
 
 #endif // __SSE4_1__
 
-#if defined(__ARM_NEON__)
+#if defined(__ARM_NEON)
 
 #include "arm_neon.h"
 
-#endif // __ARM_NEON__
+#endif // __ARM_NEON
 
 namespace vxl
 {
 
-#if defined(__ARM_NEON__)
+#if defined(__ARM_NEON)
 
 //__attribute__ ((noinline))
 inline vector<float, 2> csqrt(float const x) noexcept

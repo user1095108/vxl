@@ -22,9 +22,9 @@
 # include "immintrin.h"
 #endif // __AVX__
 
-#if defined(__ARM_NEON__)
+#if defined(__ARM_NEON)
 # include "arm_neon.h"
-#endif // __ARM_NEON__
+#endif // __ARM_NEON
 
 #include <cstring>
 
@@ -788,7 +788,7 @@ abs_mask(std::index_sequence<Is...> const) noexcept
 }
 
 // abs
-#if defined(__ARM_NEON__)
+#if defined(__ARM_NEON)
 inline vector<float, 2> cabs(vector<float, 2> const& v) noexcept
 {
   using vector_type = typename vector_traits<float, 2>::vector_type;
@@ -1074,7 +1074,7 @@ all_ones(typename vector_traits<T, N>::int_vector_type v,
 
   return v[0];
 }
-#elif defined(__ARM_NEON__)
+#elif defined(__ARM_NEON)
 // just one byte out of each vector needs to be tested for 0
 template <typename T, unsigned N, std::size_t ...Is>
 //__attribute__ ((noinline))

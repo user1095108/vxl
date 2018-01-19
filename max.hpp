@@ -2,18 +2,18 @@
 # define VXL_MAX_HPP
 # pragma once
 
-#if defined(__ARM_NEON__)
+#if defined(__ARM_NEON)
 
 #include "arm_neon.h"
 
-#endif // __ARM_NEON__
+#endif // __ARM_NEON
 
 #include "vector.hpp"
 
 namespace vxl
 {
 
-#if defined(__ARM_NEON__)
+#if defined(__ARM_NEON)
 
 //__attribute__ ((noinline))
 inline vector<float, 2> cmax(vector<float, 2> const& v) noexcept
@@ -57,7 +57,7 @@ inline vector<float, 4> cmax(vector<float, 4> const& v) noexcept
   };
 }
 
-#endif // __ARM_NEON__
+#endif // __ARM_NEON
 
 namespace detail
 {

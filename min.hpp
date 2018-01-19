@@ -4,16 +4,16 @@
 
 #include "vector.hpp"
 
-#if defined(__ARM_NEON__)
+#if defined(__ARM_NEON)
 
 #include "arm_neon.h"
 
-#endif // __ARM_NEON__
+#endif // __ARM_NEON
 
 namespace vxl
 {
 
-#if defined(__ARM_NEON__)
+#if defined(__ARM_NEON)
 
 //__attribute__ ((noinline))
 inline vector<float, 2> cmin(vector<float, 2> const& v) noexcept
@@ -57,7 +57,7 @@ inline vector<float, 4> cmin(vector<float, 4> const& v) noexcept
   };
 }
 
-#endif // __ARM_NEON__
+#endif // __ARM_NEON
 
 namespace detail
 {

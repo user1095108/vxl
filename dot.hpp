@@ -7,7 +7,7 @@
 namespace vxl
 {
 
-#if defined(__ARM_NEON__)
+#if defined(__ARM_NEON)
 
 //__attribute__ ((noinline))
 inline vector<float, 2> cdot(vector<float, 2> const& l,
@@ -54,7 +54,7 @@ inline vector<float, 4> cdot(vector<float, 4> const& l,
   };
 }
 
-#endif // __ARM_NEON__
+#endif // __ARM_NEON
 
 /*
 #if defined(__SSE4_1__)
