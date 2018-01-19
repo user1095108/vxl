@@ -50,6 +50,7 @@ inline vector<float, 4> cdot(vector<float, 4> const& l,
   auto prod(float32x4_t(l.data_) * float32x4_t(r.data_));
 
   prod = vaddq_f32(prod, vrev64q_f32(prod));
+  // prod = a0*b0+a3*b3, a1*b1+a2*b2, a2*b2+a1*b1, a3*b3+a0*b0
 
   return {
     vector_type(
