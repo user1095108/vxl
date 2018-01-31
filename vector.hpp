@@ -391,9 +391,7 @@ struct deduce<T,
 };
 
 template <typename T>
-struct deduce<T,
-  std::enable_if_t<std::is_arithmetic<T>{}>
->
+struct deduce<T, std::enable_if_t<std::is_arithmetic<T>{}> >
 {
   using value_type = std::decay_t<decltype(std::declval<T>())>;
 
