@@ -554,6 +554,7 @@ struct vector
 
   using int_vector_type = typename vector_traits<T, N>::int_vector_type;
   using vector_type = typename vector_traits<T, N>::vector_type;
+  using value_type = typename vector_traits<T, N>::value_type;
 
   vector_type data_;
 
