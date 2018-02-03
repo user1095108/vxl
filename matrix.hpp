@@ -47,25 +47,6 @@ struct matrix
   operator decltype(data_) const& () const noexcept {return data_;}
   operator decltype((data_)) () noexcept {return data_;}
 
-  // element access
-  auto get_element(unsigned const i, unsigned const j) const noexcept
-  {
-#ifndef VXL_ROW_MAJOR
-    return data_[j][i];
-#else
-    return data_[i][j];
-#endif // VXL_ROW_MAJOR
-  }
-
-  void set_element(unsigned const i, unsigned const j, T const v) noexcept
-  {
-#ifndef VXL_ROW_MAJOR
-    data_[j][i] = v;
-#else
-    data_[i][j] = v;
-#endif // VXL_ROW_MAJOR
-  }
-
   auto operator()(unsigned const i, unsigned const j) const noexcept
   {
     return get_element(i, j);
@@ -90,6 +71,30 @@ struct matrix
     }
 
     return *this;
+  }
+
+  // element access
+  auto get_element(unsigned const i, unsigned const j) const noexcept
+  {
+#ifndef VXL_ROW_MAJOR
+    return data_[j][i];
+#else
+    return data_[i][j];
+#endif // VXL_ROW_MAJOR
+  }
+
+  void set_element(unsigned const i, unsigned const j, T const v) noexcept
+  {
+#ifndef VXL_ROW_MAJOR
+    data_[j][i] = v;
+#else
+    data_[i][j] = v;
+#endif // VXL_ROW_MAJOR
+  }
+
+  auto get_entry(unsigned const i, unsigned const j) const noexcept
+  {
+    return get_element(i, j);
   }
 
   template <unsigned I>
@@ -174,13 +179,13 @@ struct matrix
 };
 
 template <typename T, unsigned M, unsigned N, typename ...A,
-  typename = typename std::enable_if<
+  typename = typename std::enable_if_t<
     all_of<
       std::is_same<T, typename std::decay<A>::type>...
     >{}
-  >::type
+  >
 >
-inline matrix<T, M, N> make_matrix(A const ...a) noexcept
+inline auto make_matrix(A const ...a) noexcept
 {
   static_assert(M * N == sizeof...(A), "");
   matrix<T, M, N> result;
