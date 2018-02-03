@@ -18,7 +18,7 @@ namespace matrix
 template <unsigned I, typename D, typename S, std::size_t ...Is>
 static void copy(D& dst, S const& src, std::index_sequence<Is...> const)
 {
-  swallow{(dst[Is][I] = src[Is])...};
+  ((dst[Is][I] = src[Is]), ...);
 }
 
 template <typename D, unsigned I, typename S, std::size_t ...Is>
@@ -95,6 +95,11 @@ struct matrix
   auto get_entry(unsigned const i, unsigned const j) const noexcept
   {
     return get_element(i, j);
+  }
+
+  void set_entry(unsigned const i, unsigned const j, T const v) noexcept
+  {
+    set_element(i, j, v);
   }
 
   template <unsigned I>

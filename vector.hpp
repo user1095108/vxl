@@ -2,8 +2,8 @@
 # define VXL_VECTOR_HPP
 # pragma once
 
-#if __cplusplus < 201402L
-# error "You need a c++14 compiler"
+#if __cplusplus < 201703L
+# error "You need a c++17 compiler"
 #endif // __cplusplus
 
 #if defined(__SSE__)
@@ -51,14 +51,6 @@ struct all_of : std::integral_constant<bool, A{} && all_of<B...>{}>
 template <class A>
 struct all_of<A> : std::integral_constant<bool, A{}>
 {
-};
-
-struct swallow
-{
-  template <typename ...T>
-  constexpr explicit swallow(T&& ...) noexcept
-  {
-  }
 };
 
 template <typename T, unsigned N> struct vector_traits;
@@ -570,6 +562,18 @@ struct vector
   auto& ref() const noexcept {return data_;}
   auto& ref() noexcept {return data_;}
 };
+
+template <typename R, unsigned M, typename T, unsigned N>
+constexpr inline auto convert_vector(vector<T, N> const& v)
+{
+  static_assert(M <= N);
+  return vxl::vector<R, M>{
+    detail::vector::convert<R, M, T, N>(
+      v.data_,
+      std::make_index_sequence<M>()
+    )
+  };
+}
 
 template <typename T, unsigned N>
 constexpr inline vector<T, N> operator+(vector<T, N> const& a,
