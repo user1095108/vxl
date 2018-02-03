@@ -43,6 +43,15 @@ using default_tag = struct { };
 using no_translation_tag = struct { };
 using shift_tag = struct { };
 
+template <typename A, typename ...B>
+struct front
+{
+  using type = A;
+};
+
+template <typename ...A>
+using front_t = typename front<A...>::type;
+
 template <class A, class ...B>
 struct all_of : std::integral_constant<bool, A{} && all_of<B...>{}>
 {
