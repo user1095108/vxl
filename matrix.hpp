@@ -48,7 +48,7 @@ struct matrix
   operator decltype((data_)) () noexcept {return data_;}
 
   // element access
-  T operator()(unsigned const i, unsigned const j) const noexcept
+  auto get_element(unsigned const i, unsigned const j) const noexcept
   {
 #ifndef VXL_ROW_MAJOR
     return data_[j][i];
@@ -57,13 +57,18 @@ struct matrix
 #endif // VXL_ROW_MAJOR
   }
 
-  void operator()(unsigned const i, unsigned const j, T const v) noexcept
+  void set_element(unsigned const i, unsigned const j, T const v) noexcept
   {
 #ifndef VXL_ROW_MAJOR
     data_[j][i] = v;
 #else
     data_[i][j] = v;
 #endif // VXL_ROW_MAJOR
+  }
+
+  auto operator()(unsigned const i, unsigned const j) const noexcept
+  {
+    return get_element(i, j);
   }
 
   // assignment
@@ -568,7 +573,7 @@ inline void identity(vxl::matrix<T, M, N>& m,
   std::index_sequence<Is...> const) noexcept
 {
   (
-    m(Is, Is, T(1)),
+    m.set_element(Is, Is, T(1)),
     ...
   );
 }
