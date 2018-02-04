@@ -1313,6 +1313,12 @@ constexpr inline bool any(vector<T, N> const& l) noexcept
 
 // zero
 template <typename T, unsigned N>
+constexpr inline auto zero() noexcept
+{
+  return vector<T, N>{{}};
+}
+
+template <typename T, unsigned N>
 constexpr inline void zero(vector<T, N>& v) noexcept
 {
   v.data_ = decltype(v.data_){};
