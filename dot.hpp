@@ -16,12 +16,12 @@ inline vector<float, 2> cdot(vector<float, 2> const& l,
   using vector_type = typename vector_traits<float, 2>::vector_type;
 
   auto const prod(float32x2_t(l.data_) * float32x2_t(r.data_));
+  // prod = l0*r0 l1*r1
 
   return {
-    vector_type(
-      vpadd_f32(prod, vrev64_f32(prod))
-    )
+    vector_type(prod + vrev64_f32(prod))
   };
+  //l0*r0+l1*r1 l1*r1+l0*r0
 }
 
 //__attribute__ ((noinline))
@@ -32,11 +32,11 @@ inline vector<float, 3> cdot(vector<float, 3> const& l,
 
   auto prod(float32x4_t(l.data_) * float32x4_t(r.data_));
 
-  prod = vaddq_f32(prod, vrev64q_f32(prod));
+  prod += vrev64q_f32(prod);
 
   return {
     vector_type(
-      vaddq_f32(prod, vcombine_f32(vget_high_f32(prod), vget_low_f32(prod)))
+      prod + vcombine_f32(vget_high_f32(prod), vget_low_f32(prod))
     )
   };
 }
@@ -49,14 +49,18 @@ inline vector<float, 4> cdot(vector<float, 4> const& l,
 
   auto prod(float32x4_t(l.data_) * float32x4_t(r.data_));
 
-  prod = vaddq_f32(prod, vrev64q_f32(prod));
-  // prod = a0*b0+a3*b3, a1*b1+a2*b2, a2*b2+a1*b1, a3*b3+a0*b0
+  prod += vrev64q_f32(prod);
+  // l0 l1 l2 l3
+  // r0 r1 r2 r3
+  // prod = l0*r0 l1*r1 l2*r2 l3*r3
+  // prod = l0*r0+l1*r1 l1*r1+l0*r0 l2*r2+r3*r3 l3*r3+l2*r2
 
   return {
     vector_type(
-      vaddq_f32(prod, vcombine_f32(vget_high_f32(prod), vget_low_f32(prod)))
+      prod + vcombine_f32(vget_high_f32(prod), vget_low_f32(prod))
     )
   };
+  // l0*r0+l1*r1+l2*r2+r3*r3 ...
 }
 
 #endif // __ARM_NEON
