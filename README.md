@@ -5,6 +5,6 @@ The test .cpp files should provide clues on how to use the library. A C++17 comp
 # examples
 example | ECMAScript | dosbox
 --- | --- | ---
-[vector.cpp](https://github.com/user1095108/vxl/blob/master/vector.cpp) | [try it](http://htmlpreview.github.io/?https://github.com/user1095108/examples/blob/master/vector.html) |
+[vector.cpp](https://github.com/user1095108/vxl/blob/master/vector.cpp) | [try it](http://htmlpreview.github.io/?https://github.com/user1095108/examples/blob/master/vector.html) | [try it](http://htmlpreview.github.io/?https://github.com/user1095108/examples/blob/master/vxl.html)
 [matrix.cpp](https://github.com/user1095108/vxl/blob/master/matrix.cpp) | [try it](http://htmlpreview.github.io/?https://github.com/user1095108/examples/blob/master/matrix.html) |
 [quat.cpp](https://github.com/user1095108/vxl/blob/master/quat.cpp) | [try it](http://htmlpreview.github.io/?https://github.com/user1095108/examples/blob/master/quat.html) |
