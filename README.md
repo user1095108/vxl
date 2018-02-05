@@ -3,7 +3,7 @@ vxl is a lightweight SIMD vector, quaternion and matrix library for vectors and 
 
 The test .cpp files should provide clues on how to use the library. A C++17 compliant compiler is needed to use the library and to complle the .cpp files.
 # examples
-example | online | dosbox
+example | ECMAScript | dosbox
 --- | --- | ---
 [vector.cpp](https://github.com/user1095108/vxl/blob/master/vector.cpp) | [try it](http://htmlpreview.github.io/?https://github.com/user1095108/examples/blob/master/vector.html) |
 [matrix.cpp](https://github.com/user1095108/vxl/blob/master/matrix.cpp) | [try it](http://htmlpreview.github.io/?https://github.com/user1095108/examples/blob/master/matrix.html) |
