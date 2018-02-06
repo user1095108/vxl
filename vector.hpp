@@ -2,7 +2,7 @@
 # define VXL_VECTOR_HPP
 # pragma once
 
-#if __cplusplus < 201703L
+#if __cplusplus <= 201402L
 # error "You need a c++17 compiler"
 #endif // __cplusplus
 
