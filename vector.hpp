@@ -565,7 +565,16 @@ struct vector
 
   // element access
   T operator()(unsigned const i) const noexcept {return data_[i];}
-  void operator()(unsigned const i, T const v) noexcept { data_[i] = v; }
+
+  void set_element(unsigned const i, T const v) noexcept
+  {
+    data_[i] = v;
+  }
+
+  void set_entry(unsigned const i, T const v) noexcept
+  {
+    set_element(i, v);
+  }
 
   // conversion
   auto& ref() const noexcept {return data_;}
