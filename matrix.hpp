@@ -190,6 +190,18 @@ struct matrix
 #endif // VXL_ROW_MAJOR
   }
 
+  template <unsigned I, typename ...A,
+    typename = typename std::enable_if_t<
+      all_of<
+        std::is_same<T, std::decay_t<A>>...
+      >{}
+    >
+  >
+  void set_col(A const... a) noexcept
+  {
+    set_col<I>(typename vector_traits<T, N>::vector_type{a...});
+  }
+
   // conversion
   auto& ref() noexcept {return data_;}
   auto& ref() const noexcept {return data_;}
