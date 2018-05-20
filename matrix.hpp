@@ -616,6 +616,23 @@ inline void identity(vxl::matrix<T, M, N>& m,
 
 }
 
+// zero
+template <typename T, unsigned M, unsigned N>
+inline void zero(matrix<T, M, N>& m) noexcept
+{
+  std::memset(&m.data_, 0, sizeof(m.data_));
+}
+
+template <typename T, unsigned M, unsigned N>
+inline auto zero() noexcept
+{
+  matrix<T, M, N> r;
+
+  zero(r);
+
+  return r;
+}
+
 // identity
 template <typename T, unsigned M, unsigned N>
 inline void identity(matrix<T, M, N>& m) noexcept
@@ -628,7 +645,7 @@ inline void identity(matrix<T, M, N>& m) noexcept
 }
 
 template <typename T, unsigned M, unsigned N>
-inline matrix<T, M, N> identity() noexcept
+inline auto identity() noexcept
 {
   static_assert(M == N, "identity matrix must be square");
 
@@ -639,18 +656,11 @@ inline matrix<T, M, N> identity() noexcept
   return r;
 }
 
-// zero
-template <typename T, unsigned M, unsigned N>
-inline void zero(matrix<T, M, N>& m) noexcept
-{
-  std::memset(&m.data_, 0, sizeof(m.data_));
-}
-
 // transposition
 template <typename T, unsigned M, unsigned N>
-inline matrix<T, N, M> trans(matrix<T, M, N> const& m) noexcept
+inline auto trans(matrix<T, M, N> const& m) noexcept
 {
-  decltype(trans(m)) result;
+  matrix<T, N, M> result;
 
 #ifndef VXL_ROW_MAJOR
   for (unsigned j{}; j != N; ++j)
