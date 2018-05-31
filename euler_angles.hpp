@@ -18,26 +18,26 @@ enum struct ea
 };
 
 template <typename T>
-constexpr matrix<T, 4, 4> rot_matrix_x(T const a) noexcept
+constexpr auto rot_matrix_x(T const a) noexcept
 {
   T const ca(std::cos(a));
   T const sa(std::sin(a));
 
-  return {
+  return vxl::matrix<T, 4, 4>{
     T(1), T(0), T(0), T(0),
-    T(0), ca  ,-sa  , T(0),
+    T(0), ca  , -sa , T(0),
     T(0), sa  , ca  , T(0),
     T(0), T(0), T(0), T(1)
   };
 }
 
 template <typename T>
-constexpr matrix<T, 4, 4> rot_matrix_y(T const a) noexcept
+constexpr auto rot_matrix_y(T const a) noexcept
 {
   T const ca(std::cos(a));
   T const sa(std::sin(a));
 
-  return {
+  return vxl::matrix<T, 4, 4>{
       ca, T(0), sa,   T(0),
     T(0), T(1), T(0), T(0),
      -sa, T(0), ca  , T(0),
@@ -46,12 +46,12 @@ constexpr matrix<T, 4, 4> rot_matrix_y(T const a) noexcept
 }
 
 template <typename T>
-constexpr matrix<T, 4, 4> rot_matrix_z(T const a) noexcept
+constexpr auto rot_matrix_z(T const a) noexcept
 {
   T const ca(std::cos(a));
   T const sa(std::sin(a));
 
-  return {
+  return vxl::matrix<T, 4, 4>{
       ca,  -sa, T(0), T(0),
       sa,   ca, T(0), T(0),
     T(0), T(0), T(1), T(0),
@@ -61,44 +61,44 @@ constexpr matrix<T, 4, 4> rot_matrix_z(T const a) noexcept
 
 template <enum ea E, typename T>
 constexpr std::enable_if_t<E == ea::XYZ, matrix<T, 4, 4>>
-to_matrix(T const ax, T const ay, T const az) noexcept
+to_matrix(vxl::vector<T, 3> const& a) noexcept
 {
-  return rot_matrix_x(ax) * rot_matrix_y(ay) * rot_matrix_z(az);
+  return rot_matrix_x(a(0)) * rot_matrix_y(a(1)) * rot_matrix_z(a(2));
 }
 
 template <enum ea E, typename T>
 constexpr std::enable_if_t<E == ea::XZY, matrix<T, 4, 4>>
-to_matrix(T const ax, T const az, T const ay) noexcept
+to_matrix(vxl::vector<T, 3> const& a) noexcept
 {
-  return rot_matrix_x(ax) * rot_matrix_z(ay) * rot_matrix_y(az);
+  return rot_matrix_x(a(0)) * rot_matrix_z(a(2)) * rot_matrix_y(a(1));
 }
 
 template <enum ea E, typename T>
 constexpr std::enable_if_t<E == ea::YXZ, matrix<T, 4, 4>>
-to_matrix(T const ay, T const ax, T const az) noexcept
+to_matrix(vxl::vector<T, 3> const& a) noexcept
 {
-  return rot_matrix_y(ax) * rot_matrix_x(ax) * rot_matrix_z(az);
+  return rot_matrix_y(a(1)) * rot_matrix_x(a(0)) * rot_matrix_z(a(2));
 }
 
 template <enum ea E, typename T>
 constexpr std::enable_if_t<E == ea::YZX, matrix<T, 4, 4>>
-to_matrix(T const ay, T const az, T const ax) noexcept
+to_matrix(vxl::vector<T, 3> const& a) noexcept
 {
-  return rot_matrix_y(ax) * rot_matrix_z(ay) * rot_matrix_x(az);
+  return rot_matrix_y(a(1)) * rot_matrix_z(a(2)) * rot_matrix_x(a(0));
 }
 
 template <enum ea E, typename T>
 constexpr std::enable_if_t<E == ea::ZXY, matrix<T, 4, 4>>
-to_matrix(T const az, T const ax, T const ay) noexcept
+to_matrix(vxl::vector<T, 3> const& a) noexcept
 {
-  return rot_matrix_z(ax) * rot_matrix_x(ax) * rot_matrix_y(az);
+  return rot_matrix_z(a(2)) * rot_matrix_x(a(0)) * rot_matrix_y(a(1));
 }
 
 template <enum ea E, typename T>
 constexpr std::enable_if_t<E == ea::ZYX, matrix<T, 4, 4>>
-to_matrix(T const az, T const ay, T const ax) noexcept
+to_matrix(vxl::vector<T, 3> const& a) noexcept
 {
-  return rot_matrix_z(ax) * rot_matrix_y(ay) * rot_matrix_x(az);
+  return rot_matrix_z(a(2)) * rot_matrix_y(a(1)) * rot_matrix_x(a(0));
 }
 
 }

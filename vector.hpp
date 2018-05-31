@@ -594,6 +594,18 @@ constexpr inline auto convert_vector(vector<T, N> const& v)
 }
 
 template <typename T, unsigned N>
+constexpr inline vector<T, N> operator+(vector<T, N> const& a) noexcept
+{
+  return a;
+}
+
+template <typename T, unsigned N>
+constexpr inline vector<T, N> operator-(vector<T, N> const& a) noexcept
+{
+  return { -a.data_ };
+}
+
+template <typename T, unsigned N>
 constexpr inline vector<T, N> operator+(vector<T, N> const& a,
   vector<T, N> const& b) noexcept
 {
