@@ -18,7 +18,7 @@ enum struct ea
 };
 
 template <typename T>
-constexpr auto rot_matrix_x(T const a) noexcept
+constexpr inline auto rot_matrix_x(T const a) noexcept
 {
   T const ca(std::cos(a));
   T const sa(std::sin(a));
@@ -32,7 +32,7 @@ constexpr auto rot_matrix_x(T const a) noexcept
 }
 
 template <typename T>
-constexpr auto rot_matrix_y(T const a) noexcept
+constexpr inline auto rot_matrix_y(T const a) noexcept
 {
   T const ca(std::cos(a));
   T const sa(std::sin(a));
@@ -46,7 +46,7 @@ constexpr auto rot_matrix_y(T const a) noexcept
 }
 
 template <typename T>
-constexpr auto rot_matrix_z(T const a) noexcept
+constexpr inline auto rot_matrix_z(T const a) noexcept
 {
   T const ca(std::cos(a));
   T const sa(std::sin(a));
@@ -74,28 +74,28 @@ to_matrix(vxl::vector<T, 3> const& a) noexcept
 }
 
 template <enum ea E, typename T>
-constexpr std::enable_if_t<E == ea::YXZ, matrix<T, 4, 4>>
+constexpr inline std::enable_if_t<E == ea::YXZ, matrix<T, 4, 4>>
 to_matrix(vxl::vector<T, 3> const& a) noexcept
 {
   return rot_matrix_y(a(1)) * rot_matrix_x(a(0)) * rot_matrix_z(a(2));
 }
 
 template <enum ea E, typename T>
-constexpr std::enable_if_t<E == ea::YZX, matrix<T, 4, 4>>
+constexpr inline std::enable_if_t<E == ea::YZX, matrix<T, 4, 4>>
 to_matrix(vxl::vector<T, 3> const& a) noexcept
 {
   return rot_matrix_y(a(1)) * rot_matrix_z(a(2)) * rot_matrix_x(a(0));
 }
 
 template <enum ea E, typename T>
-constexpr std::enable_if_t<E == ea::ZXY, matrix<T, 4, 4>>
+constexpr inline std::enable_if_t<E == ea::ZXY, matrix<T, 4, 4>>
 to_matrix(vxl::vector<T, 3> const& a) noexcept
 {
   return rot_matrix_z(a(2)) * rot_matrix_x(a(0)) * rot_matrix_y(a(1));
 }
 
 template <enum ea E, typename T>
-constexpr std::enable_if_t<E == ea::ZYX, matrix<T, 4, 4>>
+constexpr inline std::enable_if_t<E == ea::ZYX, matrix<T, 4, 4>>
 to_matrix(vxl::vector<T, 3> const& a) noexcept
 {
   return rot_matrix_z(a(2)) * rot_matrix_y(a(1)) * rot_matrix_x(a(0));
