@@ -25,7 +25,7 @@ namespace detail
 {
 
 template <typename T>
-constexpr inline auto rot_matrix_x(std::pair<vxl::vector<T, 3>,
+constexpr inline auto rot_x(std::pair<vxl::vector<T, 3>,
   vxl::vector<T, 3>> const& sc) noexcept
 {
   return vxl::matrix<T, 4, 4>{
@@ -37,7 +37,7 @@ constexpr inline auto rot_matrix_x(std::pair<vxl::vector<T, 3>,
 }
 
 template <typename T>
-constexpr inline auto rot_matrix_y(std::pair<vxl::vector<T, 3>,
+constexpr inline auto rot_y(std::pair<vxl::vector<T, 3>,
   vxl::vector<T, 3>> const& sc) noexcept
 {
   return vxl::matrix<T, 4, 4>{
@@ -49,7 +49,7 @@ constexpr inline auto rot_matrix_y(std::pair<vxl::vector<T, 3>,
 }
 
 template <typename T>
-constexpr inline auto rot_matrix_z(std::pair<vxl::vector<T, 3>,
+constexpr inline auto rot_z(std::pair<vxl::vector<T, 3>,
   vxl::vector<T, 3>> const& sc) noexcept
 {
   return vxl::matrix<T, 4, 4>{
@@ -71,8 +71,7 @@ to_matrix(vxl::vector<T, 3> const& a) noexcept
 {
   auto const sc(csincos(a));
 
-  return detail::rot_matrix_x(sc) * detail::rot_matrix_y(sc) *
-    detail::rot_matrix_z(sc);
+  return detail::rot_x(sc) * detail::rot_y(sc) * detail::rot_z(sc);
 }
 
 template <enum ea E, typename T>
@@ -81,8 +80,7 @@ to_matrix(vxl::vector<T, 3> const& a) noexcept
 {
   auto const sc(csincos(a));
 
-  return detail::rot_matrix_x(sc) * detail::rot_matrix_z(sc) *
-    detail::rot_matrix_y(sc);
+  return detail::rot_x(sc) * detail::rot_z(sc) * detail::rot_y(sc);
 }
 
 template <enum ea E, typename T>
@@ -91,8 +89,7 @@ to_matrix(vxl::vector<T, 3> const& a) noexcept
 {
   auto const sc(csincos(a));
 
-  return detail::rot_matrix_y(sc) * detail::rot_matrix_x(sc) *
-    detail::rot_matrix_z(sc);
+  return detail::rot_y(sc) * detail::rot_x(sc) * detail::rot_z(sc);
 }
 
 template <enum ea E, typename T>
@@ -101,8 +98,7 @@ to_matrix(vxl::vector<T, 3> const& a) noexcept
 {
   auto const sc(csincos(a));
 
-  return detail::rot_matrix_y(sc) * detail::rot_matrix_z(sc) *
-    detail::rot_matrix_x(sc);
+  return detail::rot_y(sc) * detail::rot_z(sc) * detail::rot_x(sc);
 }
 
 template <enum ea E, typename T>
@@ -111,8 +107,7 @@ to_matrix(vxl::vector<T, 3> const& a) noexcept
 {
   auto const sc(csincos(a));
 
-  return detail::rot_matrix_z(sc) * detail::rot_matrix_x(sc) *
-    detail::rot_matrix_y(sc);
+  return detail::rot_z(sc) * detail::rot_x(sc) * detail::rot_y(sc);
 }
 
 template <enum ea E, typename T>
@@ -121,8 +116,7 @@ to_matrix(vxl::vector<T, 3> const& a) noexcept
 {
   auto const sc(csincos(a));
 
-  return detail::rot_matrix_z(sc) * detail::rot_matrix_y(sc) *
-    detail::rot_matrix_x(sc);
+  return detail::rot_z(sc) * detail::rot_y(sc) * detail::rot_x(sc);
 }
 
 // convert axis angle to quaternion

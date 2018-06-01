@@ -20,7 +20,7 @@ int main()
     std::endl;
 
   std::cout <<
-    vxl::aa2q(vxl::vector<float, 3>{1.f, .0f, .0f}, 2.f) <<
+    vxl::to_quat(vxl::vector<float, 3>{1.f, .0f, .0f}, 2.f) <<
     std::endl;
 
   std::cout <<
