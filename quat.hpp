@@ -141,7 +141,7 @@ namespace quat
 {
 
 template <typename T, unsigned N, std::size_t ...Is>
-constexpr inline auto scalar_vector(::vxl::quat<T> const& x,
+constexpr inline auto scalar_vector(vxl::quat<T> const& x,
   std::index_sequence<Is...> const) noexcept ->
   typename vector_traits<T, N>::vector_type
 {
@@ -213,7 +213,7 @@ constexpr inline vector<T, 4> norm2(quat<T> const& x) noexcept
 
 // stream operators
 template <typename T>
-std::ostream& operator<<(std::ostream& os, ::vxl::quat<T> const& v)
+std::ostream& operator<<(std::ostream& os, vxl::quat<T> const& v)
 {
   os << '(';
 
