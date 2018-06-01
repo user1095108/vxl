@@ -66,7 +66,7 @@ constexpr inline auto rot_matrix_z(std::pair<vxl::vector<T, 3>,
 // with angles negated, this is because Blender caters to artists.
 //////////////////////////////////////////////////////////////////////////////
 template <enum ea E, typename T>
-constexpr std::enable_if_t<E == ea::XYZ, matrix<T, 4, 4>>
+constexpr inline std::enable_if_t<E == ea::XYZ, matrix<T, 4, 4>>
 to_matrix(vxl::vector<T, 3> const& a) noexcept
 {
   auto const sc(csincos(a));
@@ -76,7 +76,7 @@ to_matrix(vxl::vector<T, 3> const& a) noexcept
 }
 
 template <enum ea E, typename T>
-constexpr std::enable_if_t<E == ea::XZY, matrix<T, 4, 4>>
+constexpr inline std::enable_if_t<E == ea::XZY, matrix<T, 4, 4>>
 to_matrix(vxl::vector<T, 3> const& a) noexcept
 {
   auto const sc(csincos(a));
