@@ -21,6 +21,8 @@ enum struct ea
   ZYX
 };
 
+struct scale;
+
 namespace detail
 {
 
@@ -117,6 +119,20 @@ to_matrix(vxl::vector<T, 3> const& a) noexcept
   auto const sc(csincos(a));
 
   return detail::rot_z(sc) * detail::rot_y(sc) * detail::rot_x(sc);
+}
+
+template <typename E, typename T>
+constexpr inline std::enable_if_t<std::is_same<E, scale>{}, matrix<T, 4, 4>>
+to_matrix(vxl::vector<T, 3> const& s) noexcept
+{
+  matrix<T, 4, 4> r{{}};
+
+  r.set_element(0, 0, s(0));
+  r.set_element(1, 1, s(1));
+  r.set_element(2, 2, s(2));
+  r.set_element(3, 3, T(1));
+
+  return r;
 }
 
 // convert axis angle to quaternion
