@@ -582,7 +582,7 @@ struct vector
 };
 
 template <typename R, unsigned M, typename T, unsigned N>
-constexpr inline auto convert(vector<T, N> const& v)
+constexpr inline auto convert(vector<T, N> const& v) noexcept
 {
   static_assert(M <= N);
   return vxl::vector<R, M>{
