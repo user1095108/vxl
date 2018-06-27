@@ -396,7 +396,7 @@ struct deduce<T, std::enable_if_t<std::is_arithmetic<T>{}> >
 {
   using value_type = std::decay_t<decltype(std::declval<T>())>;
 
-  enum : std::size_t
+  enum : unsigned
   {
     size = sizeof(T) / sizeof(value_type)
   };
@@ -542,7 +542,7 @@ convert(V const& v) noexcept
 {
   return detail::vector::convert<R, M, typename deduce<V>::value_type, M>(
     v,
-    std::make_index_sequence<std::min(M, deduce<V>::size)>()
+    std::make_index_sequence<std::min(M, unsigned(deduce<V>::size))>()
   );
 }
 
