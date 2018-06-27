@@ -542,7 +542,7 @@ convert(V const& v) noexcept
 {
   return detail::vector::convert<R, M, typename deduce<V>::value_type, M>(
     v,
-    std::make_index_sequence<M>()
+    std::make_index_sequence<std::min(M, deduce<V>::size)>()
   );
 }
 
@@ -587,7 +587,7 @@ constexpr inline auto convert(vector<T, N> const& v) noexcept
   return vxl::vector<R, M>{
     detail::vector::convert<R, M, T, N>(
       v.data_,
-      std::make_index_sequence<M>()
+      std::make_index_sequence<std::min(M, N)>()
     )
   };
 }
