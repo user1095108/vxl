@@ -506,9 +506,9 @@ namespace detail
 namespace vector
 {
 
-template <typename R, unsigned M, typename T, unsigned N, std::size_t ...Is>
-constexpr inline auto convert(
-  typename vxl::vector_traits<T, N>::vector_type const& v,
+template <typename R, unsigned M, typename T, unsigned N, typename C,
+  std::size_t ...Is>
+constexpr inline auto convert(C const& v,
   std::index_sequence<Is...> const) noexcept
 {
   return typename vxl::vector_traits<R, M>::vector_type{R(v[Is])...};
@@ -518,13 +518,6 @@ template <typename R, typename T>
 constexpr inline R const& convert(T const& v)
 {
   return reinterpret_cast<R const&>(v);
-}
-
-template <typename R, unsigned M, typename T, unsigned N, std::size_t ...Is>
-constexpr inline auto from_array(std::array<T, N> const& a,
-  std::index_sequence<Is...> const) noexcept
-{
-  return typename vxl::vector_traits<R, M>::vector_type{R(a[Is])...};
 }
 
 }
@@ -602,10 +595,10 @@ constexpr inline auto convert(vector<T, N> const& v) noexcept
 }
 
 template <typename R, unsigned M, typename T, std::size_t N>
-constexpr inline auto vector_from(std::array<T, N> const& a) noexcept
+constexpr inline auto make_vector(std::array<T, N> const& a) noexcept
 {
   return vxl::vector<R, M>{
-    detail::vector::from_array<R, M, T, N>(
+    detail::vector::convert<R, M, T, N>(
       a,
       std::make_index_sequence<std::min(M, unsigned(N))>()
     )
@@ -613,10 +606,10 @@ constexpr inline auto vector_from(std::array<T, N> const& a) noexcept
 }
 
 template <typename T, std::size_t N>
-constexpr inline auto vector_from(std::array<T, N> const& a) noexcept
+constexpr inline auto make_vector(std::array<T, N> const& a) noexcept
 {
   return vxl::vector<T, N>{
-    detail::vector::from_array<T, N, T, N>(
+    detail::vector::convert<T, N, T, N>(
       a,
       std::make_index_sequence<N>()
     )
