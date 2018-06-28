@@ -208,7 +208,7 @@ struct matrix
 };
 
 template <typename T, unsigned M, unsigned N, typename ...A,
-  typename = typename std::enable_if_t<
+  typename = std::enable_if_t<
     all_of<
       std::is_same<T, std::decay_t<A>>...
     >{}

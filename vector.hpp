@@ -34,6 +34,8 @@
 
 #include <array>
 
+#include <initializer_list>
+
 #include <ostream>
 
 #include <utility>
@@ -614,6 +616,42 @@ constexpr inline auto make_vector(std::array<T, N> const& a) noexcept
       std::make_index_sequence<N>()
     )
   };
+}
+
+template <typename T>
+constexpr inline auto make_vector(
+  std::initializer_list<T> const l) noexcept
+{
+  return vxl::vector<T, l.size()>{
+    detail::vector::convert<T, l.size(), T, l.size()>(
+      l,
+      std::make_index_sequence<l.size()>()
+    )
+  };
+}
+
+template <typename ...A,
+  typename = std::enable_if_t<
+    all_of<
+      std::is_same<std::decay_t<front_t<A...>>, std::decay_t<A>>...
+    >{} &&
+    std::is_arithmetic<std::decay_t<front_t<A...>>>{}
+  >
+>
+constexpr inline auto make_vector(A const ...a) noexcept
+{
+  vector<std::decay_t<front_t<A...>>, sizeof...(A)> r;
+
+  unsigned i{};
+
+  (
+    (
+      r.data_[i++] = a
+    ),
+    ...
+  );
+
+  return r;
 }
 
 template <typename T, unsigned N>
