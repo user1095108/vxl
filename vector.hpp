@@ -749,8 +749,7 @@ cvector(T const c, std::index_sequence<Is...> const) noexcept
 }
 
 template <typename T, unsigned N>
-constexpr inline typename vxl::vector_traits<T, N>::vector_type
-cvector(T const c) noexcept
+constexpr inline auto cvector(T const c) noexcept
 {
   return detail::vector::cvector<T, N>(c,
     std::make_index_sequence<N>()
