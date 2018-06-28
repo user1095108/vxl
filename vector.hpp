@@ -640,7 +640,7 @@ template <typename ...A,
 >
 constexpr inline auto make_vector(A const ...a) noexcept
 {
-  vector<std::decay_t<front_t<A...>>, sizeof...(A)> r;
+  vector<std::decay_t<front_t<A...>>, sizeof...(A)> r{{}};
 
   unsigned i{};
 

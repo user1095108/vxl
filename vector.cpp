@@ -20,7 +20,7 @@
 
 int main()
 {
-  vxl::vector<float, 3> a{1.f, 2.f, 3.f};
+  auto a(vxl::make_vector(1.f, 2.f, 3.f));
   vxl::vector<float, 3> b{1.f, 1.f, 1.f};
 
   std::cout << (a == a) << std::endl;
