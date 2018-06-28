@@ -51,10 +51,10 @@ template <class T>
 //__attribute__ ((noinline))
 inline T det(vxl::matrix<T, 4, 4> const& m) noexcept
 {
-  auto const A(make_matrix<T, 2, 2>(m(0, 0), m(0, 1), m(1, 0), m(1, 1)));
-  auto const B(make_matrix<T, 2, 2>(m(0, 2), m(0, 3), m(1, 2), m(1, 3)));
-  auto const C(make_matrix<T, 2, 2>(m(2, 0), m(2, 1), m(3, 0), m(3, 1)));
-  auto const D(make_matrix<T, 2, 2>(m(2, 2), m(2, 3), m(3, 2), m(3, 3)));
+  auto const A(make_matrix<2, 2>(m(0, 0), m(0, 1), m(1, 0), m(1, 1)));
+  auto const B(make_matrix<2, 2>(m(0, 2), m(0, 3), m(1, 2), m(1, 3)));
+  auto const C(make_matrix<2, 2>(m(2, 0), m(2, 1), m(3, 0), m(3, 1)));
+  auto const D(make_matrix<2, 2>(m(2, 2), m(2, 3), m(3, 2), m(3, 3)));
 
   return det(A - B * inv(D) * C) * det(D);
 }

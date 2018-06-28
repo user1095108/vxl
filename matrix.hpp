@@ -207,33 +207,34 @@ struct matrix
   auto& ref() const noexcept {return data_;}
 };
 
-template <typename T, unsigned M, unsigned N, typename ...A,
+template <unsigned M, unsigned N, typename ...A,
   typename = std::enable_if_t<
     all_of<
-      std::is_same<T, std::decay_t<A>>...
-    >{}
+      std::is_same<std::decay_t<front_t<A...>>, std::decay_t<A>>...
+    >{} &&
+    std::is_arithmetic<std::decay_t<front_t<A...>>>{}
   >
 >
 inline auto make_matrix(A const ...a) noexcept
 {
-  static_assert(M * N == sizeof...(A), "");
-  matrix<T, M, N> result;
+  static_assert(M * N == sizeof...(A));
+  matrix<std::decay_t<front_t<A...>>, M, N> r;
 
   unsigned i{};
 
   (
     (
 #ifndef VXL_ROW_MAJOR
-      result.data_[i % N][i / M] = a,
+      r.data_[i % N][i / M] = a,
 #else
-      result.data_[i / M][i % N] = a,
+      r.data_[i / M][i % N] = a,
 #endif // VXL_ROW_MAJOR
       ++i
     ),
     ...
   );
 
-  return result;
+  return r;
 }
 
 namespace detail
