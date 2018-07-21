@@ -598,29 +598,28 @@ constexpr inline auto convert(vector<T, N> const& v) noexcept
 
 template <typename R, unsigned M, typename C>
 constexpr inline auto make_vector(C const& c) noexcept ->
-  decltype(std::size(std::declval<C>()), typename C::value_type(),
-    vector<typename C::value_type, std::size(std::declval<C>())>())
+  decltype(std::size(C()), typename C::value_type(),
+    vector<typename C::value_type, std::size(C())>())
 {
   return {
     detail::vector::convert<R, M, typename C::value_type,
       std::size(std::declval<C>())>(
         c,
-        std::make_index_sequence<std::min(M,
-          unsigned(std::size(std::declval<C>())))>()
+        std::make_index_sequence<std::min(M, unsigned(std::size(C())))>()
     )
   };
 }
 
 template <typename C>
 constexpr inline auto make_vector(C const& c) noexcept ->
-  decltype(std::size(std::declval<C>()), typename C::value_type(),
-    vector<typename C::value_type, std::size(std::declval<C>())>())
+  decltype(std::size(C()), typename C::value_type(),
+    vector<typename C::value_type, std::size(C())>())
 {
   return {
-    detail::vector::convert<typename C::value_type,
-      std::size(std::declval<C>())>(
+    detail::vector::convert<typename C::value_type, std::size(C()),
+      typename C::value_type, std::size(C())>(
         c,
-        std::make_index_sequence<std::size(std::declval<C>())>()
+        std::make_index_sequence<std::size(C())>()
     )
   };
 }
