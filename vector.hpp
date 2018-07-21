@@ -32,9 +32,9 @@
 
 #include <cstdint>
 
-#include <array>
-
 #include <initializer_list>
+
+#include <iterator>
 
 #include <ostream>
 
@@ -596,36 +596,31 @@ constexpr inline auto convert(vector<T, N> const& v) noexcept
   };
 }
 
-template <typename R, unsigned M, typename T, std::size_t N>
-constexpr inline auto make_vector(std::array<T, N> const& a) noexcept
+template <typename R, unsigned M, typename C>
+constexpr inline auto make_vector(C const& c) noexcept ->
+  decltype(std::size(std::declval<C>()), typename C::value_type(),
+    vector<typename C::value_type, std::size(std::declval<C>())>())
 {
-  return vxl::vector<R, M>{
-    detail::vector::convert<R, M, T, N>(
-      a,
-      std::make_index_sequence<std::min(M, unsigned(N))>()
+  return {
+    detail::vector::convert<R, M, typename C::value_type,
+      std::size(std::declval<C>())>(
+        c,
+        std::make_index_sequence<std::min(M,
+          unsigned(std::size(std::declval<C>())))>()
     )
   };
 }
 
-template <typename T, std::size_t N>
-constexpr inline auto make_vector(std::array<T, N> const& a) noexcept
+template <typename C>
+constexpr inline auto make_vector(C const& c) noexcept ->
+  decltype(std::size(std::declval<C>()), typename C::value_type(),
+    vector<typename C::value_type, std::size(std::declval<C>())>())
 {
-  return vxl::vector<T, N>{
-    detail::vector::convert<T, N, T, N>(
-      a,
-      std::make_index_sequence<N>()
-    )
-  };
-}
-
-template <typename T>
-constexpr inline auto make_vector(
-  std::initializer_list<T> const l) noexcept
-{
-  return vxl::vector<T, l.size()>{
-    detail::vector::convert<T, l.size(), T, l.size()>(
-      l,
-      std::make_index_sequence<l.size()>()
+  return {
+    detail::vector::convert<typename C::value_type,
+      std::size(std::declval<C>())>(
+        c,
+        std::make_index_sequence<std::size(std::declval<C>())>()
     )
   };
 }
