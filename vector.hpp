@@ -953,24 +953,6 @@ namespace detail
 namespace vector
 {
 
-template <typename T, unsigned N, std::size_t ...Is>
-constexpr inline std::size_t make_hash(std::size_t seed,
-  typename vector_traits<T, N>::vector_type const& v,
-  std::index_sequence<Is...> const) noexcept
-{
-  (
-    (
-      seed ^= (
-        convert<typename vxl::vector<T, N>::uint_value_type>(
-          v[Is + 1]) + 0x9e3779b9 + (seed << 6) + (seed >> 2)
-      )
-    ),
-    ...
-  );
-
-  return seed;
-}
-
 template <typename T, unsigned N, std::size_t I, std::size_t ...Is>
 constexpr inline typename vxl::vector_traits<T, N>::vector_type
 lin_shuffler(typename vector_traits<T, N>::vector_type const& v,
@@ -1421,15 +1403,28 @@ namespace std
 template <typename T, unsigned N>
 struct hash<vxl::vector<T, N> >
 {
-  constexpr size_t operator()(vxl::vector<T, N> const& v) const noexcept
+  template <std::size_t ...I>
+  static constexpr inline auto make_hash(
+    typename vxl::vector_traits<T, N>::vector_type const& v,
+    std::index_sequence<I...> const) noexcept
   {
-    return vxl::detail::vector::make_hash(
-      vxl::detail::vector::convert<
-        typename vxl::vector<T, N>::uint_value_type
-      >(v.data_[0]),
-      v.data_,
-      std::make_index_sequence<N - 1>()
+    std::size_t seed{};
+
+    return (
+      (
+        seed = (
+          vxl::detail::vector::convert<
+            typename vxl::vector_traits<T, N>::uint_value_type
+          >(v[I]) + 0x9e3779b9 + (seed << 6) + (seed >> 2)
+        )
+      ),
+      ...
     );
+  }
+
+  constexpr auto operator()(vxl::vector<T, N> const& v) const noexcept
+  {
+    return make_hash(v.data_, std::make_index_sequence<N>());
   }
 };
 
