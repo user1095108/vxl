@@ -1401,7 +1401,7 @@ namespace std
 {
 
 template <typename T, unsigned N>
-struct hash<vxl::vector<T, N> >
+struct hash<vxl::vector<T, N>>
 {
   template <std::size_t ...I>
   static constexpr inline auto make_hash(
