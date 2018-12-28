@@ -142,8 +142,7 @@ namespace quat
 
 template <typename T, unsigned N, std::size_t ...Is>
 constexpr inline auto scalar_vector(vxl::quat<T> const& x,
-  std::index_sequence<Is...> const) noexcept ->
-  typename vector_traits<T, N>::vector_type
+  std::index_sequence<Is...> const) noexcept
 {
 #if defined(__clang__)
   return __builtin_shufflevector(x.data_, x.data_, (Is, 3)...);
@@ -159,8 +158,7 @@ constexpr inline auto scalar_vector(vxl::quat<T> const& x,
 }
 
 template <typename T, unsigned N>
-constexpr inline auto scalar_vector(quat<T> const& x) noexcept ->
-  typename vector_traits<T, N>::vector_type
+constexpr inline auto scalar_vector(quat<T> const& x) noexcept
 {
   return detail::quat::scalar_vector<T, N>(x,
     std::make_index_sequence<sizeof(x.data_) / sizeof(T)>()
