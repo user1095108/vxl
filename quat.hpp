@@ -145,11 +145,11 @@ constexpr inline auto scalar_vector(vxl::quat<T> const& x,
   std::index_sequence<Is...> const) noexcept ->
   typename vector_traits<T, N>::vector_type
 {
-  using int_vector_type = typename vector_traits<T, N>::int_vector_type;
-
 #if defined(__clang__)
   return __builtin_shufflevector(x.data_, x.data_, (Is, 3)...);
 #else
+  using int_vector_type = typename vector_traits<T, N>::int_vector_type;
+
   return __builtin_shuffle(x.data_, int_vector_type{(Is, 3)...});
 #endif
 }
