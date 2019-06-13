@@ -40,7 +40,5 @@ int main()
   ) <<
   std::endl;
 
-  vxl::zero(m2);
-
   return 0;
 }
