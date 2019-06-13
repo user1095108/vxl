@@ -16,13 +16,13 @@ namespace matrix
 {
 
 template <unsigned I, typename D, typename S, std::size_t ...Is>
-static void copy(D& dst, S const& src, std::index_sequence<Is...> const)
+inline constexpr void copy(D& dst, S const& src, std::index_sequence<Is...>)
 {
   ((dst[Is][I] = src[Is]), ...);
 }
 
 template <typename D, unsigned I, typename S, std::size_t ...Is>
-static D sample(S const& src, std::index_sequence<Is...> const)
+inline constexpr auto sample(S const& src, std::index_sequence<Is...>)
 {
   return D{(src[Is][I])...};
 }
@@ -74,7 +74,8 @@ struct matrix
   }
 
   // element access
-  auto get_element(unsigned const i, unsigned const j) const noexcept
+  constexpr auto get_element(unsigned const i,
+    unsigned const j) const noexcept
   {
 #ifndef VXL_ROW_MAJOR
     return data_[j][i];
@@ -83,7 +84,8 @@ struct matrix
 #endif // VXL_ROW_MAJOR
   }
 
-  void set_element(unsigned const i, unsigned const j, T const v) noexcept
+  constexpr void set_element(unsigned const i, unsigned const j,
+    T const v) noexcept
   {
 #ifndef VXL_ROW_MAJOR
     data_[j][i] = v;
@@ -92,18 +94,19 @@ struct matrix
 #endif // VXL_ROW_MAJOR
   }
 
-  auto get_entry(unsigned const i, unsigned const j) const noexcept
+  constexpr auto get_entry(unsigned const i, unsigned const j) const noexcept
   {
     return get_element(i, j);
   }
 
-  void set_entry(unsigned const i, unsigned const j, T const v) noexcept
+  constexpr void set_entry(unsigned const i, unsigned const j,
+    T const v) noexcept
   {
     set_element(i, j, v);
   }
 
   template <unsigned I>
-  typename vector_traits<T, N>::vector_type row() const noexcept
+  constexpr auto row() const noexcept
   {
 #ifndef VXL_ROW_MAJOR
     return detail::matrix::sample<
@@ -115,7 +118,7 @@ struct matrix
   }
 
   template <unsigned I>
-  void set_row(
+  constexpr void set_row(
     typename vector_traits<T, N>::vector_type const& v) noexcept
   {
 #ifndef VXL_ROW_MAJOR
@@ -129,7 +132,7 @@ struct matrix
   }
 
   template <unsigned I>
-  void set_row(vector<T, N> const& v) noexcept
+  constexpr void set_row(vector<T, N> const& v) noexcept
   {
 #ifndef VXL_ROW_MAJOR
     detail::matrix::copy<I>(data_,
@@ -148,13 +151,13 @@ struct matrix
       >{}
     >
   >
-  void set_row(A const... a) noexcept
+  constexpr void set_row(A const... a) noexcept
   {
     set_row<I>(typename vector_traits<T, N>::vector_type{a...});
   }
 
   template <unsigned J>
-  typename vector_traits<T, M>::vector_type col() const noexcept
+  constexpr auto col() const noexcept
   {
 #ifndef VXL_ROW_MAJOR
     return data_[J];
@@ -166,7 +169,7 @@ struct matrix
   }
 
   template <unsigned J>
-  void set_col(
+  constexpr void set_col(
     typename vector_traits<T, M>::vector_type const& v) noexcept
   {
 #ifndef VXL_ROW_MAJOR
@@ -179,7 +182,7 @@ struct matrix
   }
 
   template <unsigned J>
-  void set_col(vector<T, M> const& v) noexcept
+  constexpr void set_col(vector<T, M> const& v) noexcept
   {
 #ifndef VXL_ROW_MAJOR
     data_[J] = v.data_;
@@ -197,7 +200,7 @@ struct matrix
       >{}
     >
   >
-  void set_col(A const... a) noexcept
+  constexpr void set_col(A const... a) noexcept
   {
     set_col<I>(typename vector_traits<T, N>::vector_type{a...});
   }
@@ -215,20 +218,16 @@ template <unsigned M, unsigned N, typename ...A,
     std::is_arithmetic<std::decay_t<front_t<A...>>>{}
   >
 >
-inline auto make_matrix(A const ...a) noexcept
+inline constexpr auto make_matrix(A const ...a) noexcept
 {
   static_assert(M * N == sizeof...(A));
-  matrix<std::decay_t<front_t<A...>>, M, N> r;
+  matrix<std::decay_t<front_t<A...>>, M, N> r{};
 
   unsigned i{};
 
   (
     (
-#ifndef VXL_ROW_MAJOR
-      r.data_[i % N][i / M] = a,
-#else
-      r.data_[i / M][i % N] = a,
-#endif // VXL_ROW_MAJOR
+      r.set_element(i / M, i % N, a),
       ++i
     ),
     ...
@@ -604,9 +603,9 @@ namespace matrix
 {
 
 template <typename T, unsigned M, std::size_t ...Is>
-inline auto identity(std::index_sequence<Is...>) noexcept
+inline constexpr auto identity(std::index_sequence<Is...>) noexcept
 {
-  vxl::matrix<T, M, M> r{{}};
+  vxl::matrix<T, M, M> r{};
 
   (
     r.set_element(Is, Is, T(1)),
@@ -617,10 +616,10 @@ inline auto identity(std::index_sequence<Is...>) noexcept
 }
 
 template <typename T, unsigned M, std::size_t ...Is>
-inline auto diag(vxl::vector<T, M> const& v,
+inline constexpr auto diag(vxl::vector<T, M> const& v,
   std::index_sequence<Is...>) noexcept
 {
-  vxl::matrix<T, M, M> r{{}};
+  vxl::matrix<T, M, M> r{};
 
   (
     r.set_element(Is, Is, v(Is)),
@@ -636,21 +635,21 @@ inline auto diag(vxl::vector<T, M> const& v,
 
 // diagonal
 template <typename T, unsigned M>
-inline auto diag(vxl::vector<T, M> const& v) noexcept
+inline constexpr auto diag(vxl::vector<T, M> const& v) noexcept
 {
   return detail::matrix::diag(v, std::make_index_sequence<M>());
 }
 
 // identity
 template <typename T, unsigned M, unsigned N>
-inline void identity(matrix<T, M, N>& m) noexcept
+inline constexpr void identity(matrix<T, M, N>& m) noexcept
 {
   static_assert(M == N);
   m = detail::matrix::identity<T, M>(std::make_index_sequence<M>());
 }
 
 template <typename T, unsigned M, unsigned N>
-inline auto identity() noexcept
+inline constexpr auto identity() noexcept
 {
   static_assert(M == N);
   return detail::matrix::identity<T, M>(std::make_index_sequence<M>());
@@ -658,9 +657,9 @@ inline auto identity() noexcept
 
 // transposition
 template <typename T, unsigned M, unsigned N>
-inline auto trans(matrix<T, M, N> const& m) noexcept
+inline constexpr auto trans(matrix<T, M, N> const& m) noexcept
 {
-  matrix<T, N, M> result;
+  matrix<T, N, M> result{};
 
 #ifndef VXL_ROW_MAJOR
   for (unsigned j{}; j != N; ++j)
@@ -685,14 +684,14 @@ inline auto trans(matrix<T, M, N> const& m) noexcept
 
 // zero
 template <typename T, unsigned M, unsigned N>
-inline auto zero() noexcept
+inline constexpr auto zero() noexcept
 {
   static_assert(M == N);
-  return matrix<T, M, N>{{}};
+  return matrix<T, M, N>{};
 }
 
 template <typename T, unsigned M, unsigned N>
-inline void zero(matrix<T, M, N>& m) noexcept
+inline constexpr void zero(matrix<T, M, N>& m) noexcept
 {
   static_assert(M == N);
   m = zero<T, M, N>();

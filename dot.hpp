@@ -10,7 +10,7 @@ namespace vxl
 #if defined(__ARM_NEON)
 
 //__attribute__ ((noinline))
-inline vector<float, 2> cdot(vector<float, 2> const& l,
+inline constexpr auto cdot(vector<float, 2> const& l,
   vector<float, 2> const& r) noexcept
 {
   using vector_type = typename vector_traits<float, 2>::vector_type;
@@ -18,7 +18,7 @@ inline vector<float, 2> cdot(vector<float, 2> const& l,
   auto const prod(float32x2_t(l.data_) * float32x2_t(r.data_));
   // prod = l0*r0 l1*r1
 
-  return {
+  return vector<float, 2>{
     vector_type(prod + vrev64_f32(prod))
   };
   //l0*r0+l1*r1 l1*r1+l0*r0
@@ -152,9 +152,9 @@ namespace vector
 */
 
 template <typename T, unsigned N, std::size_t ...Is>
-constexpr inline typename ::vxl::vector_traits<T, N>::vector_type
-cdot(typename vector_traits<T, N>::vector_type v,
-  std::index_sequence<Is...> const) noexcept
+//__attribute__ ((noinline))
+inline constexpr auto cdot(typename vector_traits<T, N>::vector_type v,
+  std::index_sequence<Is...>) noexcept
 {
   (
     // result depends on previous shuffles
@@ -174,12 +174,12 @@ cdot(typename vector_traits<T, N>::vector_type v,
 }
 
 // dot product
-//__attribute__ ((noinline))
 template <typename T, unsigned N>
-constexpr inline vector<T, N> cdot(vector<T, N> const& l,
+//__attribute__ ((noinline))
+inline constexpr auto cdot(vector<T, N> const& l,
   vector<T, N> const& r) noexcept
 {
-  return {
+  return vector<T, N>{
     detail::vector::cdot<T, N>(l.data_ * r.data_,
       std::make_index_sequence<detail::vector::log2(N)>()
     )
@@ -187,7 +187,7 @@ constexpr inline vector<T, N> cdot(vector<T, N> const& l,
 }
 
 template <typename T, unsigned N>
-inline auto norm2(vector<T, N> const& v) noexcept
+inline constexpr auto norm2(vector<T, N> const& v) noexcept
 {
   return cdot(v, v);
 }

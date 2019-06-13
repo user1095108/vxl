@@ -954,9 +954,10 @@ namespace vector
 {
 
 template <typename T, unsigned N, std::size_t I, std::size_t ...Is>
-constexpr inline typename vxl::vector_traits<T, N>::vector_type
+//__attribute__ ((noinline))
+inline constexpr auto
 lin_shuffler(typename vector_traits<T, N>::vector_type const& v,
-  std::index_sequence<Is...> const) noexcept
+  std::index_sequence<Is...>) noexcept
 {
 #if defined(__clang__)
   return __builtin_shufflevector(v, v, ((I + Is) % N)...);
@@ -968,7 +969,8 @@ lin_shuffler(typename vector_traits<T, N>::vector_type const& v,
 }
 
 template <typename T, unsigned N, std::size_t I, std::size_t ...Is>
-constexpr inline typename vxl::vector_traits<T, N>::vector_type
+//__attribute__ ((noinline))
+inline constexpr auto
 pow2_shuffler(typename vector_traits<T, N>::vector_type const& v,
   std::index_sequence<Is...> const) noexcept
 {
