@@ -26,37 +26,37 @@ struct scale;
 namespace detail
 {
 
-template <typename T>
-constexpr inline auto rot_x(std::pair<vxl::vector<T, 3>,
+template <unsigned I, typename T>
+inline constexpr auto rot_x(std::pair<vxl::vector<T, 3>,
   vxl::vector<T, 3>> const& sc) noexcept
 {
   return vxl::matrix<T, 4, 4>{
     T(1), T(0), T(0), T(0),
-    T(0), sc.second(0), -sc.first(0), T(0),
-    T(0), sc.first(0), sc.second(0), T(0),
+    T(0), sc.second(I), -sc.first(I), T(0),
+    T(0), sc.first(I), sc.second(I), T(0),
     T(0), T(0), T(0), T(1)
   };
 }
 
-template <typename T>
-constexpr inline auto rot_y(std::pair<vxl::vector<T, 3>,
+template <unsigned I, typename T>
+inline constexpr auto rot_y(std::pair<vxl::vector<T, 3>,
   vxl::vector<T, 3>> const& sc) noexcept
 {
   return vxl::matrix<T, 4, 4>{
-    sc.second(1), T(0), sc.first(1), T(0),
+    sc.second(I), T(0), sc.first(I), T(0),
     T(0), T(1), T(0), T(0),
-    -sc.first(1), T(0), sc.second(1), T(0),
+    -sc.first(I), T(0), sc.second(I), T(0),
     T(0), T(0), T(0), T(1)
   };
 }
 
-template <typename T>
-constexpr inline auto rot_z(std::pair<vxl::vector<T, 3>,
+template <unsigned I, typename T>
+inline constexpr auto rot_z(std::pair<vxl::vector<T, 3>,
   vxl::vector<T, 3>> const& sc) noexcept
 {
   return vxl::matrix<T, 4, 4>{
-    sc.second(2), -sc.first(2), T(0), T(0),
-    sc.first(2), sc.second(2), T(0), T(0),
+    sc.second(I), -sc.first(I), T(0), T(0),
+    sc.first(I), sc.second(I), T(0), T(0),
     T(0), T(0), T(1), T(0),
     T(0), T(0), T(0), T(1)
   };
@@ -64,75 +64,67 @@ constexpr inline auto rot_z(std::pair<vxl::vector<T, 3>,
 
 }
 
-// Euler angle to rotation matrix conversions. WARNING: Blender XYZ is ZYX
-// with angles negated, this is because Blender caters to artists.
+// Euler angle to rotation matrix conversions.
 //////////////////////////////////////////////////////////////////////////////
 template <enum ea E, typename T>
-constexpr inline std::enable_if_t<E == ea::XYZ, matrix<T, 4, 4>>
+inline constexpr std::enable_if_t<E == ea::XYZ, matrix<T, 4, 4>>
 to_matrix(vxl::vector<T, 3> const& a) noexcept
 {
   auto const sc(csincos(a));
 
-  return detail::rot_x(sc) * detail::rot_y(sc) * detail::rot_z(sc);
+  return detail::rot_z<2>(sc) * detail::rot_y<1>(sc) * detail::rot_x<0>(sc);
 }
 
 template <enum ea E, typename T>
-constexpr inline std::enable_if_t<E == ea::XZY, matrix<T, 4, 4>>
+inline constexpr std::enable_if_t<E == ea::XZY, matrix<T, 4, 4>>
 to_matrix(vxl::vector<T, 3> const& a) noexcept
 {
   auto const sc(csincos(a));
 
-  return detail::rot_x(sc) * detail::rot_z(sc) * detail::rot_y(sc);
+  return detail::rot_y<2>(sc) * detail::rot_z<1>(sc) * detail::rot_x<0>(sc);
 }
 
 template <enum ea E, typename T>
-constexpr inline std::enable_if_t<E == ea::YXZ, matrix<T, 4, 4>>
+inline constexpr std::enable_if_t<E == ea::YXZ, matrix<T, 4, 4>>
 to_matrix(vxl::vector<T, 3> const& a) noexcept
 {
   auto const sc(csincos(a));
 
-  return detail::rot_y(sc) * detail::rot_x(sc) * detail::rot_z(sc);
+  return detail::rot_z<2>(sc) * detail::rot_x<1>(sc) * detail::rot_y<0>(sc);
 }
 
 template <enum ea E, typename T>
-constexpr inline std::enable_if_t<E == ea::YZX, matrix<T, 4, 4>>
+inline constexpr std::enable_if_t<E == ea::YZX, matrix<T, 4, 4>>
 to_matrix(vxl::vector<T, 3> const& a) noexcept
 {
   auto const sc(csincos(a));
 
-  return detail::rot_y(sc) * detail::rot_z(sc) * detail::rot_x(sc);
+  return detail::rot_x<2>(sc) * detail::rot_z<1>(sc) * detail::rot_y<0>(sc);
 }
 
 template <enum ea E, typename T>
-constexpr inline std::enable_if_t<E == ea::ZXY, matrix<T, 4, 4>>
+inline constexpr std::enable_if_t<E == ea::ZXY, matrix<T, 4, 4>>
 to_matrix(vxl::vector<T, 3> const& a) noexcept
 {
   auto const sc(csincos(a));
 
-  return detail::rot_z(sc) * detail::rot_x(sc) * detail::rot_y(sc);
+  return detail::rot_y<2>(sc) * detail::rot_x<1>(sc) * detail::rot_z<0>(sc);
 }
 
 template <enum ea E, typename T>
-constexpr inline std::enable_if_t<E == ea::ZYX, matrix<T, 4, 4>>
+inline constexpr std::enable_if_t<E == ea::ZYX, matrix<T, 4, 4>>
 to_matrix(vxl::vector<T, 3> const& a) noexcept
 {
   auto const sc(csincos(a));
 
-  return detail::rot_z(sc) * detail::rot_y(sc) * detail::rot_x(sc);
+  return detail::rot_x<2>(sc) * detail::rot_y<1>(sc) * detail::rot_z<0>(sc);
 }
 
 template <typename E, typename T>
-constexpr inline std::enable_if_t<std::is_same<E, scale>{}, matrix<T, 4, 4>>
+inline constexpr std::enable_if_t<std::is_same<E, scale>{}, matrix<T, 4, 4>>
 to_matrix(vxl::vector<T, 3> const& s) noexcept
 {
-  matrix<T, 4, 4> r{{}};
-
-  r.set_element(0, 0, s(0));
-  r.set_element(1, 1, s(1));
-  r.set_element(2, 2, s(2));
-  r.set_element(3, 3, T(1));
-
-  return r;
+  return vxl::diag(vxl::vector<T, 4>{s(0), s(1), s(2), T(1)});
 }
 
 // convert axis angle to quaternion

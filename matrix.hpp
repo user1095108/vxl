@@ -603,58 +603,57 @@ namespace detail
 namespace matrix
 {
 
-template <typename T, unsigned M, unsigned N, std::size_t ...Is>
-inline void identity(vxl::matrix<T, M, N>& m,
-  std::index_sequence<Is...> const) noexcept
+template <typename T, unsigned M, std::size_t ...Is>
+inline auto identity(std::index_sequence<Is...>) noexcept
 {
+  vxl::matrix<T, M, M> r{{}};
+
   (
-    m.set_element(Is, Is, T(1)),
+    r.set_element(Is, Is, T(1)),
     ...
   );
-}
-
-}
-
-}
-
-// zero
-template <typename T, unsigned M, unsigned N>
-inline void zero(matrix<T, M, N>& m) noexcept
-{
-  std::memset(&m.data_, 0, sizeof(m.data_));
-}
-
-template <typename T, unsigned M, unsigned N>
-inline auto zero() noexcept
-{
-  matrix<T, M, N> r;
-
-  zero(r);
 
   return r;
+}
+
+template <typename T, unsigned M, std::size_t ...Is>
+inline auto diag(vxl::vector<T, M> const& v,
+  std::index_sequence<Is...>) noexcept
+{
+  vxl::matrix<T, M, M> r{{}};
+
+  (
+    r.set_element(Is, Is, v(Is)),
+    ...
+  );
+
+  return r;
+}
+
+}
+
+}
+
+// diagonal
+template <typename T, unsigned M>
+inline auto diag(vxl::vector<T, M> const& v) noexcept
+{
+  return detail::matrix::diag(v, std::make_index_sequence<M>());
 }
 
 // identity
 template <typename T, unsigned M, unsigned N>
 inline void identity(matrix<T, M, N>& m) noexcept
 {
-  static_assert(M == N, "identity matrix must be square");
-
-  zero(m);
-
-  detail::matrix::identity(m, std::make_index_sequence<M>());
+  static_assert(M == N);
+  m = detail::matrix::identity<T, M>(std::make_index_sequence<M>());
 }
 
 template <typename T, unsigned M, unsigned N>
 inline auto identity() noexcept
 {
-  static_assert(M == N, "identity matrix must be square");
-
-  matrix<T, M, N> r;
-
-  identity(r);
-
-  return r;
+  static_assert(M == N);
+  return detail::matrix::identity<T, M>(std::make_index_sequence<M>());
 }
 
 // transposition
@@ -682,6 +681,21 @@ inline auto trans(matrix<T, M, N> const& m) noexcept
 #endif // VXL_ROW_MAJOR
 
   return result;
+}
+
+// zero
+template <typename T, unsigned M, unsigned N>
+inline auto zero() noexcept
+{
+  static_assert(M == N);
+  return matrix<T, M, N>{{}};
+}
+
+template <typename T, unsigned M, unsigned N>
+inline void zero(matrix<T, M, N>& m) noexcept
+{
+  static_assert(M == N);
+  m = zero<T, M, N>();
 }
 
 template <typename T, unsigned M, unsigned N>
