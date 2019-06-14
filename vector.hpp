@@ -384,7 +384,7 @@ struct deduce<T,
 {
   using value_type = std::decay_t<decltype(std::declval<T>()[0])>;
 
-  enum : std::size_t
+  enum : unsigned
   {
     size = sizeof(T) / sizeof(value_type)
   };
