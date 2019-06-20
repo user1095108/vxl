@@ -40,9 +40,9 @@ template <class T>
 inline constexpr auto det(vxl::matrix<T, 3, 3> const& m) noexcept
 {
 #ifndef VXL_ROW_MAJOR
-  return cdot(col<0>(m), ccross(col<1>(m), col<2>(m)))(0);
+  return dot(col<0>(m), ccross(col<1>(m), col<2>(m)))(0);
 #else
-  return cdot(row<0>(m), ccross(row<1>(m), row<2>(m)))(0);
+  return dot(row<0>(m), ccross(row<1>(m), row<2>(m)))(0);
 #endif // VXL_ROW_MAJOR
 }
 

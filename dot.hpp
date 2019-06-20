@@ -10,7 +10,7 @@ namespace vxl
 #if defined(__ARM_NEON)
 
 //__attribute__ ((noinline))
-inline constexpr auto cdot(vector<float, 2> const& l,
+inline constexpr auto dot(vector<float, 2> const& l,
   vector<float, 2> const& r) noexcept
 {
   using vector_type = typename vector_traits<float, 2>::vector_type;
@@ -25,7 +25,7 @@ inline constexpr auto cdot(vector<float, 2> const& l,
 }
 
 //__attribute__ ((noinline))
-inline constexpr auto cdot(vector<float, 3> const& l,
+inline constexpr auto dot(vector<float, 3> const& l,
   vector<float, 3> const& r) noexcept
 {
   using vector_type = typename vector_traits<float, 3>::vector_type;
@@ -42,7 +42,7 @@ inline constexpr auto cdot(vector<float, 3> const& l,
 }
 
 //__attribute__ ((noinline))
-inline constexpr auto cdot(vector<float, 4> const& l,
+inline constexpr auto dot(vector<float, 4> const& l,
   vector<float, 4> const& r) noexcept
 {
   using vector_type = typename vector_traits<float, 3>::vector_type;
@@ -67,7 +67,7 @@ inline constexpr auto cdot(vector<float, 4> const& l,
 #elif defined(__SSE4_1__)
 
 //__attribute__ ((noinline))
-inline constexpr auto cdot(vector<float, 2> const& l,
+inline constexpr auto dot(vector<float, 2> const& l,
   vector<float, 2> const& r) noexcept
 {
   return vector<float, 2>{
@@ -76,7 +76,7 @@ inline constexpr auto cdot(vector<float, 2> const& l,
 }
 
 //__attribute__ ((noinline))
-inline constexpr auto cdot(vector<float, 3> const& l,
+inline constexpr auto dot(vector<float, 3> const& l,
   vector<float, 3> const& r) noexcept
 {
   return vector<float, 3>{
@@ -85,7 +85,7 @@ inline constexpr auto cdot(vector<float, 3> const& l,
 }
 
 //__attribute__ ((noinline))
-inline constexpr auto cdot(vector<float, 4> const& l,
+inline constexpr auto dot(vector<float, 4> const& l,
   vector<float, 4> const& r) noexcept
 {
   return vector<float, 4>{
@@ -96,7 +96,7 @@ inline constexpr auto cdot(vector<float, 4> const& l,
 #elif defined(__SSE3__)
 
 //__attribute__ ((noinline))
-inline constexpr auto cdot(vector<float, 2> const& l,
+inline constexpr auto dot(vector<float, 2> const& l,
   vector<float, 2> const& r) noexcept
 {
   auto prod(l.data_ * r.data_);
@@ -109,7 +109,7 @@ inline constexpr auto cdot(vector<float, 2> const& l,
 }
 
 //__attribute__ ((noinline))
-inline constexpr auto cdot(vector<float, 3> const& l,
+inline constexpr auto dot(vector<float, 3> const& l,
   vector<float, 3> const& r) noexcept
 {
   auto prod(l.data_ * r.data_);
@@ -122,7 +122,7 @@ inline constexpr auto cdot(vector<float, 3> const& l,
 }
 
 //__attribute__ ((noinline))
-inline constexpr auto cdot(vector<float, 4> const& l,
+inline constexpr auto dot(vector<float, 4> const& l,
   vector<float, 4> const& r) noexcept
 {
   auto prod(l.data_ * r.data_);
@@ -152,7 +152,7 @@ namespace vector
 
 template <typename T, unsigned N, std::size_t ...Is>
 //__attribute__ ((noinline))
-inline constexpr auto cdot(typename vector_traits<T, N>::vector_type v,
+inline constexpr auto dot(typename vector_traits<T, N>::vector_type v,
   std::index_sequence<Is...>) noexcept
 {
   (
@@ -175,11 +175,11 @@ inline constexpr auto cdot(typename vector_traits<T, N>::vector_type v,
 // dot product
 template <typename T, unsigned N>
 //__attribute__ ((noinline))
-inline constexpr auto cdot(vector<T, N> const& l,
+inline constexpr auto dot(vector<T, N> const& l,
   vector<T, N> const& r) noexcept
 {
   return vector<T, N>{
-    detail::vector::cdot<T, N>(l.data_ * r.data_,
+    detail::vector::dot<T, N>(l.data_ * r.data_,
       std::make_index_sequence<detail::vector::log2(N)>()
     )
   };
@@ -188,7 +188,7 @@ inline constexpr auto cdot(vector<T, N> const& l,
 template <typename T, unsigned N>
 inline constexpr auto norm2(vector<T, N> const& v) noexcept
 {
-  return cdot(v, v);
+  return dot(v, v);
 }
 
 }

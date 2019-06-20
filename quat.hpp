@@ -174,7 +174,7 @@ constexpr inline vector<T, 3> vec(quat<T> const& x) noexcept
 
 // conjugation
 template <typename T>
-constexpr inline void conjugate(quat<T>& x) noexcept
+inline constexpr void conjugate(quat<T>& x) noexcept
 {
   using int_vector_type = typename vector_traits<T, 4>::int_vector_type;
   using vector_type = typename vector_traits<T, 4>::vector_type;
@@ -186,7 +186,7 @@ constexpr inline void conjugate(quat<T>& x) noexcept
 }
 
 template <typename T>
-constexpr inline quat<T> conjugated(quat<T> const& x) noexcept
+inline constexpr quat<T> conjugated(quat<T> const& x) noexcept
 {
   using int_vector_type = typename vector_traits<T, 4>::int_vector_type;
   using vector_type = typename vector_traits<T, 4>::vector_type;
@@ -200,11 +200,11 @@ constexpr inline quat<T> conjugated(quat<T> const& x) noexcept
 }
 
 template <typename T>
-constexpr inline vector<T, 4> norm2(quat<T> const& x) noexcept
+inline constexpr auto norm2(quat<T> const& x) noexcept
 {
   vector<T, 4> const q{x.data_};
 
-  return cdot(q, q);
+  return dot(q, q);
 }
 
 }

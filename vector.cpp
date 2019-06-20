@@ -29,7 +29,7 @@ int main()
   std::cout << vxl::all(a) << std::endl;
   std::cout << vxl::any(b) << std::endl;
 
-  std::cout << vxl::cdot(a, b).data_[0] << std::endl;
+  std::cout << vxl::dot(a, b).data_[0] << std::endl;
   std::cout << vxl::ccross(a, b) << std::endl;
   std::cout << vxl::csqrt(a) << std::endl;
 
@@ -56,9 +56,9 @@ int main()
 
   vxl::vector<double, 4> e{1., 2., 3., 4.};
   std::cout << (e == e) << std::endl;
-  std::cout << vxl::norm2(e) << std::endl;
+  std::cout << vxl::cnorm2(e) << std::endl;
 
-  std::cout << vxl::cdot(
+  std::cout << vxl::dot(
       vxl::vector<float, 2>{1, 2},
       vxl::vector<float, 2>{3, 4}
     ).data_[0] <<

@@ -563,24 +563,18 @@ struct vector
 
   vector_type data_;
 
-  // conversion operators
-  operator decltype(data_) const& () const noexcept {return data_;}
-  operator decltype((data_)) () noexcept {return data_;}
-
   // element access
-  T operator()(unsigned const i) const noexcept {return data_[i];}
+  constexpr auto operator()(unsigned const i) const noexcept
+  {
+    return data_[i];
+  }
 
-  void set_element(unsigned const i, T const v) noexcept
+  constexpr void set_element(unsigned const i, T const v) noexcept
   {
     data_[i] = v;
   }
 
-  void set_entry(unsigned const i, T const v) noexcept
-  {
-    set_element(i, v);
-  }
-
-  // conversion
+  // ref
   auto& ref() const noexcept {return data_;}
   auto& ref() noexcept {return data_;}
 };

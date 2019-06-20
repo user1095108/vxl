@@ -43,11 +43,7 @@ struct matrix
   typename vector_traits<T, M>::vector_type data_[N];
 #endif // VXL_ROW_MAJOR
 
-  // conversion operator
-  operator decltype(data_) const& () const noexcept {return data_;}
-  operator decltype((data_)) () noexcept {return data_;}
-
-  auto operator()(unsigned const i, unsigned const j) const noexcept
+  constexpr auto operator()(unsigned const i, unsigned const j) const noexcept
   {
     return get_element(i, j);
   }
@@ -92,17 +88,6 @@ struct matrix
 #else
     data_[i][j] = v;
 #endif // VXL_ROW_MAJOR
-  }
-
-  constexpr auto get_entry(unsigned const i, unsigned const j) const noexcept
-  {
-    return get_element(i, j);
-  }
-
-  constexpr void set_entry(unsigned const i, unsigned const j,
-    T const v) noexcept
-  {
-    set_element(i, j, v);
   }
 
   template <unsigned I>
@@ -205,7 +190,7 @@ struct matrix
     set_col<I>(typename vector_traits<T, N>::vector_type{a...});
   }
 
-  // conversion
+  // ref
   auto& ref() noexcept {return data_;}
   auto& ref() const noexcept {return data_;}
 };
@@ -417,7 +402,7 @@ inline vector<T, M1> operator*(matrix<T, M1, N1> const& l,
 
   for (unsigned i{}; i != M1; ++i)
   {
-    result.data_[i] = cdot({l.data_[i]}, r).data_[0];
+    result.data_[i] = dot({l.data_[i]}, r).data_[0];
   }
 #endif // VXL_ROW_MAJOR
 
@@ -436,7 +421,7 @@ inline vector<T, N2> operator*(vector<T, N> const& l,
 
   for (unsigned j{}; j != N2; ++j)
   {
-    result.data_[j] = cdot(l, {r.data_[j]}).data_[0];
+    result.data_[j] = dot(l, {r.data_[j]}).data_[0];
   }
 #else
   decltype(l * r) result{cvector<T, N2>(l.data_[0]) * r.data_[0]};
