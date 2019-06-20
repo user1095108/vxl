@@ -142,7 +142,7 @@ namespace quat
 {
 
 template <typename T, unsigned N, std::size_t ...Is>
-constexpr inline auto scalar_vector(vxl::quat<T> const& x,
+inline constexpr auto scalar_vector(vxl::quat<T> const& x,
   std::index_sequence<Is...>) noexcept
 {
 #if defined(__clang__)
@@ -159,7 +159,7 @@ constexpr inline auto scalar_vector(vxl::quat<T> const& x,
 }
 
 template <typename T, unsigned N>
-constexpr inline auto scalar_vector(quat<T> const& x) noexcept
+inline constexpr auto scalar_vector(quat<T> const& x) noexcept
 {
   return detail::quat::scalar_vector<T, N>(x,
     std::make_index_sequence<4>()
@@ -168,7 +168,7 @@ constexpr inline auto scalar_vector(quat<T> const& x) noexcept
 
 // vector part
 template <typename T>
-constexpr inline auto vec(quat<T> const& x) noexcept
+inline constexpr auto vec(quat<T> const& x) noexcept
 {
   return vector<T, 3>{x.data_};
 }
