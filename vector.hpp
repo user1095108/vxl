@@ -934,7 +934,7 @@ inline constexpr auto abs(vector<T, N> const& v) noexcept
 }
 
 template <typename T, unsigned N>
-inline constexpr void mabs(vector<T, N>& v) noexcept
+inline constexpr void mutable_abs(vector<T, N>& v) noexcept
 {
   using int_vector_type = typename vector_traits<T, N>::int_vector_type;
   using vector_type = typename vector_traits<T, N>::vector_type;
