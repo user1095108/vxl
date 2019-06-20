@@ -564,7 +564,15 @@ struct vector
   vector_type data_;
 
   // element access
-  constexpr auto operator()(unsigned const i) const noexcept
+  template <unsigned M = N>
+  constexpr std::enable_if_t<1 == M, T> operator()(unsigned) const noexcept
+  {
+    return data_;
+  }
+
+  template <unsigned M = N>
+  constexpr std::enable_if_t<(M > 1), T> operator()(
+    unsigned const i) const noexcept
   {
     return data_[i];
   }
