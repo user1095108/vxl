@@ -26,6 +26,8 @@
 # include "arm_neon.h"
 #endif // __ARM_NEON
 
+#include <cassert>
+
 #include <cstring>
 
 #include <cstddef>
@@ -565,8 +567,10 @@ struct vector
 
   // element access
   template <unsigned M = N>
-  constexpr std::enable_if_t<1 == M, T> operator()(unsigned) const noexcept
+  constexpr std::enable_if_t<1 == M, T> operator()(
+    unsigned const i) const noexcept
   {
+    assert(i);
     return data_;
   }
 
