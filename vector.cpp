@@ -8,9 +8,7 @@
 
 #include "onb.hpp"
 
-#include "max.hpp"
-
-#include "min.hpp"
+#include "minmax.hpp"
 
 #include "sqrt.hpp"
 
