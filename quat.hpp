@@ -46,8 +46,7 @@ inline constexpr quat<T> operator-(quat<T> const& a,
 
 template <typename T>
 //__attribute__ ((noinline))
-inline constexpr quat<T> operator*(
-  quat<T> const& l, quat<T> const& r) noexcept
+inline constexpr auto operator*(quat<T> const& l, quat<T> const& r) noexcept
 {
 //  l(0)r(3) + l(1)r(2) - l(2)r(1) + l(3)r(0)
 // -l(0)r(2) + l(1)r(3) + l(2)r(0) + l(3)r(1)
@@ -92,7 +91,7 @@ inline constexpr quat<T> operator*(
   );
 #endif
 
-  return {
+  return quat<T>{
     t1 +
     decltype(t2)(int_vector_type(t2 + t3) ^
       int_vector_type{
