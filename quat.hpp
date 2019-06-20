@@ -103,13 +103,13 @@ inline constexpr quat<T> operator*(
 }
 
 template <typename T>
-inline constexpr quat<T>& operator+=(quat<T>& a, quat<T> const& b) noexcept
+inline constexpr auto& operator+=(quat<T>& a, quat<T> const& b) noexcept
 {
   return a.data_ += b.data_, a;
 }
 
 template <typename T>
-inline constexpr quat<T>& operator-=(quat<T>& a, quat<T> const& b) noexcept
+inline constexpr auto& operator-=(quat<T>& a, quat<T> const& b) noexcept
 {
   return a.data_ -= b.data_, a;
 }
@@ -131,7 +131,7 @@ inline constexpr bool operator!=(quat<T> const& l, quat<T> const& r) noexcept
 
 // scalar part
 template <typename T>
-inline constexpr T scalar(quat<T> const& x) noexcept
+inline constexpr auto scalar(quat<T> const& x) noexcept
 {
   return x.data_[3];
 }
@@ -144,7 +144,7 @@ namespace quat
 
 template <typename T, unsigned N, std::size_t ...Is>
 constexpr inline auto scalar_vector(vxl::quat<T> const& x,
-  std::index_sequence<Is...> const) noexcept
+  std::index_sequence<Is...>) noexcept
 {
 #if defined(__clang__)
   return __builtin_shufflevector(x.data_, x.data_, (Is, 3)...);
@@ -163,15 +163,15 @@ template <typename T, unsigned N>
 constexpr inline auto scalar_vector(quat<T> const& x) noexcept
 {
   return detail::quat::scalar_vector<T, N>(x,
-    std::make_index_sequence<sizeof(x.data_) / sizeof(T)>()
+    std::make_index_sequence<4>()
   );
 }
 
 // vector part
 template <typename T>
-constexpr inline vector<T, 3> vec(quat<T> const& x) noexcept
+constexpr inline auto vec(quat<T> const& x) noexcept
 {
-  return { x.data_ };
+  return vector<T, 3>{x.data_};
 }
 
 // conjugation
