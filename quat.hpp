@@ -162,9 +162,7 @@ inline constexpr auto scalar_vector(vxl::quat<T> const& x,
 template <typename T, unsigned N>
 inline constexpr auto scalar_vector(quat<T> const& x) noexcept
 {
-  return detail::quat::scalar_vector<T, N>(x,
-    std::make_index_sequence<4>()
-  );
+  return detail::quat::scalar_vector<T, N>(x, std::make_index_sequence<N>());
 }
 
 // vector part
