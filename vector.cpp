@@ -30,33 +30,39 @@ int main()
   std::cout << vxl::any(b) << std::endl;
 
   std::cout << vxl::dot(a, b).data_[0] << std::endl;
-  std::cout << vxl::ccross(a, b) << std::endl;
-  std::cout << vxl::csqrt(a) << std::endl;
+  std::cout << vxl::cross(a, b) << std::endl;
+  std::cout << vxl::sqrt(a) << std::endl;
 
   vxl::vector<float, 4> c{1.f, 2.f, -3.f, 4.f};
-  auto const sincos(vxl::csincos(c));
-  std::cout << sincos.first << std::endl;
-  std::cout << sincos.second << std::endl;
 
-  std::cout << vxl::csin(c) << std::endl;
-  std::cout << vxl::ccos(c) << std::endl;
-  std::cout << vxl::ctan(c) << std::endl;
-  std::cout << vxl::ccot(c) << std::endl;
+  {
+    auto const sc(vxl::sincos(c));
+    std::cout << sc.first << std::endl;
+    std::cout << sc.second << std::endl;
+  }
+
+  std::cout << vxl::sin(c) << std::endl;
+  std::cout << vxl::cos(c) << std::endl;
+  std::cout << vxl::tan(c) << std::endl;
+  std::cout << vxl::cot(c) << std::endl;
 
   vxl::vector<float, 1> d{1.f};
-  auto const sc(vxl::csincos(d));
-  std::cout << sc.first.data_ << std::endl;
-  std::cout << sc.second.data_ << std::endl;
 
-  std::cout << vxl::cmax(a) << std::endl;
-  std::cout << vxl::cmin(a) << std::endl;
+  {
+    auto const sc(vxl::sincos(d));
+    std::cout << sc.first.data_ << std::endl;
+    std::cout << sc.second.data_ << std::endl;
+  }
+
+  std::cout << vxl::max(a) << std::endl;
+  std::cout << vxl::min(a) << std::endl;
 
   vxl::vector<float, 3> const u{3.0f, 2.0f, 1.0f};
-  std::cout << vxl::cortho(u) << std::endl;
+  std::cout << vxl::ortho(u) << std::endl;
 
   vxl::vector<double, 4> e{1., 2., 3., 4.};
   std::cout << (e == e) << std::endl;
-  std::cout << vxl::cnorm2(e) << std::endl;
+  std::cout << vxl::norm2(e) << std::endl;
 
   std::cout << vxl::dot(
       vxl::vector<float, 2>{1, 2},

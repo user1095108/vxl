@@ -24,7 +24,7 @@ namespace constantsf
 }
 
 template <unsigned N>
-inline vector<float, N> csin(vector<float, N> xx) noexcept
+inline vector<float, N> sin(vector<float, N> xx) noexcept
 {
   using int_value_type = typename vector_traits<float, N>::int_value_type;
   using int_vector_type = typename vector_traits<float, N>::int_vector_type;
@@ -68,7 +68,7 @@ inline vector<float, N> csin(vector<float, N> xx) noexcept
 }
 
 template <unsigned N>
-inline vector<float, N> ccos(vector<float, N> xx) noexcept
+inline vector<float, N> cos(vector<float, N> xx) noexcept
 {
   using int_value_type = typename vector_traits<float, N>::int_value_type;
   using int_vector_type = typename vector_traits<float, N>::int_vector_type;
@@ -112,7 +112,7 @@ inline vector<float, N> ccos(vector<float, N> xx) noexcept
 template <unsigned N>
 inline std::pair<vector<float, N>, vector<float, N> >
 //__attribute__ ((noinline))
-csincos(vector<float, N> xx) noexcept
+sincos(vector<float, N> xx) noexcept
 {
   using int_value_type = typename vector_traits<float, N>::int_value_type;
   using int_vector_type = typename vector_traits<float, N>::int_vector_type;

@@ -16,7 +16,7 @@ namespace vxl
 #if defined(__ARM_NEON)
 
 //__attribute__ ((noinline))
-inline constexpr auto cmin(vector<float, 2> const& v) noexcept
+inline constexpr auto min(vector<float, 2> const& v) noexcept
 {
   using vector_type = typename vector_traits<float, 2>::vector_type;
 
@@ -28,7 +28,7 @@ inline constexpr auto cmin(vector<float, 2> const& v) noexcept
 }
 
 //__attribute__ ((noinline))
-inline constexpr auto cmax(vector<float, 2> const& v) noexcept
+inline constexpr auto max(vector<float, 2> const& v) noexcept
 {
   using vector_type = typename vector_traits<float, 2>::vector_type;
 
@@ -40,7 +40,7 @@ inline constexpr auto cmax(vector<float, 2> const& v) noexcept
 }
 
 //__attribute__ ((noinline))
-inline constexpr auto cmin(vector<float, 3> const& v) noexcept
+inline constexpr auto min(vector<float, 3> const& v) noexcept
 {
   using vector_type = typename vector_traits<float, 3>::vector_type;
 
@@ -55,7 +55,7 @@ inline constexpr auto cmin(vector<float, 3> const& v) noexcept
 }
 
 //__attribute__ ((noinline))
-inline constexpr auto cmax(vector<float, 3> const& v) noexcept
+inline constexpr auto max(vector<float, 3> const& v) noexcept
 {
   using vector_type = typename vector_traits<float, 3>::vector_type;
 
@@ -70,7 +70,7 @@ inline constexpr auto cmax(vector<float, 3> const& v) noexcept
 }
 
 //__attribute__ ((noinline))
-inline constexpr auto cmin(vector<float, 4> const& v) noexcept
+inline constexpr auto min(vector<float, 4> const& v) noexcept
 {
   using vector_type = typename vector_traits<float, 4>::vector_type;
 
@@ -85,7 +85,7 @@ inline constexpr auto cmin(vector<float, 4> const& v) noexcept
 }
 
 //__attribute__ ((noinline))
-inline constexpr auto cmax(vector<float, 4> const& v) noexcept
+inline constexpr auto max(vector<float, 4> const& v) noexcept
 {
   using vector_type = typename vector_traits<float, 4>::vector_type;
 
@@ -111,7 +111,7 @@ namespace minmax
 // m(1, 2) m(2, 3) m(3, 4) m(4, 1)
 // m(1, 2, 3, 4) m(2, 3, 4, 1) m(3, 4, 1, 2) m(4, 1, 2, 3)
 template <typename T, unsigned N, std::size_t ...Is>
-inline constexpr auto cmin(typename vector_traits<T, N>::vector_type v,
+inline constexpr auto min(typename vector_traits<T, N>::vector_type v,
   std::index_sequence<Is...>) noexcept
 {
   decltype(v) sr;
@@ -133,7 +133,7 @@ inline constexpr auto cmin(typename vector_traits<T, N>::vector_type v,
 // m(1, 2) m(2, 3) m(3, 4) m(4, 1)
 // m(1, 2, 3, 4) m(2, 3, 4, 1) m(3, 4, 1, 2) m(4, 1, 2, 3)
 template <typename T, unsigned N, std::size_t ...Is>
-inline constexpr auto cmax(typename vector_traits<T, N>::vector_type v,
+inline constexpr auto max(typename vector_traits<T, N>::vector_type v,
   std::index_sequence<Is...>) noexcept
 {
   decltype(v) sr;
@@ -160,10 +160,10 @@ inline constexpr auto cmax(typename vector_traits<T, N>::vector_type v,
 // min
 template <typename T, unsigned N>
 //__attribute__ ((noinline))
-inline constexpr auto cmin(vector<T, N> const& v) noexcept
+inline constexpr auto min(vector<T, N> const& v) noexcept
 {
   return vector<T, N>{
-    detail::minmax::cmin<T, N>(v.data_,
+    detail::minmax::min<T, N>(v.data_,
       std::make_index_sequence<detail::vector::log2(N)>()
     )
   };
@@ -172,10 +172,10 @@ inline constexpr auto cmin(vector<T, N> const& v) noexcept
 // max
 template <typename T, unsigned N>
 //__attribute__ ((noinline))
-inline constexpr auto cmax(vector<T, N> const& v) noexcept
+inline constexpr auto max(vector<T, N> const& v) noexcept
 {
   return vector<T, N>{
-    detail::minmax::cmax<T, N>(v.data_,
+    detail::minmax::max<T, N>(v.data_,
       std::make_index_sequence<detail::vector::log2(N)>()
     )
   };

@@ -39,10 +39,11 @@ template <class T>
 //__attribute__ ((noinline))
 inline constexpr auto det(vxl::matrix<T, 3, 3> const& m) noexcept
 {
+// get row or col, whatever is more efficient as det(A) == det(A^T)
 #ifndef VXL_ROW_MAJOR
-  return dot(col<0>(m), ccross(col<1>(m), col<2>(m)))(0);
+  return dot(col<0>(m), cross(col<1>(m), col<2>(m)))(0);
 #else
-  return dot(row<0>(m), ccross(row<1>(m), row<2>(m)))(0);
+  return dot(row<0>(m), cross(row<1>(m), row<2>(m)))(0);
 #endif // VXL_ROW_MAJOR
 }
 

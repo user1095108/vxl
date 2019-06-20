@@ -24,7 +24,7 @@ int main()
     std::endl;
 
   std::cout <<
-    vxl::cnorm2(vxl::quat<float>{1, 1, 1, 1}) <<
+    vxl::norm2(vxl::quat<float>{1, 1, 1, 1}) <<
     std::endl;
 
   return 0;

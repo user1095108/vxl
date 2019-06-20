@@ -12,18 +12,20 @@ struct quat
 {
   typename vector_traits<T, 4>::vector_type data_;
 
-  // conversion operators
-  operator decltype(data_) const& () const noexcept { return data_; }
-  operator decltype((data_)) () noexcept { return data_; }
+  // element access
+  constexpr auto operator()(unsigned const i) const noexcept
+  {
+    return data_[i];
+  }
+
+  constexpr void set_element(unsigned const i, T const v) noexcept
+  {
+    data_[i] = v;
+  }
 
   // conversion
-  auto& ref() noexcept { return data_; }
-  auto& ref() const noexcept { return data_; }
-
-  // element access
-  T& operator()(unsigned const i) noexcept { return data_[i]; }
-  T operator()(unsigned const i) const noexcept { return data_[i]; }
-  void operator()(unsigned const i, T const v) noexcept { data_[i] = v; }
+  constexpr auto& ref() noexcept { return data_; }
+  constexpr auto& ref() const noexcept { return data_; }
 };
 
 template <typename T>

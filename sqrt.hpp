@@ -34,7 +34,7 @@ namespace vxl
 #if defined(__ARM_NEON)
 
 //__attribute__ ((noinline))
-inline vector<float, 2> csqrt(float const x) noexcept
+inline vector<float, 2> sqrt(float const x) noexcept
 {
   using vector_type = typename vector_traits<float, 2>::vector_type;
 
@@ -50,7 +50,7 @@ inline vector<float, 2> csqrt(float const x) noexcept
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 2> csqrt(vector<float, 2> const& x) noexcept
+inline vector<float, 2> sqrt(vector<float, 2> const& x) noexcept
 {
   using vector_type = typename vector_traits<float, 2>::vector_type;
 
@@ -66,7 +66,7 @@ inline vector<float, 2> csqrt(vector<float, 2> const& x) noexcept
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 3> csqrt(vector<float, 3> const& x) noexcept
+inline vector<float, 3> sqrt(vector<float, 3> const& x) noexcept
 {
   using vector_type = typename vector_traits<float, 3>::vector_type;
 
@@ -82,7 +82,7 @@ inline vector<float, 3> csqrt(vector<float, 3> const& x) noexcept
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 4> csqrt(vector<float, 4> const& x) noexcept
+inline vector<float, 4> sqrt(vector<float, 4> const& x) noexcept
 {
   using vector_type = typename vector_traits<float, 4>::vector_type;
 
@@ -100,7 +100,7 @@ inline vector<float, 4> csqrt(vector<float, 4> const& x) noexcept
 #elif defined(__SSE__)
 
 //__attribute__ ((noinline))
-inline vector<float, 4> csqrt(float const xx) noexcept
+inline vector<float, 4> sqrt(float const xx) noexcept
 {
   using vector_type = typename vector_traits<float, 4>::vector_type;
 
@@ -115,7 +115,7 @@ inline vector<float, 4> csqrt(float const xx) noexcept
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 2> csqrt(vector<float, 2> const& x) noexcept
+inline vector<float, 2> sqrt(vector<float, 2> const& x) noexcept
 {
   auto const r(_mm_rsqrt_ps(x.data_));
 
@@ -126,7 +126,7 @@ inline vector<float, 2> csqrt(vector<float, 2> const& x) noexcept
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 3> csqrt(vector<float, 3> const& x) noexcept
+inline vector<float, 3> sqrt(vector<float, 3> const& x) noexcept
 {
   auto const r(_mm_rsqrt_ps(x.data_));
 
@@ -137,7 +137,7 @@ inline vector<float, 3> csqrt(vector<float, 3> const& x) noexcept
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 4> csqrt(vector<float, 4> const& x) noexcept
+inline vector<float, 4> sqrt(vector<float, 4> const& x) noexcept
 {
   auto const r(_mm_rsqrt_ps(x.data_));
 
@@ -151,7 +151,7 @@ inline vector<float, 4> csqrt(vector<float, 4> const& x) noexcept
 
 template <unsigned N>
 //__attribute__ ((noinline))
-inline vector<float, N> csqrt(vector<float, N> const& x) noexcept
+inline vector<float, N> sqrt(vector<float, N> const& x) noexcept
 {
   using int_value_type = typename vector_traits<float, N>::int_value_type;
   using int_vector_type = typename vector_traits<float, N>::int_vector_type;
@@ -172,7 +172,7 @@ inline vector<float, N> csqrt(vector<float, N> const& x) noexcept
 
 template <unsigned N>
 //__attribute__ ((noinline))
-inline vector<double, N> csqrt(vector<double, N> const& x) noexcept
+inline vector<double, N> sqrt(vector<double, N> const& x) noexcept
 {
   using int_value_type = typename vector_traits<double, N>::int_value_type;
   using int_vector_type = typename vector_traits<double, N>::int_vector_type;
