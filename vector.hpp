@@ -725,19 +725,11 @@ namespace detail
 namespace vector
 {
 
-template <typename T>
-inline constexpr T constant_value(std::size_t const, T const v) noexcept
-{
-  return v;
-}
-
 template <typename T, unsigned N, std::size_t ...Is>
 inline constexpr typename vxl::vector_traits<T, N>::vector_type
 cvector(T const c, std::index_sequence<Is...> const) noexcept
 {
-  return typename vxl::vector_traits<T, N>::vector_type{
-    constant_value(Is, c)...
-  };
+  return typename vxl::vector_traits<T, N>::vector_type{(c + T(Is - Is))...};
 }
 
 }
@@ -864,12 +856,12 @@ inline constexpr T log2(T const n, T const e = 0) noexcept
 
 template <typename T, unsigned N, std::size_t ...Is>
 inline constexpr typename vxl::vector_traits<T, N>::int_vector_type
-abs_mask(std::index_sequence<Is...> const) noexcept
+abs_mask(std::index_sequence<Is...>) noexcept
 {
   using int_vector_type = typename vector_traits<T, N>::int_vector_type;
   using vector_type = typename vector_traits<T, N>::vector_type;
 
-  return ~int_vector_type(vector_type{constant_value(Is, T(-.0))...});
+  return ~int_vector_type(vector_type{(T(-.0) + T(Is - Is))...});
 }
 
 }
@@ -934,7 +926,7 @@ inline constexpr auto abs(vector<T, N> const& v) noexcept
 }
 
 template <typename T, unsigned N>
-inline constexpr void mutable_abs(vector<T, N>& v) noexcept
+inline constexpr void mabs(vector<T, N>& v) noexcept
 {
   using int_vector_type = typename vector_traits<T, N>::int_vector_type;
   using vector_type = typename vector_traits<T, N>::vector_type;
