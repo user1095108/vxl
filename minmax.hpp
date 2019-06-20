@@ -1,5 +1,5 @@
-#ifndef VXL_MAX_HPP
-# define VXL_MAX_HPP
+#ifndef VXL_MINMAX_HPP
+# define VXL_MINMAX_HPP
 # pragma once
 
 #if defined(__ARM_NEON)
@@ -99,7 +99,7 @@ inline constexpr auto cmax(vector<float, 4> const& v) noexcept
   };
 }
 
-#endif // __ARM_NEON
+#endif
 
 namespace detail
 {
@@ -183,4 +183,4 @@ inline constexpr auto cmax(vector<T, N> const& v) noexcept
 
 }
 
-#endif // VXL_MAX_HPP
+#endif // VXL_MINMAX_HPP
