@@ -94,7 +94,7 @@ inline constexpr auto operator*(quat<T> const& l, quat<T> const& r) noexcept
   return quat<T>{
     t1 +
     decltype(t2)(int_vector_type(t2 + t3) ^
-      int_vector_type(vector_type{0, 0, 0, T(-.0)})
+      int_vector_type(vector_type{T(0), T(0), T(0), T(-.0)})
     ) -
     t4
   };
@@ -170,7 +170,7 @@ inline constexpr quat<T> conjugated(quat<T> const& x) noexcept
   return {
     vector_type(
       int_vector_type(x.data_) ^
-      int_vector_type(vector_type{T(-.0), T(-.0), T(-.0), T(.0)})
+      int_vector_type(vector_type{T(-.0), T(-.0), T(-.0), T(0)})
     )
   };
 }
