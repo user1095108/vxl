@@ -566,6 +566,7 @@ struct vector
   vector_type data_;
 
   // element access
+#ifndef NDEBUG
   template <unsigned M = N>
   constexpr std::enable_if_t<1 == M, T> operator()(
     unsigned const i) const noexcept
@@ -573,6 +574,13 @@ struct vector
     assert(i);
     return data_;
   }
+#else
+  template <unsigned M = N>
+  constexpr std::enable_if_t<1 == M, T> operator()(unsigned) const noexcept
+  {
+    return data_;
+  }
+#endif // NDEBUG
 
   template <unsigned M = N>
   constexpr std::enable_if_t<(M > 1), T> operator()(
