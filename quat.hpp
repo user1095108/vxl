@@ -135,6 +135,7 @@ inline constexpr auto scalar(quat<T> const& x) noexcept
 }
 
 template <typename T, unsigned N>
+//__attribute__ ((noinline))
 inline constexpr auto scalar_vector(quat<T> const& x) noexcept
 {
   return cvector<T, N>(scalar(x));

@@ -727,7 +727,7 @@ namespace vector
 
 template <typename T, unsigned N, std::size_t ...Is>
 inline constexpr typename vxl::vector_traits<T, N>::vector_type
-cvector(T const c, std::index_sequence<Is...> const) noexcept
+cvector(T const c, std::index_sequence<Is...>) noexcept
 {
   return typename vxl::vector_traits<T, N>::vector_type{(c + T(Is - Is))...};
 }
