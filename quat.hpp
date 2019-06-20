@@ -52,8 +52,8 @@ inline constexpr auto operator*(quat<T> const& l, quat<T> const& r) noexcept
 // -l(0)r(2) + l(1)r(3) + l(2)r(0) + l(3)r(1)
 //  l(0)r(1) - l(1)r(0) + l(2)r(3) + l(3)r(2)
 // -l(0)r(0) - l(1)r(1) - l(2)r(2) + l(3)r(3)
-  using int_value_type = typename vector_traits<T, 4>::int_value_type;
   using int_vector_type = typename vector_traits<T, 4>::int_vector_type;
+  using vector_type = typename vector_traits<T, 4>::vector_type;
 
 #if defined(__clang__)
   auto const t1(
@@ -94,9 +94,7 @@ inline constexpr auto operator*(quat<T> const& l, quat<T> const& r) noexcept
   return quat<T>{
     t1 +
     decltype(t2)(int_vector_type(t2 + t3) ^
-      int_vector_type{
-        0, 0, 0, 1 << (8 * sizeof(int_value_type) - 1)
-      }
+      int_vector_type(vector_type{0, 0, 0, T(-.0)})
     ) -
     t4
   };
@@ -136,33 +134,10 @@ inline constexpr auto scalar(quat<T> const& x) noexcept
   return x.data_[3];
 }
 
-namespace detail
-{
-
-namespace quat
-{
-
-template <typename T, unsigned N, std::size_t ...Is>
-inline constexpr auto scalar_vector(vxl::quat<T> const& x,
-  std::index_sequence<Is...>) noexcept
-{
-#if defined(__clang__)
-  return __builtin_shufflevector(x.data_, x.data_, (3 + Is - Is)...);
-#else
-  using int_vector_type = typename vector_traits<T, N>::int_vector_type;
-
-  return __builtin_shuffle(x.data_, int_vector_type{(3 + Is - Is)...});
-#endif
-}
-
-}
-
-}
-
 template <typename T, unsigned N>
 inline constexpr auto scalar_vector(quat<T> const& x) noexcept
 {
-  return detail::quat::scalar_vector<T, N>(x, std::make_index_sequence<N>());
+  return cvector<T, N>(scalar(x));
 }
 
 // vector part
