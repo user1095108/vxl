@@ -7,6 +7,8 @@
 namespace vxl
 {
 
+// elements in a quat are laid out as: (x, y, z, w)
+
 template <typename T>
 struct quat
 {
