@@ -111,46 +111,46 @@ namespace minmax
 // m(1, 2) m(2, 3) m(3, 4) m(4, 1)
 // m(1, 2, 3, 4) m(2, 3, 4, 1) m(3, 4, 1, 2) m(4, 1, 2, 3)
 template <typename T, unsigned N, std::size_t ...Is>
-inline constexpr auto cmin(vxl::vector<T, N> v,
+inline constexpr auto cmin(typename vector_traits<T, N>::vector_type v,
   std::index_sequence<Is...>) noexcept
 {
-  decltype(v.data_) sr;
+  decltype(v) sr;
 
   (
     (
-      sr = detail::vector::pow2_shuffler<T, N, Is>(v.data_,
-        std::make_index_sequence<sizeof(v.data_) / sizeof(T)>()
+      sr = detail::vector::pow2_shuffler<T, N, Is>(v,
+        std::make_index_sequence<sizeof(v) / sizeof(T)>()
       ),
-      v.data_ = select(v.data_, sr, v.data_ < sr)
+      v = select(v, sr, v < sr)
     ),
     ...
   );
 
-  return v.data_;
+  return v;
 }
 
 // 1 2 3 4
 // m(1, 2) m(2, 3) m(3, 4) m(4, 1)
 // m(1, 2, 3, 4) m(2, 3, 4, 1) m(3, 4, 1, 2) m(4, 1, 2, 3)
 template <typename T, unsigned N, std::size_t ...Is>
-inline constexpr auto cmax(vxl::vector<T, N> v,
+inline constexpr auto cmax(typename vector_traits<T, N>::vector_type v,
   std::index_sequence<Is...>) noexcept
 {
-  decltype(v.data_) sr;
+  decltype(v) sr;
 
   (
     (
       // sr = pow2-shuffled v
-      sr = detail::vector::pow2_shuffler<T, N, Is>(v.data_,
-        std::make_index_sequence<sizeof(v.data_) / sizeof(T)>()
+      sr = detail::vector::pow2_shuffler<T, N, Is>(v,
+        std::make_index_sequence<sizeof(v) / sizeof(T)>()
       ),
       // compute m(a, b)
-      v.data_ = select(v.data_, sr, v.data_ > sr)
+      v = select(v, sr, v > sr)
     ),
     ...
   );
 
-  return v.data_;
+  return v;
 }
 
 }
@@ -163,7 +163,7 @@ template <typename T, unsigned N>
 inline constexpr auto cmin(vector<T, N> const& v) noexcept
 {
   return vector<T, N>{
-    detail::minmax::cmin(v,
+    detail::minmax::cmin<T, N>(v.data_,
       std::make_index_sequence<detail::vector::log2(N)>()
     )
   };
@@ -175,7 +175,7 @@ template <typename T, unsigned N>
 inline constexpr auto cmax(vector<T, N> const& v) noexcept
 {
   return vector<T, N>{
-    detail::minmax::cmax(v,
+    detail::minmax::cmax<T, N>(v.data_,
       std::make_index_sequence<detail::vector::log2(N)>()
     )
   };
