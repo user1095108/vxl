@@ -16,19 +16,19 @@ namespace vxl
 #if defined(__ARM_NEON)
 
 //__attribute__ ((noinline))
-inline vector<float, 2> cmax(vector<float, 2> const& v) noexcept
+inline constexpr auto cmax(vector<float, 2> const& v) noexcept
 {
   using vector_type = typename vector_traits<float, 2>::vector_type;
 
   auto const tmp(float32x2_t(v.data_));
 
-  return {
+  return vector<float, 2>{
     vector_type(vpmax_f32(tmp, tmp))
   };
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 3> cmax(vector<float, 3> const& v) noexcept
+inline constexpr auto cmax(vector<float, 3> const& v) noexcept
 {
   using vector_type = typename vector_traits<float, 3>::vector_type;
 
@@ -37,13 +37,13 @@ inline vector<float, 3> cmax(vector<float, 3> const& v) noexcept
 
   tmp = vpmax_f32(tmp, tmp);
 
-  return {
+  return vector<float, 3>{
     vector_type(vcombine_f32(tmp, tmp))
   };
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 4> cmax(vector<float, 4> const& v) noexcept
+inline constexpr auto cmax(vector<float, 4> const& v) noexcept
 {
   using vector_type = typename vector_traits<float, 4>::vector_type;
 
@@ -52,7 +52,7 @@ inline vector<float, 4> cmax(vector<float, 4> const& v) noexcept
 
   tmp = vpmax_f32(tmp, tmp);
 
-  return {
+  return vector<float, 4>{
     vector_type(vcombine_f32(tmp, tmp))
   };
 }
@@ -69,8 +69,8 @@ namespace max
 // m(1, 2) m(2, 3) m(3, 4) m(4, 1)
 // m(1, 2, 3, 4) m(2, 3, 4, 1) m(3, 4, 1, 2) m(4, 1, 2, 3)
 template <typename T, unsigned N, std::size_t ...Is>
-inline typename vxl::vector_traits<T, N>::vector_type
-cmax(vxl::vector<T, N> v, std::index_sequence<Is...> const) noexcept
+inline constexpr auto cmax(vxl::vector<T, N> v,
+  std::index_sequence<Is...>) noexcept
 {
   decltype(v.data_) sr;
 
@@ -96,9 +96,9 @@ cmax(vxl::vector<T, N> v, std::index_sequence<Is...> const) noexcept
 // max
 template <typename T, unsigned N>
 //__attribute__ ((noinline))
-inline vector<T, N> cmax(vector<T, N> const& v) noexcept
+inline constexpr auto cmax(vector<T, N> const& v) noexcept
 {
-  return {
+  return vector<T, N>{
     detail::max::cmax(v,
       std::make_index_sequence<detail::vector::log2(N)>()
     )

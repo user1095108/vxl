@@ -25,7 +25,7 @@ inline constexpr auto cdot(vector<float, 2> const& l,
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 3> cdot(vector<float, 3> const& l,
+inline constexpr auto cdot(vector<float, 3> const& l,
   vector<float, 3> const& r) noexcept
 {
   using vector_type = typename vector_traits<float, 3>::vector_type;
@@ -34,7 +34,7 @@ inline vector<float, 3> cdot(vector<float, 3> const& l,
 
   prod += vrev64q_f32(prod);
 
-  return {
+  return vector<float, 3>{
     vector_type(
       prod + vcombine_f32(vget_high_f32(prod), vget_low_f32(prod))
     )
@@ -42,7 +42,7 @@ inline vector<float, 3> cdot(vector<float, 3> const& l,
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 4> cdot(vector<float, 4> const& l,
+inline constexpr auto cdot(vector<float, 4> const& l,
   vector<float, 4> const& r) noexcept
 {
   using vector_type = typename vector_traits<float, 3>::vector_type;
@@ -55,7 +55,7 @@ inline vector<float, 4> cdot(vector<float, 4> const& l,
   // prod = l0*r0 l1*r1 l2*r2 l3*r3
   // prod = l0*r0+l1*r1 l1*r1+l0*r0 l2*r2+r3*r3 l3*r3+l2*r2
 
-  return {
+  return vector<float, 4>{
     vector_type(
       prod + vcombine_f32(vget_high_f32(prod), vget_low_f32(prod))
     )
@@ -63,81 +63,80 @@ inline vector<float, 4> cdot(vector<float, 4> const& l,
   // l0*r0+l1*r1+l2*r2+r3*r3 ...
 }
 
-#endif // __ARM_NEON
-
 /*
-#if defined(__SSE4_1__)
+#elif defined(__SSE4_1__)
 
 //__attribute__ ((noinline))
-inline vector<float, 2> cdot(vector<float, 2> const& l,
+inline constexpr auto cdot(vector<float, 2> const& l,
   vector<float, 2> const& r) noexcept
 {
-  return {
+  return vector<float, 2>{
     _mm_dp_ps(l.data_, r.data_, 0x3f)
   };
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 3> cdot(vector<float, 3> const& l,
+inline constexpr auto cdot(vector<float, 3> const& l,
   vector<float, 3> const& r) noexcept
 {
-  return {
+  return vector<float, 3>{
     _mm_dp_ps(l.data_, r.data_, 0x7f)
   };
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 4> cdot(vector<float, 4> const& l,
+inline constexpr auto cdot(vector<float, 4> const& l,
   vector<float, 4> const& r) noexcept
 {
-  return {
+  return vector<float, 4>{
     _mm_dp_ps(l.data_, r.data_, 0xff)
   };
 }
 
-#elif defined(__SSE3__) && !defined(__SSE4_1__)
+#elif defined(__SSE3__)
 
 //__attribute__ ((noinline))
-inline vector<float, 2> cdot(vector<float, 2> const& l,
+inline constexpr auto cdot(vector<float, 2> const& l,
   vector<float, 2> const& r) noexcept
 {
   auto prod(l.data_ * r.data_);
 
   prod = _mm_hadd_ps(prod, prod);
 
-  return {
+  return vector<float, 2>{
     _mm_hadd_ps(prod, prod)
   };
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 3> cdot(vector<float, 3> const& l,
+inline constexpr auto cdot(vector<float, 3> const& l,
   vector<float, 3> const& r) noexcept
 {
   auto prod(l.data_ * r.data_);
 
   prod = _mm_hadd_ps(prod, prod);
 
-  return {
+  return vector<float, 3>{
     _mm_hadd_ps(prod, prod)
   };
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 4> cdot(vector<float, 4> const& l,
+inline constexpr auto cdot(vector<float, 4> const& l,
   vector<float, 4> const& r) noexcept
 {
   auto prod(l.data_ * r.data_);
 
   prod = _mm_hadd_ps(prod, prod);
 
-  return {
+  return vector<float, 4>{
     _mm_hadd_ps(prod, prod)
   };
 }
 
-#endif
 */
+
+#endif
 
 namespace detail
 {
