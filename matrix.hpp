@@ -191,8 +191,8 @@ struct matrix
   }
 
   // ref
-  auto& ref() noexcept {return data_;}
-  auto& ref() const noexcept {return data_;}
+  constexpr auto& ref() noexcept {return data_;}
+  constexpr auto& ref() const noexcept {return data_;}
 };
 
 template <unsigned M, unsigned N, typename ...A,
