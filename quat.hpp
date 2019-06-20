@@ -162,12 +162,12 @@ inline constexpr void conjugate(quat<T>& x) noexcept
 }
 
 template <typename T>
-inline constexpr quat<T> conjugated(quat<T> const& x) noexcept
+inline constexpr auto conjugated(quat<T> const& x) noexcept
 {
   using int_vector_type = typename vector_traits<T, 4>::int_vector_type;
   using vector_type = typename vector_traits<T, 4>::vector_type;
 
-  return {
+  return quat<T>{
     vector_type(
       int_vector_type(x.data_) ^
       int_vector_type(vector_type{T(-.0), T(-.0), T(-.0), T(0)})
