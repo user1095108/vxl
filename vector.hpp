@@ -453,6 +453,7 @@ select(V const a, V const b, U const c, std::index_sequence<Is...>) noexcept
 }
 
 template <typename U, typename V>
+//__attribute__ ((noinline))
 inline constexpr std::enable_if_t<
   is_vector<U>{} && is_vector<V>{},
   V
@@ -480,6 +481,7 @@ select(V const a, V const b, U const c) noexcept
 #endif
 
 template <typename U, typename V>
+//__attribute__ ((noinline))
 inline constexpr std::enable_if_t<
   !is_vector<U>{} && !is_vector<V>{},
   V
@@ -495,9 +497,12 @@ select(V const a, V const b, U const c) noexcept
   // auto const r((((U&)(b) ^ (U&)(a)) & c) ^ (U&)(a));
 
   // (c & a) | (~c & b)
-  auto const r((c & (U&)(a)) | (~c & (U&)(b)));
+  // auto const r((c & (U&)(a)) | (~c & (U&)(b)));
 
-  return (V&)(r);
+  // return (V&)(r);
+
+  // in the end, I opted to forego the magic
+  return c ? a : b;
 }
 
 // convert
