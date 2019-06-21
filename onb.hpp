@@ -27,6 +27,7 @@ template <typename T>
 inline constexpr auto ortho(vector<T, 3> const& v) noexcept
 {
   using int_value_type = typename vector_traits<float, 3>::int_value_type;
+  using vector_type = typename vector_traits<float, 3>::vector_type;
 
   auto const tmp(abs(v));
 
