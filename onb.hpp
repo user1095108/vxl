@@ -37,8 +37,9 @@ inline constexpr auto ortho(vector<T, 3> const& v) noexcept
     vector<T, 3>{T(0), -v(2), v(1)};
 */
 
-  // if abs(v(0)) > abs(v(1)), then we keep v(0) and v(2),
-  // otherwise v(1) and v(2)
+  // if abs(v(0)) > abs(v(1)), then we keep v(0) and v(2), otherwise
+  // v(1) and v(2), this way the maximum vector element by abs value is always
+  // retained
   return vector<T, 3>{
     select(
       vector_type{-v(2), T(0), v(0)},
