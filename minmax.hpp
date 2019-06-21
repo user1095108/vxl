@@ -16,7 +16,7 @@ namespace vxl
 #if defined(__ARM_NEON)
 
 //__attribute__ ((noinline))
-inline constexpr auto min(vector<float, 2> const& v) noexcept
+inline auto min(vector<float, 2> const& v) noexcept
 {
   using vector_type = typename vector_traits<float, 2>::vector_type;
 
@@ -28,7 +28,7 @@ inline constexpr auto min(vector<float, 2> const& v) noexcept
 }
 
 //__attribute__ ((noinline))
-inline constexpr auto max(vector<float, 2> const& v) noexcept
+inline auto max(vector<float, 2> const& v) noexcept
 {
   using vector_type = typename vector_traits<float, 2>::vector_type;
 
@@ -40,7 +40,7 @@ inline constexpr auto max(vector<float, 2> const& v) noexcept
 }
 
 //__attribute__ ((noinline))
-inline constexpr auto min(vector<float, 3> const& v) noexcept
+inline auto min(vector<float, 3> const& v) noexcept
 {
   using vector_type = typename vector_traits<float, 3>::vector_type;
 
@@ -55,7 +55,7 @@ inline constexpr auto min(vector<float, 3> const& v) noexcept
 }
 
 //__attribute__ ((noinline))
-inline constexpr auto max(vector<float, 3> const& v) noexcept
+inline auto max(vector<float, 3> const& v) noexcept
 {
   using vector_type = typename vector_traits<float, 3>::vector_type;
 
@@ -70,7 +70,7 @@ inline constexpr auto max(vector<float, 3> const& v) noexcept
 }
 
 //__attribute__ ((noinline))
-inline constexpr auto min(vector<float, 4> const& v) noexcept
+inline auto min(vector<float, 4> const& v) noexcept
 {
   using vector_type = typename vector_traits<float, 4>::vector_type;
 
@@ -85,7 +85,7 @@ inline constexpr auto min(vector<float, 4> const& v) noexcept
 }
 
 //__attribute__ ((noinline))
-inline constexpr auto max(vector<float, 4> const& v) noexcept
+inline auto max(vector<float, 4> const& v) noexcept
 {
   using vector_type = typename vector_traits<float, 4>::vector_type;
 
