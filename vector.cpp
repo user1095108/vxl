@@ -59,6 +59,7 @@ int main()
 
   vxl::vector<float, 3> const u{3.0f, 2.0f, 1.0f};
   std::cout << vxl::ortho(u) << std::endl;
+  std::cout << vxl::ortho(u, vxl::canonical_tag{}) << std::endl;
 
   vxl::vector<double, 4> e{1., 2., 3., 4.};
   std::cout << (e == e) << std::endl;

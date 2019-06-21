@@ -45,9 +45,9 @@
 namespace vxl
 {
 
+using canonical_tag = struct { };
 using default_tag = struct { };
 using no_translation_tag = struct { };
-using shift_tag = struct { };
 
 template <typename A, typename ...B>
 struct front
@@ -976,7 +976,7 @@ template <typename T, unsigned N, std::size_t I, std::size_t ...Is>
 //__attribute__ ((noinline))
 inline constexpr auto
 pow2_shuffler(typename vector_traits<T, N>::vector_type const& v,
-  std::index_sequence<Is...> const) noexcept
+  std::index_sequence<Is...>) noexcept
 {
 #if defined(__clang__)
   return __builtin_shufflevector(v, v, ((pow2(I) + Is) % N)...);
