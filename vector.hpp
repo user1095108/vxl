@@ -430,17 +430,6 @@ struct is_vector<T,
 };
 
 #if defined(__clang__)
-/*
-template <typename U, typename V>
-inline constexpr std::enable_if_t<
-  is_vector<U>{} && is_vector<V>{},
-  V
->
-select(V const a, V const b, U const c) noexcept
-{
-  return V((c & U(a)) | (~c & U(b)));
-}
-*/
 
 namespace detail
 {
@@ -499,8 +488,14 @@ select(V const a, V const b, U const c) noexcept
 {
   static_assert(sizeof(U) == sizeof(V));
 
-  // (((b ^ a) & c) ^ a)
-  auto const r((((U&)(b) ^ (U&)(a)) & c) ^ (U&)(a));
+  // https://markplusplus.wordpress.com/2007/03/14/fast-sse-select-operation/
+  // https://markplusplus.wordpress.com/2008/04/08/revisiting-fast-sse-select/
+
+  // ((b ^ a) & c) ^ a
+  // auto const r((((U&)(b) ^ (U&)(a)) & c) ^ (U&)(a));
+
+  // (c & a) | (~c & b)
+  auto const r((c & (U&)(a)) | (~c & (U&)(b)));
 
   return (V&)(r);
 }
