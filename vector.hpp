@@ -497,8 +497,10 @@ inline constexpr std::enable_if_t<
 >
 select(V const a, V const b, U const c) noexcept
 {
-  static_assert(sizeof(U) == sizeof(V), "sizeof(U) != sizeof(V)");
-  auto const r((-c & (U&)(a)) | (~-c & (U&)(b)));
+  static_assert(sizeof(U) == sizeof(V));
+
+  // (((b ^ a) & mask)^a)
+  auto const r((((U&)(b) ^ (U&)(a)) & c) ^ (U&)(a));
 
   return (V&)(r);
 }

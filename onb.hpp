@@ -24,7 +24,7 @@ inline constexpr auto ortho(vector<T, 2> const& v,
 //////////////////////////////////////////////////////////////////////////////
 template <typename T>
 //__attribute__ ((noinline))
-constexpr inline auto ortho(vector<T, 3> const& v) noexcept
+inline constexpr auto ortho(vector<T, 3> const& v) noexcept
 {
   using int_value_type = typename vector_traits<float, 3>::int_value_type;
   using vector_type = typename vector_traits<float, 3>::vector_type;
@@ -42,7 +42,7 @@ constexpr inline auto ortho(vector<T, 3> const& v) noexcept
     select(
       vector_type{T(0), -v(2), v(1)},
       vector_type{-v(1), v(0), T(0)},
-      cvector<int_value_type, 3>(-(tmp(0) < tmp(1)))
+      cvector<int_value_type, 3>(tmp(0) < tmp(1))
     )
   };
 }
