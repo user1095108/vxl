@@ -46,15 +46,18 @@ int main()
   std::cout << vxl::tan(c) << std::endl;
   std::cout << vxl::cot(c) << std::endl;
 
-  vxl::vector<float, 1> d{2.f};
-
   {
+    vxl::vector<float, 1> d{1.f};
+
     auto const sc(vxl::sincos(d));
     std::cout << sc.first(0) << std::endl;
     std::cout << sc.second(0) << std::endl;
   }
 
-  std::cout << vxl::sqrt(d)(0) << std::endl;
+  {
+    vxl::vector<double, 1> d{3.};
+    std::cout << vxl::sqrt(d)(0) << std::endl;
+  }
 
   std::cout << vxl::max(a) << std::endl;
   std::cout << vxl::min(a) << std::endl;

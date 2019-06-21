@@ -145,54 +145,49 @@ inline auto rsqrt(vector<float, 4> const& x) noexcept
 
 #endif
 
-template <unsigned N>
-//__attribute__ ((noinline))
-inline constexpr auto rsqrt(vector<float, N> const& x) noexcept
+namespace detail
 {
-  using int_value_type = typename vector_traits<float, N>::int_value_type;
-  using int_vector_type = typename vector_traits<float, N>::int_vector_type;
-  using vector_type = typename vector_traits<float, N>::vector_type;
 
-  auto& x(xx.ref());
-  auto& xi((int_vector_type&)(x));
+namespace rsqrt
+{
 
-  auto r(cvector<int_value_type, N>(0x5f375a86) -
-    (xi >> cvector<int_value_type, N>(1)));
-  auto& rr((vector_type&)r);
+template <typename T>
+inline constexpr T magic_constant;
 
-  auto const xhalf(cvector<float, N>(.5f) * x.data_);
+template <>
+inline constexpr auto magic_constant<float>{0x5f375a86};
 
-  constexpr auto c(cvector<float, N>(1.5f));
+template <>
+inline constexpr auto magic_constant<double>{0x5fe6eb50c7b537a9};
 
-  r *= c - xhalf * rr * rr;
-  r *= c - xhalf * rr * rr;
+}
 
-  return vector<float, N>{rr * (c - xhalf * rr * rr)};
 }
 
 template <unsigned N>
 //__attribute__ ((noinline))
-inline constexpr auto rsqrt(vector<double, N> const& x) noexcept
+inline constexpr auto rsqrt(vector<T, N> const& x) noexcept
 {
-  using int_value_type = typename vector_traits<double, N>::int_value_type;
-  using int_vector_type = typename vector_traits<double, N>::int_vector_type;
-  using vector_type = typename vector_traits<double, N>::vector_type;
+  using int_value_type = typename vector_traits<T, N>::int_value_type;
+  using int_vector_type = typename vector_traits<T, N>::int_vector_type;
+  using vector_type = typename vector_traits<T, N>::vector_type;
 
   auto& x(xx.ref());
   auto& xi((int_vector_type&)(x));
 
-  auto r(cvector<int_value_type, N>(0x5fe6eb50c7b537a9) -
+  // magic step
+  auto r(cvector<int_value_type, N>(detail::rsqrt::magic_constant<T>) -
     (xi >> cvector<int_value_type, N>(1)));
   auto& rr((vector_type&)r);
 
-  auto const xhalf(cvector<double, N>(.5) * x.data_);
+  auto const xhalf(cvector<T, N>(T(.5)) * x.data_);
 
-  constexpr auto c(cvector<double, N>(1.5));
+  constexpr auto c(cvector<T, N>(T(1.5)));
 
   r *= c - xhalf * rr * rr;
   r *= c - xhalf * rr * rr;
 
-  return vector<double, N>{rr * (c - xhalf * rr * rr)};
+  return vector<T, N>{rr * (c - xhalf * rr * rr)};
 }
 
 }
