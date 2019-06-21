@@ -892,7 +892,7 @@ abs_mask(std::index_sequence<Is...>) noexcept
 
 // abs
 #if defined(__ARM_NEON)
-inline constexpr auto abs(vector<float, 2> const& v) noexcept
+inline auto abs(vector<float, 2> const& v) noexcept
 {
   using vector_type = typename vector_traits<float, 2>::vector_type;
 
@@ -901,7 +901,7 @@ inline constexpr auto abs(vector<float, 2> const& v) noexcept
   };
 }
 
-inline constexpr auto abs(vector<float, 3> const& v) noexcept
+inline auto abs(vector<float, 3> const& v) noexcept
 {
   using vector_type = typename vector_traits<float, 3>::vector_type;
 
@@ -910,7 +910,7 @@ inline constexpr auto abs(vector<float, 3> const& v) noexcept
   };
 }
 
-inline constexpr auto abs(vector<float, 4> const& v) noexcept
+inline auto abs(vector<float, 4> const& v) noexcept
 {
   using vector_type = typename vector_traits<float, 4>::vector_type;
 
@@ -919,20 +919,7 @@ inline constexpr auto abs(vector<float, 4> const& v) noexcept
   };
 }
 
-template <typename T, unsigned N>
-inline constexpr auto abs(vector<T, N> const& v) noexcept
-{
-  using int_vector_type = typename vector_traits<T, N>::int_vector_type;
-  using vector_type = typename vector_traits<T, N>::vector_type;
-
-  return vector<T, N>{
-    vector_type(int_vector_type(v.data_) &
-      detail::vector::abs_mask<T, N>(std::make_index_sequence<N>())
-    )
-  };
-}
-
-#else
+#endif
 
 template <typename T, unsigned N>
 inline constexpr auto abs(vector<T, N> const& v) noexcept
@@ -957,8 +944,6 @@ inline constexpr void mabs(vector<T, N>& v) noexcept
     detail::vector::abs_mask<T, N>(std::make_index_sequence<N>())
   );
 }
-
-#endif
 
 namespace detail
 {
