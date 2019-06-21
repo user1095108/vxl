@@ -153,17 +153,21 @@ inline constexpr auto rsqrt(vector<float, N> const& x) noexcept
   using int_vector_type = typename vector_traits<float, N>::int_vector_type;
   using vector_type = typename vector_traits<float, N>::vector_type;
 
-  auto r(vector_type(cvector<int_value_type, N>(0x5f375a86) -
-    (int_vector_type(x.data_) >> 1)));
+  auto& x(xx.ref());
+  auto& xi((int_vector_type&)(x));
+
+  auto r(cvector<int_value_type, N>(0x5f375a86) -
+    (xi >> cvector<int_value_type, N>(1)));
+  auto& rr((vector_type&)r);
 
   auto const xhalf(cvector<float, N>(.5f) * x.data_);
 
   constexpr auto c(cvector<float, N>(1.5f));
 
-  r *= c - xhalf * r * r;
-  r *= c - xhalf * r * r;
+  r *= c - xhalf * rr * rr;
+  r *= c - xhalf * rr * rr;
 
-  return vector<float, N>{r * (c - xhalf * r * r)};
+  return vector<float, N>{rr * (c - xhalf * rr * rr)};
 }
 
 template <unsigned N>
@@ -174,17 +178,21 @@ inline constexpr auto rsqrt(vector<double, N> const& x) noexcept
   using int_vector_type = typename vector_traits<double, N>::int_vector_type;
   using vector_type = typename vector_traits<double, N>::vector_type;
 
-  auto r(vector_type(cvector<int_value_type, N>(0x5fe6eb50c7b537a9) -
-    (int_vector_type(x.data_) >> 1)));
+  auto& x(xx.ref());
+  auto& xi((int_vector_type&)(x));
+
+  auto r(cvector<int_value_type, N>(0x5fe6eb50c7b537a9) -
+    (xi >> cvector<int_value_type, N>(1)));
+  auto& rr((vector_type&)r);
 
   auto const xhalf(cvector<double, N>(.5) * x.data_);
 
-  constexpr auto c(cvector<float, N>(1.5f));
+  constexpr auto c(cvector<double, N>(1.5));
 
-  r *= c - xhalf * r * r;
-  r *= c - xhalf * r * r;
+  r *= c - xhalf * rr * rr;
+  r *= c - xhalf * rr * rr;
 
-  return vector<double, N>{r * (c - xhalf * r * r)};
+  return vector<double, N>{rr * (c - xhalf * rr * rr)};
 }
 
 }
