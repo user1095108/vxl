@@ -107,7 +107,7 @@ inline constexpr auto ortho(vector<T, 3> const& v, canonical_tag) noexcept
     )[0]
   );
 
-  vector<T, 3> r;
+  vector<T, 3> r{};
 
   switch (i)
   {

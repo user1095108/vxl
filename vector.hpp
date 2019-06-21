@@ -590,7 +590,16 @@ struct vector
     return data_[i];
   }
 
-  constexpr void set_element(unsigned const i, T const v) noexcept
+  template <unsigned M = N>
+  constexpr std::enable_if_t<1 == M>
+  set_element(unsigned const i, T const v) noexcept
+  {
+    data_ = v;
+  }
+
+  template <unsigned M = N>
+  constexpr std::enable_if_t<(M > 1)>
+  set_element(unsigned const i, T const v) noexcept
   {
     data_[i] = v;
   }
