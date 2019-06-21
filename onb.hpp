@@ -96,8 +96,9 @@ template <typename T>
 //__attribute__ ((noinline))
 inline constexpr auto ortho(vector<T, 3> const& v, canonical_tag) noexcept
 {
-  // the canonical way is to find the minimum element, set it to zero and
-  // swap the other 2. Obviously, this is much more involved.
+  // the canonical way is to find the minimum element by absolute value,
+  // set it to zero and swap the other 2. Obviously, this is much more
+  // involved.
 
   auto const i(detail::onb::min_element<T, 3>(v.data_,
       std::make_index_sequence<
