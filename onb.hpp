@@ -32,17 +32,18 @@ inline constexpr auto ortho(vector<T, 3> const& v) noexcept
   auto const tmp(abs(v));
 
 /*
-  return tmp(0) < tmp(1) ?
-    vector<T, 3>{T(0), -v(2), v(1)} :
-    vector<T, 3>{-v(1), v(0), T(0)};
+  return tmp(0) > tmp(1) ?
+    vector<T, 3>{-v(2), T(0), v(0)} ?
+    vector<T, 3>{T(0), -v(2), v(1)};
 */
 
-  // if abs(x) < abs(y), then the largest components are either y or z
+  // if abs(v(0)) > abs(v(1)), then we keep v(0) and v(2),
+  // otherwise v(1) and v(2)
   return vector<T, 3>{
     select(
+      vector_type{-v(2), T(0), v(0)},
       vector_type{T(0), -v(2), v(1)},
-      vector_type{-v(1), v(0), T(0)},
-      cvector<int_value_type, 3>(tmp(0) < tmp(1))
+      cvector<int_value_type, 3>(tmp(0) > tmp(1))
     )
   };
 }
