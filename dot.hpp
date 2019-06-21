@@ -10,8 +10,7 @@ namespace vxl
 #if defined(__ARM_NEON)
 
 //__attribute__ ((noinline))
-inline auto dot(vector<float, 2> const& l,
-  vector<float, 2> const& r) noexcept
+inline auto dot(vector<float, 2> const& l, vector<float, 2> const& r) noexcept
 {
   using vector_type = typename vector_traits<float, 2>::vector_type;
 
@@ -25,8 +24,7 @@ inline auto dot(vector<float, 2> const& l,
 }
 
 //__attribute__ ((noinline))
-inline auto dot(vector<float, 3> const& l,
-  vector<float, 3> const& r) noexcept
+inline auto dot(vector<float, 3> const& l, vector<float, 3> const& r) noexcept
 {
   using vector_type = typename vector_traits<float, 3>::vector_type;
 
@@ -42,8 +40,7 @@ inline auto dot(vector<float, 3> const& l,
 }
 
 //__attribute__ ((noinline))
-inline auto dot(vector<float, 4> const& l,
-  vector<float, 4> const& r) noexcept
+inline auto dot(vector<float, 4> const& l, vector<float, 4> const& r) noexcept
 {
   using vector_type = typename vector_traits<float, 3>::vector_type;
 
@@ -67,8 +64,7 @@ inline auto dot(vector<float, 4> const& l,
 #elif defined(__SSE4_1__)
 
 //__attribute__ ((noinline))
-inline auto dot(vector<float, 2> const& l,
-  vector<float, 2> const& r) noexcept
+inline auto dot(vector<float, 2> const& l, vector<float, 2> const& r) noexcept
 {
   return vector<float, 2>{
     _mm_dp_ps(l.data_, r.data_, 0x3f)
@@ -76,8 +72,7 @@ inline auto dot(vector<float, 2> const& l,
 }
 
 //__attribute__ ((noinline))
-inline auto dot(vector<float, 3> const& l,
-  vector<float, 3> const& r) noexcept
+inline auto dot(vector<float, 3> const& l, vector<float, 3> const& r) noexcept
 {
   return vector<float, 3>{
     _mm_dp_ps(l.data_, r.data_, 0x7f)
@@ -85,8 +80,7 @@ inline auto dot(vector<float, 3> const& l,
 }
 
 //__attribute__ ((noinline))
-inline auto dot(vector<float, 4> const& l,
-  vector<float, 4> const& r) noexcept
+inline auto dot(vector<float, 4> const& l, vector<float, 4> const& r) noexcept
 {
   return vector<float, 4>{
     _mm_dp_ps(l.data_, r.data_, 0xff)
@@ -96,8 +90,7 @@ inline auto dot(vector<float, 4> const& l,
 #elif defined(__SSE3__)
 
 //__attribute__ ((noinline))
-inline auto dot(vector<float, 2> const& l,
-  vector<float, 2> const& r) noexcept
+inline auto dot(vector<float, 2> const& l, vector<float, 2> const& r) noexcept
 {
   auto prod(l.data_ * r.data_);
 
@@ -109,8 +102,7 @@ inline auto dot(vector<float, 2> const& l,
 }
 
 //__attribute__ ((noinline))
-inline auto dot(vector<float, 3> const& l,
-  vector<float, 3> const& r) noexcept
+inline auto dot(vector<float, 3> const& l, vector<float, 3> const& r) noexcept
 {
   auto prod(l.data_ * r.data_);
 
@@ -122,8 +114,7 @@ inline auto dot(vector<float, 3> const& l,
 }
 
 //__attribute__ ((noinline))
-inline auto dot(vector<float, 4> const& l,
-  vector<float, 4> const& r) noexcept
+inline auto dot(vector<float, 4> const& l, vector<float, 4> const& r) noexcept
 {
   auto prod(l.data_ * r.data_);
 

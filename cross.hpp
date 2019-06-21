@@ -11,7 +11,7 @@ namespace vxl
 // http://fastcpp.blogspot.si/2011/04/vector-cross-product-using-sse-code.html
 template <typename T, unsigned N>
 //__attribute__ ((noinline))
-inline constexpr vector<T, N> cross(vector<T, N> const& l,
+inline constexpr auto cross(vector<T, N> const& l,
   vector<T, N> const& r) noexcept
 {
 /*
