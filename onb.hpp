@@ -27,7 +27,6 @@ template <typename T>
 inline constexpr auto ortho(vector<T, 3> const& v) noexcept
 {
   using int_value_type = typename vector_traits<float, 3>::int_value_type;
-  using vector_type = typename vector_traits<float, 3>::vector_type;
 
   auto const tmp(abs(v));
 
@@ -39,12 +38,12 @@ inline constexpr auto ortho(vector<T, 3> const& v) noexcept
 
   // if abs(v(0)) > abs(v(1)), then we keep v(0) and v(2), otherwise
   // v(1) and v(2), this way the maximum vector element by abs value is always
-  // retained
+  // retained, we negate the comparison to negate 1, as -0 == 0
   return vector<T, 3>{
     select(
       vector_type{-v(2), T(0), v(0)},
       vector_type{T(0), -v(2), v(1)},
-      cvector<int_value_type, 3>(tmp(0) > tmp(1))
+      cvector<int_value_type, 3>(-(tmp(0) > tmp(1)))
     )
   };
 }
