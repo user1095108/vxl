@@ -454,8 +454,7 @@ inline constexpr std::enable_if_t<
   is_vector<U>{} && is_vector<V>{},
   V
 >
-select(V const a, V const b, U const c,
-  std::index_sequence<Is...> const) noexcept
+select(V const a, V const b, U const c, std::index_sequence<Is...>) noexcept
 {
   return V{(c[Is] ? a[Is] : b[Is])...};
 }
@@ -471,7 +470,8 @@ inline constexpr std::enable_if_t<
 >
 select(V const a, V const b, U const c) noexcept
 {
-  static_assert(sizeof(U) == sizeof(V), "sizeof(U) != sizeof(V)");
+  static_assert(sizeof(U) == sizeof(V));
+
   return detail::vector::select(a,
     b,
     c,

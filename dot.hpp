@@ -10,7 +10,7 @@ namespace vxl
 #if defined(__ARM_NEON)
 
 //__attribute__ ((noinline))
-inline constexpr auto dot(vector<float, 2> const& l,
+inline auto dot(vector<float, 2> const& l,
   vector<float, 2> const& r) noexcept
 {
   using vector_type = typename vector_traits<float, 2>::vector_type;
@@ -25,7 +25,7 @@ inline constexpr auto dot(vector<float, 2> const& l,
 }
 
 //__attribute__ ((noinline))
-inline constexpr auto dot(vector<float, 3> const& l,
+inline auto dot(vector<float, 3> const& l,
   vector<float, 3> const& r) noexcept
 {
   using vector_type = typename vector_traits<float, 3>::vector_type;
@@ -42,7 +42,7 @@ inline constexpr auto dot(vector<float, 3> const& l,
 }
 
 //__attribute__ ((noinline))
-inline constexpr auto dot(vector<float, 4> const& l,
+inline auto dot(vector<float, 4> const& l,
   vector<float, 4> const& r) noexcept
 {
   using vector_type = typename vector_traits<float, 3>::vector_type;
@@ -67,7 +67,7 @@ inline constexpr auto dot(vector<float, 4> const& l,
 #elif defined(__SSE4_1__)
 
 //__attribute__ ((noinline))
-inline constexpr auto dot(vector<float, 2> const& l,
+inline auto dot(vector<float, 2> const& l,
   vector<float, 2> const& r) noexcept
 {
   return vector<float, 2>{
@@ -76,7 +76,7 @@ inline constexpr auto dot(vector<float, 2> const& l,
 }
 
 //__attribute__ ((noinline))
-inline constexpr auto dot(vector<float, 3> const& l,
+inline auto dot(vector<float, 3> const& l,
   vector<float, 3> const& r) noexcept
 {
   return vector<float, 3>{
@@ -85,7 +85,7 @@ inline constexpr auto dot(vector<float, 3> const& l,
 }
 
 //__attribute__ ((noinline))
-inline constexpr auto dot(vector<float, 4> const& l,
+inline auto dot(vector<float, 4> const& l,
   vector<float, 4> const& r) noexcept
 {
   return vector<float, 4>{
@@ -96,7 +96,7 @@ inline constexpr auto dot(vector<float, 4> const& l,
 #elif defined(__SSE3__)
 
 //__attribute__ ((noinline))
-inline constexpr auto dot(vector<float, 2> const& l,
+inline auto dot(vector<float, 2> const& l,
   vector<float, 2> const& r) noexcept
 {
   auto prod(l.data_ * r.data_);
@@ -109,7 +109,7 @@ inline constexpr auto dot(vector<float, 2> const& l,
 }
 
 //__attribute__ ((noinline))
-inline constexpr auto dot(vector<float, 3> const& l,
+inline auto dot(vector<float, 3> const& l,
   vector<float, 3> const& r) noexcept
 {
   auto prod(l.data_ * r.data_);
@@ -122,7 +122,7 @@ inline constexpr auto dot(vector<float, 3> const& l,
 }
 
 //__attribute__ ((noinline))
-inline constexpr auto dot(vector<float, 4> const& l,
+inline auto dot(vector<float, 4> const& l,
   vector<float, 4> const& r) noexcept
 {
   auto prod(l.data_ * r.data_);
