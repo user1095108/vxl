@@ -501,7 +501,6 @@ select(V const a, V const b, U const c) noexcept
 
   // return (V&)(r);
 
-  // in the end, I opted to forego the magic
   return c ? a : b;
 }
 
