@@ -8,7 +8,7 @@ namespace vxl
 {
 
 template <unsigned N>
-inline vector<float, N> tan(vector<float, N> xx) noexcept
+inline constexpr vector<float, N> tan(vector<float, N> xx) noexcept
 {
   using int_value_type = typename vector_traits<float, N>::int_value_type;
   using int_vector_type = typename vector_traits<float, N>::int_vector_type;
@@ -56,7 +56,7 @@ inline vector<float, N> tan(vector<float, N> xx) noexcept
 }
 
 template <unsigned N>
-inline vector<float, N> cot(vector<float, N> xx) noexcept
+inline constexpr vector<float, N> cot(vector<float, N> xx) noexcept
 {
   using int_value_type = typename vector_traits<float, N>::int_value_type;
   using int_vector_type = typename vector_traits<float, N>::int_vector_type;

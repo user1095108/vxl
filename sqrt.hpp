@@ -34,7 +34,7 @@ namespace vxl
 #if defined(__ARM_NEON)
 
 //__attribute__ ((noinline))
-inline vector<float, 2> sqrt(float const x) noexcept
+inline constexpr auto sqrt(float const x) noexcept
 {
   using vector_type = typename vector_traits<float, 2>::vector_type;
 
@@ -42,7 +42,7 @@ inline vector<float, 2> sqrt(float const x) noexcept
 
   r *= vrsqrts_f32(float32x2_t{x}, r * r);
 
-  return {
+  return vector<float, 2>{
     vector_type(
       float32x2_t{x} * r * (vrsqrts_f32(float32x2_t{x}, r * r))
     )
@@ -50,7 +50,7 @@ inline vector<float, 2> sqrt(float const x) noexcept
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 2> sqrt(vector<float, 2> const& x) noexcept
+inline constexpr auto sqrt(vector<float, 2> const& x) noexcept
 {
   using vector_type = typename vector_traits<float, 2>::vector_type;
 
@@ -58,7 +58,7 @@ inline vector<float, 2> sqrt(vector<float, 2> const& x) noexcept
 
   r *= vrsqrts_f32(float32x2_t(x.data_), r * r);
 
-  return {
+  return vector<float, 2>{
     vector_type(
       float32x2_t(x.data_) * r * (vrsqrts_f32(float32x2_t(x.data_), r * r))
     )
@@ -66,7 +66,7 @@ inline vector<float, 2> sqrt(vector<float, 2> const& x) noexcept
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 3> sqrt(vector<float, 3> const& x) noexcept
+inline constexpr auto sqrt(vector<float, 3> const& x) noexcept
 {
   using vector_type = typename vector_traits<float, 3>::vector_type;
 
@@ -74,7 +74,7 @@ inline vector<float, 3> sqrt(vector<float, 3> const& x) noexcept
 
   r *= vrsqrtsq_f32(float32x4_t(x.data_), r * r);
 
-  return {
+  return vector<float, 3>{
     vector_type(
       float32x4_t(x.data_) * r * (vrsqrtsq_f32(float32x4_t(x.data_), r * r))
     )
@@ -82,7 +82,7 @@ inline vector<float, 3> sqrt(vector<float, 3> const& x) noexcept
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 4> sqrt(vector<float, 4> const& x) noexcept
+inline constexpr auto sqrt(vector<float, 4> const& x) noexcept
 {
   using vector_type = typename vector_traits<float, 4>::vector_type;
 
@@ -90,7 +90,7 @@ inline vector<float, 4> sqrt(vector<float, 4> const& x) noexcept
 
   r *= vrsqrtsq_f32(float32x4_t(x.data_), r * r);
 
-  return {
+  return vector<float, 4>{
     vector_type(
       float32x4_t(x.data_) * r * (vrsqrtsq_f32(float32x4_t(x.data_), r * r))
     )
@@ -100,7 +100,7 @@ inline vector<float, 4> sqrt(vector<float, 4> const& x) noexcept
 #elif defined(__SSE__)
 
 //__attribute__ ((noinline))
-inline vector<float, 4> sqrt(float const xx) noexcept
+inline constexpr auto sqrt(float const xx) noexcept
 {
   using vector_type = typename vector_traits<float, 4>::vector_type;
 
@@ -108,40 +108,40 @@ inline vector<float, 4> sqrt(float const xx) noexcept
 
   auto const r(_mm_rsqrt_ss(x));
 
-  return {
+  return vector<float, 4>{
     x * r * (cvector<float, 4>(1.5f) -
       cvector<float, 4>(.5f) * x * r * r)
   };
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 2> sqrt(vector<float, 2> const& x) noexcept
+inline constexpr auto sqrt(vector<float, 2> const& x) noexcept
 {
   auto const r(_mm_rsqrt_ps(x.data_));
 
-  return {
+  return vector<float, 2>{
     x.data_ * r * (cvector<float, 2>(1.5f) -
       cvector<float, 2>(.5f) * x.data_ * r * r)
   };
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 3> sqrt(vector<float, 3> const& x) noexcept
+inline constexpr auto sqrt(vector<float, 3> const& x) noexcept
 {
   auto const r(_mm_rsqrt_ps(x.data_));
 
-  return {
+  return vector<float, 3>{
     x.data_ * r * (cvector<float, 3>(1.5f) -
       cvector<float, 3>(.5f) * x.data_ * r * r)
   };
 }
 
 //__attribute__ ((noinline))
-inline vector<float, 4> sqrt(vector<float, 4> const& x) noexcept
+inline constexpr auto sqrt(vector<float, 4> const& x) noexcept
 {
   auto const r(_mm_rsqrt_ps(x.data_));
 
-  return {
+  return vector<float, 4>{
     x.data_ * r * (cvector<float, 4>(1.5f) -
       cvector<float, 4>(.5f) * x.data_ * r * r)
   };
@@ -151,7 +151,7 @@ inline vector<float, 4> sqrt(vector<float, 4> const& x) noexcept
 
 template <unsigned N>
 //__attribute__ ((noinline))
-inline vector<float, N> sqrt(vector<float, N> const& x) noexcept
+inline constexpr auto sqrt(vector<float, N> const& x) noexcept
 {
   using int_value_type = typename vector_traits<float, N>::int_value_type;
   using int_vector_type = typename vector_traits<float, N>::int_vector_type;
@@ -162,17 +162,17 @@ inline vector<float, N> sqrt(vector<float, N> const& x) noexcept
 
   auto const xhalf(cvector<float, N>(.5f) * x.data_);
 
-  r *= cvector<float, N>(1.5f) - xhalf * r * r;
-  r *= cvector<float, N>(1.5f) - xhalf * r * r;
+  constexpr auto c(cvector<float, N>(1.5f));
 
-  return {
-    x.data_ * r * (cvector<float, N>(1.5f) - xhalf * r * r)
-  };
+  r *= c - xhalf * r * r;
+  r *= c - xhalf * r * r;
+
+  return vector<float, N>{x.data_ * r * (c - xhalf * r * r)};
 }
 
 template <unsigned N>
 //__attribute__ ((noinline))
-inline vector<double, N> sqrt(vector<double, N> const& x) noexcept
+inline constexpr auto sqrt(vector<double, N> const& x) noexcept
 {
   using int_value_type = typename vector_traits<double, N>::int_value_type;
   using int_vector_type = typename vector_traits<double, N>::int_vector_type;
@@ -183,12 +183,12 @@ inline vector<double, N> sqrt(vector<double, N> const& x) noexcept
 
   auto const xhalf(cvector<double, N>(.5) * x.data_);
 
-  r *= cvector<double, N>(1.5) - xhalf * r * r;
-  r *= cvector<double, N>(1.5) - xhalf * r * r;
+  constexpr auto c(cvector<float, N>(1.5f));
 
-  return {
-    x.data_ * r * (cvector<double, N>(1.5) - xhalf * r * r)
-  };
+  r *= c - xhalf * r * r;
+  r *= c - xhalf * r * r;
+
+  return vector<double, N>{x.data_ * r * (c - xhalf * r * r)};
 }
 
 }
