@@ -499,7 +499,7 @@ select(V const a, V const b, U const c) noexcept
 {
   static_assert(sizeof(U) == sizeof(V));
 
-  // (((b ^ a) & mask)^a)
+  // (((b ^ a) & c) ^ a)
   auto const r((((U&)(b) ^ (U&)(a)) & c) ^ (U&)(a));
 
   return (V&)(r);
