@@ -39,7 +39,7 @@ inline constexpr auto ortho(vector<T, 3> const& v) noexcept
 
   // if abs(v(0)) > abs(v(1)), then we keep v(0) and v(2), otherwise
   // v(1) and v(2), this way the maximum vector element by abs value is always
-  // retained, we negate the comparison to negate 1, as -0 == 0
+  // retained. We negate the comparison because of select().
   return vector<T, 3>{
     select(
       vector_type{-v(2), T(0), v(0)},
