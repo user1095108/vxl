@@ -15,8 +15,7 @@ namespace vxl
 //////////////////////////////////////////////////////////////////////////////
 template <typename T>
 //__attribute__ ((noinline))
-inline constexpr auto ortho(vector<T, 2> const& v,
-  default_tag const = {}) noexcept
+inline constexpr auto ortho(vector<T, 2> const& v, default_tag = {}) noexcept
 {
   return vector<T, 2>{-v(1), v(0)};
 }
@@ -96,10 +95,8 @@ template <typename T>
 //__attribute__ ((noinline))
 inline constexpr auto ortho(vector<T, 3> const& v, canonical_tag) noexcept
 {
-  // the canonical way is to find the minimum element by absolute value,
-  // set it to zero and swap the other 2. Obviously, this is much more
-  // involved.
-
+  // The canonical way is to find the minimum element by absolute value,
+  // set it to zero and swap the other 2. This is much more involved.
   auto const i(detail::onb::min_element<T, 3>(v.data_,
       std::make_index_sequence<
         vxl::detail::vector::log2(sizeof(v) / sizeof(T))
