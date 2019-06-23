@@ -9,10 +9,10 @@ namespace vxl
 
 // cross product
 // http://fastcpp.blogspot.si/2011/04/vector-cross-product-using-sse-code.html
-template <typename T, unsigned N>
+template <typename T>
 //__attribute__ ((noinline))
-inline constexpr auto cross(vector<T, N> const& l,
-  vector<T, N> const& r) noexcept
+inline constexpr auto cross(vector<T, 3> const& l,
+  vector<T, 3> const& r) noexcept
 {
 /*
   return vector<T, N>{
