@@ -528,9 +528,9 @@ inline constexpr std::enable_if_t<
   !is_vector<V>{} && std::is_arithmetic<V>{},
   typename vxl::vector_traits<R, M>::vector_type
 >
-convert(V const& v) noexcept
+convert(V const v) noexcept
 {
-  return {v};
+  return v;
 }
 
 template <typename R, unsigned M, typename V>

@@ -14,11 +14,11 @@ namespace detail
 
 namespace constantsf
 {
-  static constexpr auto FOPI = 1.27323954473516f;
+  inline constexpr auto FOPI = 1.27323954473516f;
 
-  static constexpr auto DP1 = 0.78515625f;
-  static constexpr auto DP2 = 2.4187564849853515625e-4f;
-  static constexpr auto DP3 = 3.77489497744594108e-8f;
+  inline constexpr auto DP1 = 0.78515625f;
+  inline constexpr auto DP2 = 2.4187564849853515625e-4f;
+  inline constexpr auto DP3 = 3.77489497744594108e-8f;
 }
 
 }
