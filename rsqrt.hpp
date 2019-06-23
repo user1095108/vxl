@@ -39,7 +39,9 @@ namespace vxl
 //__attribute__ ((noinline))
 inline auto rsqrt(vector<float, 1> const& x) noexcept
 {
-  auto r(vrsqrte_f32(float32x2_t(x.data_)));
+  using vector_type = typename vector_traits<float, 2>::vector_type;
+
+  auto r(vrsqrte_f32(float32x2_t(vector_type{x.data_})));
 
   r *= vrsqrts_f32(float32x2_t(x), r * r);
 
