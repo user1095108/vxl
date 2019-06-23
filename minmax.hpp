@@ -107,48 +107,45 @@ namespace detail
 namespace minmax
 {
 
-// 1 2 3 4
-// m(1, 2) m(2, 3) m(3, 4) m(4, 1)
-// m(1, 2, 3, 4) m(2, 3, 4, 1) m(3, 4, 1, 2) m(4, 1, 2, 3)
-template <typename T, unsigned N, std::size_t ...Is>
-inline constexpr auto min(typename vector_traits<T, N>::vector_type v,
-  std::index_sequence<Is...>) noexcept
+enum ops
 {
-  decltype(v) sr;
-
-  (
-    (
-      sr = detail::vector::pow2_shuffler<T, N, Is>(v,
-        std::make_index_sequence<sizeof(v) / sizeof(T)>()
-      ),
-      v = select(v, sr, v < sr)
-    ),
-    ...
-  );
-
-  return v;
-}
+  min,
+  max
+};
 
 // 1 2 3 4
 // m(1, 2) m(2, 3) m(3, 4) m(4, 1)
 // m(1, 2, 3, 4) m(2, 3, 4, 1) m(3, 4, 1, 2) m(4, 1, 2, 3)
-template <typename T, unsigned N, std::size_t ...Is>
-inline constexpr auto max(typename vector_traits<T, N>::vector_type v,
+template <typename T, unsigned N, enum ops O, std::size_t ...Is>
+inline constexpr auto minmax(typename vector_traits<T, N>::vector_type v,
   std::index_sequence<Is...>) noexcept
 {
   decltype(v) sr;
 
-  (
+  if constexpr(O == min)
+  {
     (
-      // sr = pow2-shuffled v
-      sr = detail::vector::pow2_shuffler<T, N, Is>(v,
-        std::make_index_sequence<sizeof(v) / sizeof(T)>()
+      (
+        sr = detail::vector::pow2_shuffler<T, N, Is>(v,
+          std::make_index_sequence<sizeof(v) / sizeof(T)>()
+        ),
+        v = select(v, sr, v < sr)
       ),
-      // compute m(a, b)
-      v = select(v, sr, v > sr)
-    ),
-    ...
-  );
+      ...
+    );
+  }
+  else
+  {
+    (
+      (
+        sr = detail::vector::pow2_shuffler<T, N, Is>(v,
+          std::make_index_sequence<sizeof(v) / sizeof(T)>()
+        ),
+        v = select(v, sr, v > sr)
+      ),
+      ...
+    );
+  }
 
   return v;
 }
@@ -163,7 +160,7 @@ template <typename T, unsigned N>
 inline constexpr auto min(vector<T, N> const& v) noexcept
 {
   return vector<T, N>{
-    detail::minmax::min<T, N>(v.data_,
+    detail::minmax::minmax<T, N, detail::minmax::min>(v.data_,
       std::make_index_sequence<detail::vector::log2(N)>()
     )
   };
@@ -175,7 +172,7 @@ template <typename T, unsigned N>
 inline constexpr auto max(vector<T, N> const& v) noexcept
 {
   return vector<T, N>{
-    detail::minmax::max<T, N>(v.data_,
+    detail::minmax::minmax<T, N, detail::minmax::max>(v.data_,
       std::make_index_sequence<detail::vector::log2(N)>()
     )
   };
