@@ -103,11 +103,13 @@ inline auto rsqrt(vector<float, 4> const& x) noexcept
 #elif defined(__SSE__)
 
 //__attribute__ ((noinline))
-inline auto rsqrt(vector<float, 1> const& x) noexcept
+inline auto rsqrt(vector<float, 1> const& xx) noexcept
 {
   using vector_type = typename vector_traits<float, 4>::vector_type;
 
-  auto const r(_mm_rsqrt_ss(x.data_));
+  vector_type const x{xx.data_};
+
+  auto const r(_mm_rsqrt_ss(x));
 
   return vector<float, 1>{
     (r * (cvector<float, 4>(1.5f) - cvector<float, 4>(.5f) * x * r * r))[0]
@@ -117,7 +119,7 @@ inline auto rsqrt(vector<float, 1> const& x) noexcept
 //__attribute__ ((noinline))
 inline auto rsqrt(vector<float, 2> const& x) noexcept
 {
-  auto r(_mm_rsqrt_ps(x.data_));
+  auto const r(_mm_rsqrt_ps(x.data_));
 
   return vector<float, 2>{
     r * (cvector<float, 2>(1.5f) - cvector<float, 2>(.5f) * x.data_ * r * r)
@@ -127,7 +129,7 @@ inline auto rsqrt(vector<float, 2> const& x) noexcept
 //__attribute__ ((noinline))
 inline auto rsqrt(vector<float, 3> const& x) noexcept
 {
-  auto r(_mm_rsqrt_ps(x.data_));
+  auto const r(_mm_rsqrt_ps(x.data_));
 
   return vector<float, 3>{
     r * (cvector<float, 3>(1.5f) - cvector<float, 3>(.5f) * x.data_ * r * r)
@@ -137,7 +139,7 @@ inline auto rsqrt(vector<float, 3> const& x) noexcept
 //__attribute__ ((noinline))
 inline auto rsqrt(vector<float, 4> const& x) noexcept
 {
-  auto r(_mm_rsqrt_ps(x.data_));
+  auto const r(_mm_rsqrt_ps(x.data_));
 
   return vector<float, 4>{
     r * (cvector<float, 4>(1.5f) - cvector<float, 4>(.5f) * x.data_ * r * r)
