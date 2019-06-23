@@ -164,9 +164,9 @@ inline constexpr auto magic_constant<double>{0x5fe6eb50c7b537a9};
 
 }
 
-template <unsigned N>
+template <typename T, unsigned N>
 //__attribute__ ((noinline))
-inline constexpr auto rsqrt(vector<T, N> const& x) noexcept
+inline constexpr auto rsqrt(vector<T, N> const& xx) noexcept
 {
   using int_value_type = typename vector_traits<T, N>::int_value_type;
   using int_vector_type = typename vector_traits<T, N>::int_vector_type;
@@ -180,14 +180,21 @@ inline constexpr auto rsqrt(vector<T, N> const& x) noexcept
     (xi >> cvector<int_value_type, N>(1)));
   auto& rr((vector_type&)r);
 
-  auto const xhalf(cvector<T, N>(T(.5)) * x.data_);
+  auto const xhalf(cvector<T, N>(T(.5)) * x);
 
   constexpr auto c(cvector<T, N>(T(1.5)));
 
-  r *= c - xhalf * rr * rr;
-  r *= c - xhalf * rr * rr;
+  rr *= c - xhalf * rr * rr;
+  rr *= c - xhalf * rr * rr;
 
   return vector<T, N>{rr * (c - xhalf * rr * rr)};
+}
+
+template <typename T, unsigned N>
+//__attribute__ ((noinline))
+inline constexpr auto sqrt(vector<T, N> const& x) noexcept
+{
+  return x * rsqrt(x);
 }
 
 }

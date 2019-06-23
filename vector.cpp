@@ -10,7 +10,7 @@
 
 #include "minmax.hpp"
 
-#include "sqrt.hpp"
+#include "rsqrt.hpp"
 
 #include "sinf.hpp"
 
