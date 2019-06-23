@@ -37,19 +37,17 @@ namespace vxl
 #if defined(__ARM_NEON)
 
 //__attribute__ ((noinline))
-inline auto rsqrt(vector<float, 1> const& x) noexcept
+inline auto rsqrt(vector<float, 1> const& xx) noexcept
 {
   using vector_type = typename vector_traits<float, 2>::vector_type;
 
-  auto r(vrsqrte_f32(float32x2_t(vector_type{x.data_})));
+  auto const x(float32x2_t(vector_type{xx.data_}));
 
-  r *= vrsqrts_f32(float32x2_t(x), r * r);
+  auto r(vrsqrte_f32(x));
 
-  return vector<float, 2>{
-    vector_type(
-      r * (vrsqrts_f32(float32x2_t(x), r * r))
-    )
-  };
+  r *= vrsqrts_f32(x, r * r);
+
+  return vector<float, 2>{vector_type(r * (vrsqrts_f32(x, r * r)))};
 }
 
 //__attribute__ ((noinline))
