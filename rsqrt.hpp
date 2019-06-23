@@ -31,6 +31,9 @@
 namespace vxl
 {
 
+// reciprocal square root and square root
+// https://en.wikipedia.org/wiki/Fast_inverse_square_root
+
 #if defined(__ARM_NEON)
 
 //__attribute__ ((noinline))
@@ -100,16 +103,14 @@ inline auto rsqrt(vector<float, 4> const& x) noexcept
 #elif defined(__SSE__)
 
 //__attribute__ ((noinline))
-inline auto rsqrt(float const& xx) noexcept
+inline auto rsqrt(vector<float, 1> const& x) noexcept
 {
   using vector_type = typename vector_traits<float, 4>::vector_type;
 
-  vector_type const x{xx};
+  auto const r(_mm_rsqrt_ss(x.data_));
 
-  auto r(_mm_rsqrt_ss(x));
-
-  return vector<float, 4>{
-    r * (cvector<float, 4>(1.5f) - cvector<float, 4>(.5f) * x * r * r)
+  return vector<float, 1>{
+    (r * (cvector<float, 4>(1.5f) - cvector<float, 4>(.5f) * x * r * r))[0]
   };
 }
 
