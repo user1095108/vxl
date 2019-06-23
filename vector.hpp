@@ -519,12 +519,6 @@ inline constexpr auto convert(C const& v,
   return typename vxl::vector_traits<R, M>::vector_type{R(v[Is])...};
 }
 
-template <typename R, typename T>
-inline constexpr R const& convert(T const& v) noexcept
-{
-  return reinterpret_cast<R const&>(v);
-}
-
 }
 
 }
@@ -536,8 +530,7 @@ inline constexpr std::enable_if_t<
 >
 convert(V const& v) noexcept
 {
-  static_assert(1 == M, "M must equal 1");
-  return v;
+  return {v};
 }
 
 template <typename R, unsigned M, typename V>
