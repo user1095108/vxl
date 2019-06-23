@@ -47,7 +47,7 @@ inline auto rsqrt(vector<float, 1> const& xx) noexcept
 
   r *= vrsqrts_f32(x, r * r);
 
-  return vector<float, 2>{vector_type(r * (vrsqrts_f32(x, r * r)))};
+  return vector<float, 1>{vector_type(r * (vrsqrts_f32(x, r * r)))[0]};
 }
 
 //__attribute__ ((noinline))
