@@ -37,11 +37,11 @@ namespace vxl
 #if defined(__ARM_NEON)
 
 //__attribute__ ((noinline))
-inline auto rsqrt(float const xx) noexcept
+inline auto rsqrt(vector<float, 1> const& xx) noexcept
 {
   using vector_type = typename vector_traits<float, 2>::vector_type;
 
-  vector_type const x{xx};
+  auto const r(vrsqrte_f32(float32x2_t(x.data_)));
 
   r *= vrsqrts_f32(float32x2_t(x), r * r);
 
@@ -57,7 +57,7 @@ inline auto rsqrt(vector<float, 2> const& x) noexcept
 {
   using vector_type = typename vector_traits<float, 2>::vector_type;
 
-  auto r(vrsqrte_f32(float32x2_t(x.data_)));
+  auto const r(vrsqrte_f32(float32x2_t(x.data_)));
 
   r *= vrsqrts_f32(float32x2_t(x.data_), r * r);
 
@@ -73,7 +73,7 @@ inline auto rsqrt(vector<float, 3> const& x) noexcept
 {
   using vector_type = typename vector_traits<float, 3>::vector_type;
 
-  auto r(vrsqrteq_f32(float32x4_t(x.data_)));
+  auto const r(vrsqrteq_f32(float32x4_t(x.data_)));
 
   r *= vrsqrtsq_f32(float32x4_t(x.data_), r * r);
 
@@ -89,7 +89,7 @@ inline auto rsqrt(vector<float, 4> const& x) noexcept
 {
   using vector_type = typename vector_traits<float, 4>::vector_type;
 
-  auto r(vrsqrteq_f32(float32x4_t(x.data_)));
+  auto const r(vrsqrteq_f32(float32x4_t(x.data_)));
 
   r *= vrsqrtsq_f32(float32x4_t(x.data_), r * r);
 
