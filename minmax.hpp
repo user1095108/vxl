@@ -117,7 +117,6 @@ inline constexpr auto minmax(typename vector_traits<T, N>::vector_type v,
   decltype(v) sr;
 
   if constexpr(op)
-  {
     (
       (
         sr = detail::vector::pow2_shuffler<T, N, Is>(v,
@@ -127,9 +126,7 @@ inline constexpr auto minmax(typename vector_traits<T, N>::vector_type v,
       ),
       ...
     );
-  }
   else
-  {
     (
       (
         sr = detail::vector::pow2_shuffler<T, N, Is>(v,
@@ -139,7 +136,6 @@ inline constexpr auto minmax(typename vector_traits<T, N>::vector_type v,
       ),
       ...
     );
-  }
 
   return v;
 }

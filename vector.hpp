@@ -565,7 +565,7 @@ struct vector
   constexpr std::enable_if_t<1 == M, T> operator()(
     unsigned const i) const noexcept
   {
-    assert(i);
+    assert(!i);
     return data_;
   }
 #else
