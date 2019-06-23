@@ -107,22 +107,16 @@ namespace detail
 namespace minmax
 {
 
-enum ops
-{
-  min,
-  max
-};
-
 // 1 2 3 4
 // m(1, 2) m(2, 3) m(3, 4) m(4, 1)
 // m(1, 2, 3, 4) m(2, 3, 4, 1) m(3, 4, 1, 2) m(4, 1, 2, 3)
-template <typename T, unsigned N, enum ops O, std::size_t ...Is>
+template <typename T, unsigned N, char C, std::size_t ...Is>
 inline constexpr auto minmax(typename vector_traits<T, N>::vector_type v,
   std::index_sequence<Is...>) noexcept
 {
   decltype(v) sr;
 
-  if constexpr(O == min)
+  if constexpr(C == '<')
   {
     (
       (
@@ -160,7 +154,7 @@ template <typename T, unsigned N>
 inline constexpr auto min(vector<T, N> const& v) noexcept
 {
   return vector<T, N>{
-    detail::minmax::minmax<T, N, detail::minmax::min>(v.data_,
+    detail::minmax::minmax<T, N, '<'>(v.data_,
       std::make_index_sequence<detail::vector::log2(N)>()
     )
   };
@@ -172,7 +166,7 @@ template <typename T, unsigned N>
 inline constexpr auto max(vector<T, N> const& v) noexcept
 {
   return vector<T, N>{
-    detail::minmax::minmax<T, N, detail::minmax::max>(v.data_,
+    detail::minmax::minmax<T, N, '>'>(v.data_,
       std::make_index_sequence<detail::vector::log2(N)>()
     )
   };
