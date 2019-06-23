@@ -602,6 +602,7 @@ struct vector
   constexpr auto& ref() noexcept {return data_;}
 };
 
+// convert another vector
 template <typename R, unsigned M, typename T, unsigned N>
 inline constexpr auto convert(vector<T, N> const& v) noexcept
 {
@@ -613,6 +614,7 @@ inline constexpr auto convert(vector<T, N> const& v) noexcept
   };
 }
 
+// convert container into vector
 template <typename R, unsigned M, typename C>
 inline constexpr auto make_vector(C const& c) noexcept ->
   decltype(std::size(C()), typename C::value_type(),
@@ -627,6 +629,7 @@ inline constexpr auto make_vector(C const& c) noexcept ->
   };
 }
 
+// convert container into vector
 template <typename C>
 inline constexpr auto make_vector(C const& c) noexcept ->
   decltype(std::size(C()), typename C::value_type(),
