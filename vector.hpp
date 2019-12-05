@@ -1378,7 +1378,7 @@ constexpr bool any(vector<T, N> const& l) noexcept
 
 // zero
 template <typename T, unsigned N>
-constexpr auto zero() noexcept
+static constexpr auto zero() noexcept
 {
   return vector<T, N>{};
 }
@@ -1412,7 +1412,7 @@ template <typename T, unsigned N>
 struct hash<vxl::vector<T, N>>
 {
   template <std::size_t ...I>
-  static inline constexpr auto make_hash(
+  static constexpr auto make_hash(
     typename vxl::vector_traits<T, N>::vector_type const& v,
     std::index_sequence<I...> const) noexcept
   {
