@@ -1378,15 +1378,15 @@ constexpr bool any(vector<T, N> const& l) noexcept
 
 // zero
 template <typename T, unsigned N>
-static constexpr auto zero() noexcept
-{
-  return vector<T, N>{};
-}
-
-template <typename T, unsigned N>
 constexpr void zero(vector<T, N>& v) noexcept
 {
   v.data_ = decltype(v.data_){};
+}
+
+template <typename T, unsigned N>
+static constexpr auto zero_vector() noexcept
+{
+  return vector<T, N>{};
 }
 
 // stream operators
