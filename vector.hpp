@@ -439,7 +439,7 @@ namespace vector
 
 template <typename U, typename V, std::size_t ...Is>
 //__attribute__ ((noinline))
-inline constexpr std::enable_if_t<
+constexpr std::enable_if_t<
   is_vector<U>{} && is_vector<V>{},
   V
 >
@@ -454,7 +454,7 @@ select(V const a, V const b, U const c, std::index_sequence<Is...>) noexcept
 
 template <typename U, typename V>
 //__attribute__ ((noinline))
-inline constexpr std::enable_if_t<
+constexpr std::enable_if_t<
   is_vector<U>{} && is_vector<V>{},
   V
 >
@@ -470,7 +470,7 @@ select(V const a, V const b, U const c) noexcept
 }
 #else
 template <typename U, typename V>
-inline constexpr std::enable_if_t<
+constexpr std::enable_if_t<
   is_vector<U>{} && is_vector<V>{},
   V
 >
@@ -482,7 +482,7 @@ select(V const a, V const b, U const c) noexcept
 
 template <typename U, typename V>
 //__attribute__ ((noinline))
-inline constexpr std::enable_if_t<
+constexpr std::enable_if_t<
   !is_vector<U>{} && !is_vector<V>{},
   V
 >
@@ -513,7 +513,7 @@ namespace vector
 
 template <typename R, unsigned M, typename T, unsigned N, typename C,
   std::size_t ...Is>
-inline constexpr auto convert(C const& v,
+constexpr auto convert(C const& v,
   std::index_sequence<Is...> const) noexcept
 {
   return typename vxl::vector_traits<R, M>::vector_type{R(v[Is])...};
@@ -524,7 +524,7 @@ inline constexpr auto convert(C const& v,
 }
 
 template <typename R, unsigned M, typename V>
-inline constexpr std::enable_if_t<
+constexpr std::enable_if_t<
   !is_vector<V>{} && std::is_arithmetic<V>{},
   typename vxl::vector_traits<R, M>::vector_type
 >
@@ -534,7 +534,7 @@ convert(V const v) noexcept
 }
 
 template <typename R, unsigned M, typename V>
-inline constexpr std::enable_if_t<
+constexpr std::enable_if_t<
   is_vector<V>{},
   typename vxl::vector_traits<R, M>::vector_type
 >
@@ -604,7 +604,7 @@ struct vector
 
 // convert another vector
 template <typename R, unsigned M, typename T, unsigned N>
-inline constexpr auto convert(vector<T, N> const& v) noexcept
+constexpr auto convert(vector<T, N> const& v) noexcept
 {
   return vxl::vector<R, M>{
     detail::vector::convert<R, M, T, N>(
@@ -616,7 +616,7 @@ inline constexpr auto convert(vector<T, N> const& v) noexcept
 
 // convert container into vector
 template <typename R, unsigned M, typename C>
-inline constexpr auto make_vector(C const& c) noexcept ->
+constexpr auto make_vector(C const& c) noexcept ->
   decltype(std::size(C()), typename C::value_type(),
     vector<typename C::value_type, std::size(C())>())
 {
@@ -631,7 +631,7 @@ inline constexpr auto make_vector(C const& c) noexcept ->
 
 // convert container into vector
 template <typename C>
-inline constexpr auto make_vector(C const& c) noexcept ->
+constexpr auto make_vector(C const& c) noexcept ->
   decltype(std::size(C()), typename C::value_type(),
     vector<typename C::value_type, std::size(C())>())
 {
@@ -652,7 +652,7 @@ template <typename ...A,
     std::is_arithmetic<std::decay_t<front_t<A...>>>{}
   >
 >
-inline constexpr auto make_vector(A const ...a) noexcept
+constexpr auto make_vector(A const ...a) noexcept
 {
   vector<std::decay_t<front_t<A...>>, sizeof...(A)> r{};
 
@@ -669,68 +669,80 @@ inline constexpr auto make_vector(A const ...a) noexcept
 }
 
 template <typename T, unsigned N>
-inline constexpr vector<T, N> operator+(vector<T, N> const& a) noexcept
+constexpr vector<T, N> operator*(T const a, vector<T, N> const& b) noexcept
+{
+  return { a * b.data_ };
+}
+
+template <typename T, unsigned N>
+constexpr vector<T, N> operator*(vector<T, N> const& a, T const b) noexcept
+{
+  return { b * a.data_ };
+}
+
+template <typename T, unsigned N>
+constexpr vector<T, N> operator+(vector<T, N> const& a) noexcept
 {
   return a;
 }
 
 template <typename T, unsigned N>
-inline constexpr vector<T, N> operator-(vector<T, N> const& a) noexcept
+constexpr vector<T, N> operator-(vector<T, N> const& a) noexcept
 {
   return { -a.data_ };
 }
 
 template <typename T, unsigned N>
-inline constexpr vector<T, N> operator+(vector<T, N> const& a,
+constexpr vector<T, N> operator+(vector<T, N> const& a,
   vector<T, N> const& b) noexcept
 {
   return { a.data_ + b.data_ };
 }
 
 template <typename T, unsigned N>
-inline constexpr vector<T, N> operator-(vector<T, N> const& a,
+constexpr vector<T, N> operator-(vector<T, N> const& a,
   vector<T, N> const& b) noexcept
 {
   return { a.data_ - b.data_ };
 }
 
 template <typename T, unsigned N>
-inline constexpr vector<T, N> operator*(vector<T, N> const& a,
+constexpr vector<T, N> operator*(vector<T, N> const& a,
   vector<T, N> const& b) noexcept
 {
   return { a.data_ * b.data_ };
 }
 
 template <typename T, unsigned N>
-inline constexpr vector<T, N> operator/(vector<T, N> const& a,
+constexpr vector<T, N> operator/(vector<T, N> const& a,
   vector<T, N> const& b) noexcept
 {
   return { a.data_ / b.data_ };
 }
 
 template <typename T, unsigned N>
-inline constexpr vector<T, N>& operator+=(vector<T, N>& a,
+constexpr vector<T, N>& operator+=(vector<T, N>& a,
   vector<T, N> const& b) noexcept
 {
   return a.data_ += b.data_, a;
 }
 
 template <typename T, unsigned N>
-inline constexpr vector<T, N>& operator-=(vector<T, N>& a,
+constexpr vector<T, N>& operator-=(vector<T, N>& a,
   vector<T, N> const& b) noexcept
 {
   return a.data_ -= b.data_, a;
 }
 
 template <typename T, unsigned N>
-inline constexpr vector<T, N>& operator*=(vector<T, N>& a,
+constexpr vector<T, N>& operator*=(vector<T, N>& a,
   vector<T, N> const& b) noexcept
 {
   return a.data_ *= b.data_, a;
 }
 
 template <typename T, unsigned N>
-inline constexpr vector<T, N>& operator/=(vector<T, N>& a,
+constexpr vector<T, N>& operator/=(vector<T, N>& a,
   vector<T, N> const& b) noexcept
 {
   return a.data_ /= b.data_, a;
@@ -744,7 +756,7 @@ namespace vector
 {
 
 template <typename T, unsigned N, std::size_t ...Is>
-inline constexpr typename vxl::vector_traits<T, N>::vector_type
+constexpr typename vxl::vector_traits<T, N>::vector_type
 cvector(T const c, std::index_sequence<Is...>) noexcept
 {
   return typename vxl::vector_traits<T, N>::vector_type{(c + T(Is - Is))...};
@@ -755,7 +767,7 @@ cvector(T const c, std::index_sequence<Is...>) noexcept
 }
 
 template <typename T, unsigned N>
-inline constexpr auto cvector(T const c) noexcept
+constexpr auto cvector(T const c) noexcept
 {
   return detail::vector::cvector<T, N>(c,
     std::make_index_sequence<N>()
@@ -780,7 +792,7 @@ struct swizzle_indices :
 };
 
 template <typename T, int ...I>
-inline constexpr auto clang_swizzle(T&& a, T&& b,
+constexpr auto clang_swizzle(T&& a, T&& b,
   std::integer_sequence<int, I...> const) noexcept
 {
   return __builtin_shufflevector(a, b, I...);
@@ -792,7 +804,7 @@ inline constexpr auto clang_swizzle(T&& a, T&& b,
 
 // swizzle
 template <int ...I, typename T, unsigned N>
-inline constexpr void swizzle(vector<T, N>& v)
+constexpr void swizzle(vector<T, N>& v)
 {
 #if defined(__clang__)
   v.data_ = detail::vector::clang_swizzle(v.data_,
@@ -809,7 +821,7 @@ inline constexpr void swizzle(vector<T, N>& v)
 }
 
 template <int ...I, typename T, unsigned N>
-inline constexpr vector<T, N> swizzled(vector<T, N> const& v) noexcept
+constexpr vector<T, N> swizzled(vector<T, N> const& v) noexcept
 {
 #if defined(__clang__)
   return {
@@ -830,7 +842,7 @@ inline constexpr vector<T, N> swizzled(vector<T, N> const& v) noexcept
 }
 
 template <int ...I, typename T, unsigned N>
-inline constexpr vector<T, N> swizzled(vector<T, N> const& a,
+constexpr vector<T, N> swizzled(vector<T, N> const& a,
   vector<T, N> const& b) noexcept
 {
 #if defined(__clang__)
@@ -861,19 +873,19 @@ namespace vector
 {
 
 template <typename T>
-inline constexpr T pow2(T const e) noexcept
+constexpr T pow2(T const e) noexcept
 {
   return T(1) << e;
 }
 
 template <typename T>
-inline constexpr T log2(T const n, T const e = 0) noexcept
+constexpr T log2(T const n, T const e = 0) noexcept
 {
   return pow2(e) < n ? log2(n, e + 1) : e;
 }
 
 template <typename T, unsigned N, std::size_t ...Is>
-inline constexpr typename vxl::vector_traits<T, N>::int_vector_type
+constexpr typename vxl::vector_traits<T, N>::int_vector_type
 abs_mask(std::index_sequence<Is...>) noexcept
 {
   using int_vector_type = typename vector_traits<T, N>::int_vector_type;
@@ -918,7 +930,7 @@ inline auto abs(vector<float, 4> const& v) noexcept
 #endif
 
 template <typename T, unsigned N>
-inline constexpr auto abs(vector<T, N> const& v) noexcept
+constexpr auto abs(vector<T, N> const& v) noexcept
 {
   using int_vector_type = typename vector_traits<T, N>::int_vector_type;
   using vector_type = typename vector_traits<T, N>::vector_type;
@@ -931,7 +943,7 @@ inline constexpr auto abs(vector<T, N> const& v) noexcept
 }
 
 template <typename T, unsigned N>
-inline constexpr void mabs(vector<T, N>& v) noexcept
+constexpr void mabs(vector<T, N>& v) noexcept
 {
   using int_vector_type = typename vector_traits<T, N>::int_vector_type;
   using vector_type = typename vector_traits<T, N>::vector_type;
@@ -949,7 +961,7 @@ namespace vector
 
 template <typename T, unsigned N, std::size_t I, std::size_t ...Is>
 //__attribute__ ((noinline))
-inline constexpr auto
+constexpr auto
 lin_shuffler(typename vector_traits<T, N>::vector_type const& v,
   std::index_sequence<Is...>) noexcept
 {
@@ -964,7 +976,7 @@ lin_shuffler(typename vector_traits<T, N>::vector_type const& v,
 
 template <typename T, unsigned N, std::size_t I, std::size_t ...Is>
 //__attribute__ ((noinline))
-inline constexpr auto
+constexpr auto
 pow2_shuffler(typename vector_traits<T, N>::vector_type const& v,
   std::index_sequence<Is...>) noexcept
 {
@@ -978,7 +990,7 @@ pow2_shuffler(typename vector_traits<T, N>::vector_type const& v,
 }
 
 template <typename T, unsigned N, std::size_t I, std::size_t ...Is>
-inline constexpr typename vxl::vector_traits<T, N>::int_vector_type
+constexpr typename vxl::vector_traits<T, N>::int_vector_type
 than_mask(std::index_sequence<Is...> const) noexcept
 {
   // generate mask for each Is
@@ -993,7 +1005,7 @@ than_mask(std::index_sequence<Is...> const) noexcept
 // e = a == b = {a[i] == b[i] ? ~0 : 0}
 // a < b == l[3] v e[3]l[2] v e[3]e[2]l[1] v e[3]e[2]e[1]l[0]
 template <typename T, unsigned N, std::size_t ...Is>
-inline constexpr bool than(typename vector_traits<T, N>::int_vector_type v,
+constexpr bool than(typename vector_traits<T, N>::int_vector_type v,
   typename vector_traits<T, N>::int_vector_type e,
   std::index_sequence<Is...> const) noexcept
 {
@@ -1028,7 +1040,7 @@ inline constexpr bool than(typename vector_traits<T, N>::int_vector_type v,
 }
 
 template <typename T, unsigned N, std::size_t ...Is>
-inline constexpr bool than_equal(
+constexpr bool than_equal(
   typename vector_traits<T, N>::int_vector_type v,
   typename vector_traits<T, N>::int_vector_type e,
   std::index_sequence<Is...> const) noexcept
@@ -1066,7 +1078,7 @@ inline constexpr bool than_equal(
 
 #if defined(__SSE__)
 template <typename T, unsigned N, std::size_t ...Is>
-inline constexpr std::enable_if_t<
+constexpr std::enable_if_t<
   (2 == N) && (4 == sizeof(T)),
   bool
 >
@@ -1077,7 +1089,7 @@ all_zeros(typename vector_traits<T, N>::int_vector_type const v,
 }
 
 template <typename T, unsigned N, std::size_t ...Is>
-inline constexpr std::enable_if_t<
+constexpr std::enable_if_t<
   (3 == N) && (4 == sizeof(T)),
   bool
 >
@@ -1088,7 +1100,7 @@ all_zeros(typename vector_traits<T, N>::int_vector_type const v,
 }
 
 template <typename T, unsigned N, std::size_t ...Is>
-inline constexpr std::enable_if_t<
+constexpr std::enable_if_t<
   ((4 == N) && (4 == sizeof(T))) || ((2 == N) && (8 == sizeof(T))),
   bool
 >
@@ -1099,7 +1111,7 @@ all_zeros(typename vector_traits<T, N>::int_vector_type const v,
 }
 
 template <typename T, unsigned N, std::size_t ...Is>
-inline constexpr std::enable_if_t<
+constexpr std::enable_if_t<
   (16 < sizeof(typename vector_traits<T, N>::int_vector_type)),
   bool
 >
@@ -1120,7 +1132,7 @@ all_zeros(typename vector_traits<T, N>::int_vector_type v,
 }
 
 template <typename T, unsigned N, std::size_t ...Is>
-inline constexpr std::enable_if_t<
+constexpr std::enable_if_t<
   (16 < sizeof(typename vector_traits<T, N>::int_vector_type)),
   bool
 >
@@ -1143,7 +1155,7 @@ all_ones(typename vector_traits<T, N>::int_vector_type v,
 // just one byte out of each vector needs to be tested for 0
 template <typename T, unsigned N, std::size_t ...Is>
 //__attribute__ ((noinline))
-inline constexpr std::enable_if_t<
+constexpr std::enable_if_t<
   (2 == N) && (4 == sizeof(T)),
   bool
 >
@@ -1160,7 +1172,7 @@ all_zeros(typename vector_traits<T, N>::int_vector_type const v,
 
 template <typename T, unsigned N, std::size_t ...Is>
 //__attribute__ ((noinline))
-inline constexpr std::enable_if_t<
+constexpr std::enable_if_t<
   (3 == N) && (4 == sizeof(T)),
   bool
 >
@@ -1180,7 +1192,7 @@ all_zeros(typename vector_traits<T, N>::int_vector_type const v,
 
 template <typename T, unsigned N, std::size_t ...Is>
 //__attribute__ ((noinline))
-inline constexpr std::enable_if_t<
+constexpr std::enable_if_t<
   (4 == N) && (4 == sizeof(T)),
   bool
 >
@@ -1200,7 +1212,7 @@ all_zeros(typename vector_traits<T, N>::int_vector_type const v,
 
 template <typename T, unsigned N, std::size_t ...Is>
 //__attribute__ ((noinline))
-inline constexpr std::enable_if_t<
+constexpr std::enable_if_t<
   (2 == N) && (8 == sizeof(T)),
   bool
 >
@@ -1219,7 +1231,7 @@ all_zeros(typename vector_traits<T, N>::int_vector_type const v,
 }
 
 template <typename T, unsigned N, std::size_t ...Is>
-inline constexpr std::enable_if_t<
+constexpr std::enable_if_t<
   (16 < sizeof(typename vector_traits<T, N>::int_vector_type)),
   bool
 >
@@ -1240,7 +1252,7 @@ all_zeros(typename vector_traits<T, N>::int_vector_type v,
 }
 #else
 template <typename T, unsigned N, std::size_t ...Is>
-inline constexpr bool all_ones(
+constexpr bool all_ones(
   typename vector_traits<T, N>::int_vector_type v,
   std::index_sequence<Is...> const) noexcept
 {
@@ -1258,7 +1270,7 @@ inline constexpr bool all_ones(
 }
 
 template <typename T, unsigned N, std::size_t ...Is>
-inline constexpr bool all_zeros(
+constexpr bool all_zeros(
   typename vector_traits<T, N>::int_vector_type v,
   std::index_sequence<Is...> const) noexcept
 {
@@ -1285,7 +1297,7 @@ inline constexpr bool all_zeros(
 // associative containers, for which they are a requirement
 template <typename T, unsigned N>
 //__attribute__ ((noinline))
-inline constexpr bool operator==(
+constexpr bool operator==(
   vector<T, N> const& l, vector<T, N> const& r) noexcept
 {
   return detail::vector::all_zeros<T, N>(l.data_ != r.data_,
@@ -1294,14 +1306,14 @@ inline constexpr bool operator==(
 }
 
 template <typename T, unsigned N>
-inline constexpr bool operator!=(vector<T, N> const& l,
+constexpr bool operator!=(vector<T, N> const& l,
   vector<T, N> const& r) noexcept
 {
   return !operator==(l, r);
 }
 
 template <typename T, unsigned N>
-inline constexpr bool operator<(vector<T, N> const& l,
+constexpr bool operator<(vector<T, N> const& l,
   vector<T, N> const& r) noexcept
 {
   return detail::vector::than<T, N>(
@@ -1312,7 +1324,7 @@ inline constexpr bool operator<(vector<T, N> const& l,
 }
 
 template <typename T, unsigned N>
-inline constexpr bool operator<=(vector<T, N> const& l,
+constexpr bool operator<=(vector<T, N> const& l,
   vector<T, N> const& r) noexcept
 {
   return detail::vector::than_equal<T, N>(
@@ -1323,7 +1335,7 @@ inline constexpr bool operator<=(vector<T, N> const& l,
 }
 
 template <typename T, unsigned N>
-inline constexpr bool operator>(vector<T, N> const& l,
+constexpr bool operator>(vector<T, N> const& l,
   vector<T, N> const& r) noexcept
 {
   return detail::vector::than<T, N>(
@@ -1334,7 +1346,7 @@ inline constexpr bool operator>(vector<T, N> const& l,
 }
 
 template <typename T, unsigned N>
-inline constexpr bool operator>=(vector<T, N> const& l,
+constexpr bool operator>=(vector<T, N> const& l,
   vector<T, N> const& r) noexcept
 {
   return detail::vector::than_equal<T, N>(
@@ -1346,7 +1358,7 @@ inline constexpr bool operator>=(vector<T, N> const& l,
 
 template <typename T, unsigned N>
 //__attribute__ ((noinline))
-inline constexpr bool all(vector<T, N> const& l)
+constexpr bool all(vector<T, N> const& l)
 {
   return detail::vector::all_zeros<T, N>(
     l.data_ == cvector<T, N>(T(0)),
@@ -1356,7 +1368,7 @@ inline constexpr bool all(vector<T, N> const& l)
 
 template <typename T, unsigned N>
 //__attribute__ ((noinline))
-inline constexpr bool any(vector<T, N> const& l) noexcept
+constexpr bool any(vector<T, N> const& l) noexcept
 {
   return !detail::vector::all_zeros<T, N>(
     l.data_ != cvector<T, N>(T(0)),
@@ -1366,13 +1378,13 @@ inline constexpr bool any(vector<T, N> const& l) noexcept
 
 // zero
 template <typename T, unsigned N>
-inline constexpr auto zero() noexcept
+constexpr auto zero() noexcept
 {
   return vector<T, N>{};
 }
 
 template <typename T, unsigned N>
-inline constexpr void zero(vector<T, N>& v) noexcept
+constexpr void zero(vector<T, N>& v) noexcept
 {
   v.data_ = decltype(v.data_){};
 }
