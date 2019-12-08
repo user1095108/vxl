@@ -585,7 +585,7 @@ struct vector
 
   template <unsigned M = N>
   constexpr std::enable_if_t<1 == M>
-  set_element(unsigned const i, T const v) noexcept
+  set_element(unsigned, T const v) noexcept
   {
     data_ = v;
   }
