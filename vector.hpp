@@ -1083,7 +1083,7 @@ constexpr std::enable_if_t<
   bool
 >
 all_zeros(typename vector_traits<T, N>::int_vector_type const v,
-  std::index_sequence<Is...> const) noexcept
+  std::index_sequence<Is...>) noexcept
 {
   return !(_mm_movemask_ps(__m128(v)) & 0x3);
 }
@@ -1094,7 +1094,7 @@ constexpr std::enable_if_t<
   bool
 >
 all_zeros(typename vector_traits<T, N>::int_vector_type const v,
-  std::index_sequence<Is...> const) noexcept
+  std::index_sequence<Is...>) noexcept
 {
   return !(_mm_movemask_ps(__m128(v)) & 0x7);
 }
@@ -1105,7 +1105,7 @@ constexpr std::enable_if_t<
   bool
 >
 all_zeros(typename vector_traits<T, N>::int_vector_type const v,
-  std::index_sequence<Is...> const) noexcept
+  std::index_sequence<Is...>) noexcept
 {
   return !_mm_movemask_ps(__m128(v));
 }
@@ -1116,7 +1116,7 @@ constexpr std::enable_if_t<
   bool
 >
 all_zeros(typename vector_traits<T, N>::int_vector_type v,
-  std::index_sequence<Is...> const) noexcept
+  std::index_sequence<Is...>) noexcept
 {
   (
     (
@@ -1177,7 +1177,7 @@ constexpr std::enable_if_t<
   bool
 >
 all_zeros(typename vector_traits<T, N>::int_vector_type const v,
-  std::index_sequence<Is...> const) noexcept
+  std::index_sequence<Is...>) noexcept
 {
   return !int32x2_t(
     vtbl2_s8(
@@ -1197,7 +1197,7 @@ constexpr std::enable_if_t<
   bool
 >
 all_zeros(typename vector_traits<T, N>::int_vector_type const v,
-  std::index_sequence<Is...> const) noexcept
+  std::index_sequence<Is...>) noexcept
 {
   return !int32x2_t(
     vtbl2_s8(
@@ -1217,7 +1217,7 @@ constexpr std::enable_if_t<
   bool
 >
 all_zeros(typename vector_traits<T, N>::int_vector_type const v,
-  std::index_sequence<Is...> const) noexcept
+  std::index_sequence<Is...>) noexcept
 {
   return !int16x4_t(
     vtbl2_s8(
@@ -1236,7 +1236,7 @@ constexpr std::enable_if_t<
   bool
 >
 all_zeros(typename vector_traits<T, N>::int_vector_type v,
-  std::index_sequence<Is...> const) noexcept
+  std::index_sequence<Is...>) noexcept
 {
   (
     (
@@ -1254,7 +1254,7 @@ all_zeros(typename vector_traits<T, N>::int_vector_type v,
 template <typename T, unsigned N, std::size_t ...Is>
 constexpr bool all_ones(
   typename vector_traits<T, N>::int_vector_type v,
-  std::index_sequence<Is...> const) noexcept
+  std::index_sequence<Is...>) noexcept
 {
   (
     (
@@ -1272,7 +1272,7 @@ constexpr bool all_ones(
 template <typename T, unsigned N, std::size_t ...Is>
 constexpr bool all_zeros(
   typename vector_traits<T, N>::int_vector_type v,
-  std::index_sequence<Is...> const) noexcept
+  std::index_sequence<Is...>) noexcept
 {
   (
     (
@@ -1297,8 +1297,8 @@ constexpr bool all_zeros(
 // associative containers, for which they are a requirement
 template <typename T, unsigned N>
 //__attribute__ ((noinline))
-constexpr bool operator==(
-  vector<T, N> const& l, vector<T, N> const& r) noexcept
+constexpr bool operator==(vector<T, N> const& l,
+  vector<T, N> const& r) noexcept
 {
   return detail::vector::all_zeros<T, N>(l.data_ != r.data_,
     std::make_index_sequence<detail::vector::log2(N)>()
