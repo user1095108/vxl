@@ -1414,7 +1414,7 @@ struct hash<vxl::vector<T, N>>
   template <std::size_t ...I>
   static constexpr auto make_hash(
     typename vxl::vector_traits<T, N>::vector_type const& v,
-    std::index_sequence<I...> const) noexcept
+    std::index_sequence<I...>) noexcept
   {
     std::size_t seed{};
 
