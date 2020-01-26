@@ -1076,12 +1076,86 @@ constexpr bool than_equal(
   return (e | v)[0];
 }
 
-#if defined(__SSE__)
+#if defined(__SSE2__)
+template <typename T, unsigned N, std::size_t ...Is>
+constexpr std::enable_if_t<(2 == N) && (4 == sizeof(T)), bool>
+all_zeros(typename vector_traits<T, N>::int_vector_type const v,
+  std::index_sequence<Is...>) noexcept
+{
+  return !(_mm_movemask_epi8(__m128i(v)) & 0xff);
+}
+
+template <typename T, unsigned N, std::size_t ...Is>
+constexpr std::enable_if_t<(3 == N) && (4 == sizeof(T)), bool>
+all_zeros(typename vector_traits<T, N>::int_vector_type const v,
+  std::index_sequence<Is...>) noexcept
+{
+  return !(_mm_movemask_epi8(__m128i(v)) & 0xfff);
+}
+
 template <typename T, unsigned N, std::size_t ...Is>
 constexpr std::enable_if_t<
-  (2 == N) && (4 == sizeof(T)),
+  ((4 == N) && (4 == sizeof(T))) || ((2 == N) && (8 == sizeof(T))),
   bool
 >
+all_zeros(typename vector_traits<T, N>::int_vector_type const v,
+  std::index_sequence<Is...>) noexcept
+{
+  return !_mm_movemask_epi8(__m128i(v));
+}
+
+template <typename T, unsigned N, std::size_t ...Is>
+constexpr std::enable_if_t<(2 == N) && (8 == sizeof(T)), bool>
+all_zeros(typename vector_traits<T, N>::int_vector_type const v,
+  std::index_sequence<Is...>) noexcept
+{
+  return !(_mm_movemask_pd(__m128d(v)));
+}
+
+template <typename T, unsigned N, std::size_t ...Is>
+constexpr std::enable_if_t<
+  (16 < sizeof(typename vector_traits<T, N>::int_vector_type)),
+  bool
+>
+all_zeros(typename vector_traits<T, N>::int_vector_type v,
+  std::index_sequence<Is...>) noexcept
+{
+  (
+    (
+      v |= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
+        v,
+        std::make_index_sequence<sizeof(v) / sizeof(T)>()
+      )
+    ),
+    ...
+  );
+
+  return !v[0];
+}
+
+template <typename T, unsigned N, std::size_t ...Is>
+constexpr std::enable_if_t<
+  (16 < sizeof(typename vector_traits<T, N>::int_vector_type)),
+  bool
+>
+all_ones(typename vector_traits<T, N>::int_vector_type v,
+  std::index_sequence<Is...>) noexcept
+{
+  (
+    (
+      v &= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
+        v,
+        std::make_index_sequence<sizeof(v) / sizeof(T)>()
+      )
+    ),
+    ...
+  );
+
+  return v[0];
+}
+#elif defined(__SSE__)
+template <typename T, unsigned N, std::size_t ...Is>
+constexpr std::enable_if_t<(2 == N) && (4 == sizeof(T)), bool>
 all_zeros(typename vector_traits<T, N>::int_vector_type const v,
   std::index_sequence<Is...>) noexcept
 {
@@ -1089,10 +1163,7 @@ all_zeros(typename vector_traits<T, N>::int_vector_type const v,
 }
 
 template <typename T, unsigned N, std::size_t ...Is>
-constexpr std::enable_if_t<
-  (3 == N) && (4 == sizeof(T)),
-  bool
->
+constexpr std::enable_if_t<(3 == N) && (4 == sizeof(T)), bool>
 all_zeros(typename vector_traits<T, N>::int_vector_type const v,
   std::index_sequence<Is...>) noexcept
 {
@@ -1137,7 +1208,7 @@ constexpr std::enable_if_t<
   bool
 >
 all_ones(typename vector_traits<T, N>::int_vector_type v,
-  std::index_sequence<Is...> const) noexcept
+  std::index_sequence<Is...>) noexcept
 {
   (
     (
