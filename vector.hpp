@@ -1035,45 +1035,8 @@ constexpr bool than(typename vector_traits<T, N>::int_vector_type v,
     ),
     ...
   );
-  
+
   return v[0];
-}
-
-template <typename T, unsigned N, std::size_t ...Is>
-constexpr bool than_equal(
-  typename vector_traits<T, N>::int_vector_type v,
-  typename vector_traits<T, N>::int_vector_type e,
-  std::index_sequence<Is...> const) noexcept
-{
-  (
-    (
-      v &= lin_shuffler<
-        typename vector_traits<T, N>::int_value_type, N, Is + 1>(
-        e,
-        std::make_index_sequence<sizeof(v) / sizeof(T)>()
-      ) |
-      than_mask<typename vector_traits<T, N>::int_value_type, N, Is>(
-        std::make_index_sequence<sizeof(v) / sizeof(T)>()
-      )
-    ),
-    ...
-  );
-
-  (
-    (
-      e &= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
-        e,
-        std::make_index_sequence<sizeof(v) / sizeof(T)>()
-      ),
-      v |= pow2_shuffler<typename vector_traits<T, N>::int_value_type, N, Is>(
-        v,
-        std::make_index_sequence<sizeof(v) / sizeof(T)>()
-      )
-    ),
-    ...
-  );
-
-  return (e | v)[0];
 }
 
 #if defined(__SSE2__)
@@ -1400,17 +1363,6 @@ constexpr bool operator<(vector<T, N> const& l,
 }
 
 template <typename T, unsigned N>
-constexpr bool operator<=(vector<T, N> const& l,
-  vector<T, N> const& r) noexcept
-{
-  return detail::vector::than_equal<T, N>(
-    l.data_ < r.data_,
-    l.data_ == r.data_,
-    std::make_index_sequence<N - 1>()
-  );
-}
-
-template <typename T, unsigned N>
 constexpr bool operator>(vector<T, N> const& l,
   vector<T, N> const& r) noexcept
 {
@@ -1422,14 +1374,17 @@ constexpr bool operator>(vector<T, N> const& l,
 }
 
 template <typename T, unsigned N>
+constexpr bool operator<=(vector<T, N> const& l,
+  vector<T, N> const& r) noexcept
+{
+  return !(l > r);
+}
+
+template <typename T, unsigned N>
 constexpr bool operator>=(vector<T, N> const& l,
   vector<T, N> const& r) noexcept
 {
-  return detail::vector::than_equal<T, N>(
-    l.data_ > r.data_,
-    l.data_ == r.data_,
-    std::make_index_sequence<N - 1>()
-  );
+  return !(l < r);
 }
 
 template <typename T, unsigned N>
