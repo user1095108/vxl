@@ -1373,7 +1373,7 @@ template <typename T, unsigned N>
 constexpr bool operator<=(vector<T, N> const& l,
   vector<T, N> const& r) noexcept
 {
-  return !(l > r);
+  return !(r < l);
 }
 
 template <typename T, unsigned N>
