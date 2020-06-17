@@ -1366,11 +1366,7 @@ template <typename T, unsigned N>
 constexpr bool operator>(vector<T, N> const& l,
   vector<T, N> const& r) noexcept
 {
-  return detail::vector::than<T, N>(
-    l.data_ > r.data_,
-    l.data_ == r.data_,
-    std::make_index_sequence<N - 1>()
-  );
+  return r < l;
 }
 
 template <typename T, unsigned N>
