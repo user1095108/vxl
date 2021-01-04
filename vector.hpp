@@ -1416,7 +1416,7 @@ static constexpr auto zero_vector() noexcept
   return vector<T, N>{};
 }
 
-// stream operators
+// stream operator
 template <typename T, unsigned N>
 std::ostream& operator<<(std::ostream& os, vector<T, N> const& v)
 {
@@ -1440,10 +1440,10 @@ struct hash<vxl::vector<T, N>>
 {
   template <std::size_t ...I>
   static constexpr auto make_hash(
-    typename vxl::vector_traits<T, N>::vector_type const& v,
+    typename vxl::vector_traits<T, N>::vector_type const v,
     std::index_sequence<I...>) noexcept
   {
-    std::size_t seed{};
+    std::size_t seed{672807365};
 
     return (
       (
@@ -1457,7 +1457,7 @@ struct hash<vxl::vector<T, N>>
     );
   }
 
-  constexpr auto operator()(vxl::vector<T, N> const& v) const noexcept
+  constexpr auto operator()(vxl::vector<T, N> const v) const noexcept
   {
     return make_hash(v.data_, std::make_index_sequence<N>());
   }
