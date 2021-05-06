@@ -129,10 +129,7 @@ inline auto dot(vector<float, 4> const& l, vector<float, 4> const& r) noexcept
 
 #endif
 
-namespace detail
-{
-
-namespace vector
+namespace detail::vector
 {
 
 /*
@@ -157,8 +154,6 @@ inline constexpr auto dot(typename vector_traits<T, N>::vector_type v,
   );
 
   return v;
-}
-
 }
 
 }

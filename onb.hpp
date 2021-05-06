@@ -48,10 +48,7 @@ inline constexpr auto ortho(vector<T, 3> const& v, default_tag = {}) noexcept
   };
 }
 
-namespace detail
-{
-
-namespace onb
+namespace detail::onb
 {
 
 template <typename T, unsigned N, std::size_t ...Is, std::size_t ...Js>
@@ -84,8 +81,6 @@ inline constexpr auto min_element(typename vector_traits<T, N>::vector_type v,
   );
 
   return j;
-}
-
 }
 
 }
