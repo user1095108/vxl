@@ -171,7 +171,7 @@ inline constexpr auto dot(vector<T, N> const& l,
 {
   return vector<T, N>{
     detail::vector::dot<T, N>(l.data_ * r.data_,
-      std::make_index_sequence<detail::vector::log2(N)>()
+      std::make_index_sequence<detail::vector::log<2>(N)>()
     )
   };
 }

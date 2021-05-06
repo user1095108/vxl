@@ -151,7 +151,7 @@ inline constexpr auto min(vector<T, N> const& v) noexcept
 {
   return vector<T, N>{
     detail::minmax::minmax<T, N, true>(v.data_,
-      std::make_index_sequence<detail::vector::log2(N)>()
+      std::make_index_sequence<detail::vector::log<2>(N)>()
     )
   };
 }
@@ -163,7 +163,7 @@ inline constexpr auto max(vector<T, N> const& v) noexcept
 {
   return vector<T, N>{
     detail::minmax::minmax<T, N, false>(v.data_,
-      std::make_index_sequence<detail::vector::log2(N)>()
+      std::make_index_sequence<detail::vector::log<2>(N)>()
     )
   };
 }

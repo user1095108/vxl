@@ -99,7 +99,7 @@ inline constexpr auto ortho(vector<T, 3> const& v, canonical_tag) noexcept
   // set it to zero and swap the other 2. This is much more involved.
   auto const i(detail::onb::min_element<T, 3>(v.data_,
       std::make_index_sequence<
-        vxl::detail::vector::log2(sizeof(v) / sizeof(T))
+        vxl::detail::vector::log<2>(sizeof(v) / sizeof(T))
       >(),
       std::make_index_sequence<sizeof(v) / sizeof(T)>()
     )[0]

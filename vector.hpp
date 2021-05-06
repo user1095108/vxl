@@ -872,16 +872,16 @@ namespace detail
 namespace vector
 {
 
-template <typename T>
-constexpr T pow2(T const e) noexcept
+template <unsigned B, typename T>
+constexpr T pow(T const e, T const x = B) noexcept
 {
-  return T(1) << e;
+  return !e ? 1 : 1 == e ? x : pow<B>(e / 2, x * x) * (e % 2 ? x : 1);
 }
 
-template <typename T>
-constexpr T log2(T const n, T const e = 0) noexcept
+template <unsigned B, typename T>
+constexpr T log(T const n, T const e = 0) noexcept
 {
-  return pow2(e) < n ? log2(n, e + 1) : e;
+  return pow<2>(e) < n ? log<2>(n, e + 1) : e;
 }
 
 template <typename T, unsigned N, std::size_t ...Is>
@@ -981,11 +981,11 @@ pow2_shuffler(typename vector_traits<T, N>::vector_type const& v,
   std::index_sequence<Is...>) noexcept
 {
 #if defined(__clang__)
-  return __builtin_shufflevector(v, v, ((pow2(I) + Is) % N)...);
+  return __builtin_shufflevector(v, v, ((pow<2>(I) + Is) % N)...);
 #else
   using int_vector_type = typename vector_traits<T, N>::int_vector_type;
 
-  return __builtin_shuffle(v, int_vector_type{((pow2(I) + Is) % N)...});
+  return __builtin_shuffle(v, int_vector_type{((pow<2>(I) + Is) % N)...});
 #endif
 }
 
@@ -1340,7 +1340,7 @@ constexpr bool operator==(vector<T, N> const& l,
   vector<T, N> const& r) noexcept
 {
   return detail::vector::all_zeros<T, N>(l.data_ != r.data_,
-    std::make_index_sequence<detail::vector::log2(N)>()
+    std::make_index_sequence<detail::vector::log<2>(N)>()
   );
 }
 
@@ -1389,7 +1389,7 @@ constexpr bool all(vector<T, N> const& l)
 {
   return detail::vector::all_zeros<T, N>(
     l.data_ == cvector<T, N>(T(0)),
-    std::make_index_sequence<detail::vector::log2(N)>()
+    std::make_index_sequence<detail::vector::log<2>(N)>()
   );
 }
 
@@ -1399,7 +1399,7 @@ constexpr bool any(vector<T, N> const& l) noexcept
 {
   return !detail::vector::all_zeros<T, N>(
     l.data_ != cvector<T, N>(T(0)),
-    std::make_index_sequence<detail::vector::log2(N)>()
+    std::make_index_sequence<detail::vector::log<2>(N)>()
   );
 }
 
