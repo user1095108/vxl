@@ -140,7 +140,7 @@ namespace detail::vector
 
 template <typename T, unsigned N, std::size_t ...Is>
 //__attribute__ ((noinline))
-inline constexpr auto dot(typename vector_traits<T, N>::vector_type v,
+constexpr auto dot(typename vector_traits<T, N>::vector_type v,
   std::index_sequence<Is...>) noexcept
 {
   (
@@ -161,7 +161,7 @@ inline constexpr auto dot(typename vector_traits<T, N>::vector_type v,
 // dot product
 template <typename T, unsigned N>
 //__attribute__ ((noinline))
-inline constexpr auto dot(vector<T, N> const& l,
+constexpr auto dot(vector<T, N> const& l,
   vector<T, N> const& r) noexcept
 {
   return vector<T, N>{
@@ -172,7 +172,7 @@ inline constexpr auto dot(vector<T, N> const& l,
 }
 
 template <typename T, unsigned N>
-inline constexpr auto norm2(vector<T, N> const& v) noexcept
+constexpr auto norm2(vector<T, N> const& v) noexcept
 {
   return dot(v, v);
 }
