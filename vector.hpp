@@ -881,7 +881,7 @@ constexpr T pow(T const e, T const x = B) noexcept
 template <unsigned B, typename T>
 constexpr T log(T const n, T const e = 0) noexcept
 {
-  return pow<2>(e) < n ? log<2>(n, e + 1) : e;
+  return pow<B>(e) < n ? log<B>(n, e + 1) : e;
 }
 
 template <typename T, unsigned N, std::size_t ...Is>
