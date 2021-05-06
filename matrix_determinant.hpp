@@ -16,7 +16,7 @@ namespace vxl
 //////////////////////////////////////////////////////////////////////////////
 template <typename T>
 //__attribute__ ((noinline))
-inline constexpr auto det(vxl::matrix<T, 2, 2> const& m) noexcept
+constexpr auto det(vxl::matrix<T, 2, 2> const& m) noexcept
 {
 //return
 //  m(0, 0) * m(1, 1) -
@@ -37,7 +37,7 @@ inline constexpr auto det(vxl::matrix<T, 2, 2> const& m) noexcept
 //////////////////////////////////////////////////////////////////////////////
 template <class T>
 //__attribute__ ((noinline))
-inline constexpr auto det(vxl::matrix<T, 3, 3> const& m) noexcept
+constexpr auto det(vxl::matrix<T, 3, 3> const& m) noexcept
 {
 // get row or col, whatever is more efficient as det(A) == det(A^T)
 #ifndef VXL_ROW_MAJOR
@@ -50,7 +50,7 @@ inline constexpr auto det(vxl::matrix<T, 3, 3> const& m) noexcept
 //////////////////////////////////////////////////////////////////////////////
 template <class T>
 //__attribute__ ((noinline))
-inline constexpr auto det(vxl::matrix<T, 4, 4> const& m) noexcept
+constexpr auto det(vxl::matrix<T, 4, 4> const& m) noexcept
 {
   auto const A(make_matrix<2, 2>(m(0, 0), m(0, 1), m(1, 0), m(1, 1)));
   auto const B(make_matrix<2, 2>(m(0, 2), m(0, 3), m(1, 2), m(1, 3)));
