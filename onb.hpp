@@ -15,7 +15,7 @@ namespace vxl
 //////////////////////////////////////////////////////////////////////////////
 template <typename T>
 //__attribute__ ((noinline))
-inline constexpr auto ortho(vector<T, 2> const& v, default_tag = {}) noexcept
+constexpr auto ortho(vector<T, 2> const& v, default_tag = {}) noexcept
 {
   return vector<T, 2>{-v(1), v(0)};
 }
@@ -23,7 +23,7 @@ inline constexpr auto ortho(vector<T, 2> const& v, default_tag = {}) noexcept
 //////////////////////////////////////////////////////////////////////////////
 template <typename T>
 //__attribute__ ((noinline))
-inline constexpr auto ortho(vector<T, 3> const& v, default_tag = {}) noexcept
+constexpr auto ortho(vector<T, 3> const& v, default_tag = {}) noexcept
 {
   using int_value_type = typename vector_traits<float, 3>::int_value_type;
   using vector_type = typename vector_traits<float, 3>::vector_type;
@@ -52,7 +52,7 @@ namespace detail::onb
 {
 
 template <typename T, unsigned N, std::size_t ...Is, std::size_t ...Js>
-inline constexpr auto min_element(typename vector_traits<T, N>::vector_type v,
+constexpr auto min_element(typename vector_traits<T, N>::vector_type v,
   std::index_sequence<Is...>, std::index_sequence<Js...>) noexcept
 {
   using int_value_type = typename vector_traits<T, N>::int_value_type;
@@ -88,7 +88,7 @@ inline constexpr auto min_element(typename vector_traits<T, N>::vector_type v,
 //////////////////////////////////////////////////////////////////////////////
 template <typename T>
 //__attribute__ ((noinline))
-inline constexpr auto ortho(vector<T, 3> const& v, canonical_tag) noexcept
+constexpr auto ortho(vector<T, 3> const& v, canonical_tag) noexcept
 {
   // The canonical way is to find the minimum element by absolute value,
   // set it to zero and swap the other 2. This is much more involved.
