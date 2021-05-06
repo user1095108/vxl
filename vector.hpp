@@ -431,10 +431,7 @@ struct is_vector<T,
 
 #if defined(__clang__)
 
-namespace detail
-{
-
-namespace vector
+namespace detail::vector
 {
 
 template <typename U, typename V, std::size_t ...Is>
@@ -446,8 +443,6 @@ constexpr std::enable_if_t<
 select(V const a, V const b, U const c, std::index_sequence<Is...>) noexcept
 {
   return V{(c[Is] ? a[Is] : b[Is])...};
-}
-
 }
 
 }
@@ -505,10 +500,7 @@ select(V const a, V const b, U const c) noexcept
 }
 
 // convert
-namespace detail
-{
-
-namespace vector
+namespace detail::vector
 {
 
 template <typename R, unsigned M, typename T, unsigned N, typename C,
@@ -517,8 +509,6 @@ constexpr auto convert(C const& v,
   std::index_sequence<Is...> const) noexcept
 {
   return typename vxl::vector_traits<R, M>::vector_type{R(v[Is])...};
-}
-
 }
 
 }
@@ -749,10 +739,7 @@ constexpr vector<T, N>& operator/=(vector<T, N>& a,
 }
 
 // assignment
-namespace detail
-{
-
-namespace vector
+namespace detail::vector
 {
 
 template <typename T, unsigned N, std::size_t ...Is>
@@ -760,8 +747,6 @@ constexpr typename vxl::vector_traits<T, N>::vector_type
 cvector(T const c, std::index_sequence<Is...>) noexcept
 {
   return typename vxl::vector_traits<T, N>::vector_type{(c + T(Is - Is))...};
-}
-
 }
 
 }
@@ -774,10 +759,7 @@ constexpr auto cvector(T const c) noexcept
   );
 }
 
-namespace detail
-{
-
-namespace vector
+namespace detail::vector
 {
 
 template <unsigned N, int ...I>
@@ -796,8 +778,6 @@ constexpr auto clang_swizzle(T&& a, T&& b,
   std::integer_sequence<int, I...> const) noexcept
 {
   return __builtin_shufflevector(a, b, I...);
-}
-
 }
 
 }
@@ -866,10 +846,7 @@ constexpr vector<T, N> swizzled(vector<T, N> const& a,
 #endif
 }
 
-namespace detail
-{
-
-namespace vector
+namespace detail::vector
 {
 
 template <unsigned B, typename T>
@@ -892,8 +869,6 @@ abs_mask(std::index_sequence<Is...>) noexcept
   using vector_type = typename vector_traits<T, N>::vector_type;
 
   return ~int_vector_type(vector_type{(T(-.0) + T(Is - Is))...});
-}
-
 }
 
 }
@@ -953,10 +928,7 @@ constexpr void mabs(vector<T, N>& v) noexcept
   );
 }
 
-namespace detail
-{
-
-namespace vector
+namespace detail::vector
 {
 
 template <typename T, unsigned N, std::size_t I, std::size_t ...Is>
@@ -1326,8 +1298,6 @@ constexpr bool all_zeros(
   )[0];
 }
 #endif
-
-}
 
 }
 
