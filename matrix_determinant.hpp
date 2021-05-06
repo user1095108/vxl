@@ -13,6 +13,7 @@
 namespace vxl
 {
 
+// https://en.wikipedia.org/wiki/Determinant#Block_matrices
 //////////////////////////////////////////////////////////////////////////////
 template <typename T>
 //__attribute__ ((noinline))
@@ -57,7 +58,8 @@ constexpr auto det(vxl::matrix<T, 4, 4> const& m) noexcept
   auto const C(make_matrix<2, 2>(m(2, 0), m(2, 1), m(3, 0), m(3, 1)));
   auto const D(make_matrix<2, 2>(m(2, 2), m(2, 3), m(3, 2), m(3, 3)));
 
-  return det(A - B * inv(D) * C) * det(D);
+  //return det(A) * det(D - C * inv(A) * B);
+  return det(D) * det(A - B * inv(D) * C);
 }
 
 }

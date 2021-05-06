@@ -7,7 +7,6 @@
 namespace vxl
 {
 
-// cross product
 // http://fastcpp.blogspot.si/2011/04/vector-cross-product-using-sse-code.html
 template <typename T>
 //__attribute__ ((noinline))
