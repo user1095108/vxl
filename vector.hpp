@@ -852,7 +852,7 @@ namespace detail::vector
 template <unsigned B, typename T>
 constexpr T pow(T const e, T const x = B) noexcept
 {
-  return !e ? 1 : 1 == e ? x : pow<B>(e / 2, x * x) * (e % 2 ? x : 1);
+  return !e ? 1 : 1 == e ? x : (e % 2 ? x : 1) * pow<B>(e / 2, x * x);
 }
 
 template <unsigned B, typename T>
