@@ -488,7 +488,7 @@ select(V const a, V const b, U const c) noexcept
   // https://markplusplus.wordpress.com/2007/03/14/fast-sse-select-operation/
   // https://markplusplus.wordpress.com/2008/04/08/revisiting-fast-sse-select/
 
-  // ((b ^ a) & c) ^ a
+  // ((a ^ b) & c) ^ b
   // auto const r((((U&)(b) ^ (U&)(a)) & c) ^ (U&)(a));
 
   // (c & a) | (~c & b)
