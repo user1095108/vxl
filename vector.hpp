@@ -1408,7 +1408,7 @@ namespace std
 template <typename T, unsigned N>
 struct hash<vxl::vector<T, N>>
 {
-  constexpr auto operator()(vxl::vector<T, N> const v) const
+  constexpr auto operator()(vxl::vector<T, N> const& v) const
     noexcept(noexcept(std::declval<std::hash<T>>()(std::declval<T>())))
   {
     return [&]<auto ...I>(auto&& s, std::index_sequence<I...>) noexcept
