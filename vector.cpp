@@ -76,5 +76,5 @@ int main()
     ).data_[0] <<
     std::endl;
 
-  return 0;
+  return std::hash<decltype(a)>()(a);
 }
