@@ -1408,28 +1408,14 @@ namespace std
 template <typename T, unsigned N>
 struct hash<vxl::vector<T, N>>
 {
-  template <std::size_t ...I>
-  static constexpr auto make_hash(
-    typename vxl::vector_traits<T, N>::vector_type const v,
-    std::index_sequence<I...>) noexcept
+  constexpr auto operator()(vxl::vector<T, N> const v) const
+    noexcept(noexcept(std::declval<std::hash<T>>()(std::declval<T>())))
   {
-    std::size_t seed{672807365};
-
-    return (
-      (
-        seed = (
-          vxl::detail::vector::convert<
-            typename vxl::vector_traits<T, N>::uint_value_type
-          >(v[I]) + 0x9e3779b9 + (seed << 6) + (seed >> 2)
-        )
-      ),
-      ...
-    );
-  }
-
-  constexpr auto operator()(vxl::vector<T, N> const v) const noexcept
-  {
-    return make_hash(v.data_, std::make_index_sequence<N>());
+    return [&]<auto ...I>(auto&& s, std::index_sequence<I...>) noexcept
+      {
+        return ((s ^= std::hash<T>()(v(I + 1)) + 0x9e3779b9 +
+          (s << 6) + (s >> 2)), ...), s;
+      }(std::hash<T>()(v(0)), std::make_index_sequence<N - 1>());
   }
 };
 
